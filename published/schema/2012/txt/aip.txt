@@ -1,0 +1,188 @@
+Canadiana TDR AIP Technical Specification (version 0.2)
+http://canadiana.ca/schema/2012/txt/aip.txt
+
+
+Abstract
+
+    This document describes the technical specification for the
+    Canadiana.org Trustworthy Digital Repository (TDR) Archival
+    Information Package (AIP). The AIP is used internally to store and
+    manage digital objects deposited to the TDR.
+
+
+Status
+
+    This is a working draft and is subject to change. The finalized
+    specification will be given the version number 1.0. The specification
+    may be amended from time to time to accomodate new functional
+    requirements of the TDR and of services based on TDR content.
+
+
+Purpose
+
+    The Canadiana TDR AIP is meant for long-term archical storage of
+    digital objects and their associated metadata and other sources. It
+    accomodates the storage, location of digital objects and allows for
+    the tracking of changes and verification of authenticity and fixity.
+
+
+Scope
+
+    Each AIP stores information for a single Submission Information
+    Package (SIP).
+
+
+Standards
+
+    The following standards are used within the AIP:
+
+    BagIt v.0.97: http://tools.ietf.org/html/draft-kunze-bagit-07
+    CSIP: http://canadiana.ca/schema/2012/txt/sip.txt
+    CMR: http://canadiana.ca/schema/2012/xsd/cmr
+
+
+Structure
+
+    An AIP is a BagIt version 0.97 archive. The archive is structured as
+    follows:
+
+    root
+    |- bagit.txt
+    |- bag-info.txt
+    |- data/
+    |   |- changelog.txt
+    |   |- cmr.xml
+    |   |- revisions/
+    |   |- sip/
+    |- manifest-crc32.txt
+    |- manifest-md5.txt
+
+    bagit.txt
+
+        This is the BagIt declaration file.
+
+    bag-info.txt
+
+        This file will contain generic human-readable metadata describing
+        the content of the archive and the date of bagginbagit.txt
+
+            This is the BagIt declaration file.
+
+        bag-info.txt
+
+            This file will contain general human-readable metadata
+            describing the content of the archive and the date of last
+            update.
+
+        changelog.txt
+
+            A file logging all operations made to the AIP. Each line
+            consists of a timestamp in ISO 8601 combined date and time
+            fomrat followed by whitespace and a description of the action
+            performed. Actions logged include the following:
+
+                - Initial creation of the AIP
+                - Update of the AIP with a new SIP (and movement of the
+                  previous sip into the revisions directory)
+                - Update of the AIP with a new metadata record (and
+                  creation of a partial revision containing the old
+                  metadata record)
+                - Withdrawal of the SIP and all revisions (and reason for
+                  withdrawal)
+                - Creation or re-creation of the CMR record (cmr.xml)
+
+        cmr.xml
+
+            A Canadiana Metadata Repository file derived from metadata.xml
+            in the SIP.
+
+        manifest-crc32.txt
+            
+            A CRC-32 decimal checksum of all files in the data directory.
+            This file is used to validate the integrity of the archive
+            over time. It is re-generated each time the AIP is modified.
+
+        manifest-md5.txt
+
+            Like manifest-crc32.txt but with MD5 hexadecimal digests. This
+            manifest provides a more rigorous but slower checksum for
+            validation. It too is re-generated each time the AIP is
+            modified.
+
+            Note that the sip is also a BagIt archive and contains its own
+            manifest-md5.txt file for validation. Unlike the AIP manifest,
+            the sip manifest is never re-generated and can therefore be
+            used to ensure the long-term fixity of the sip.
+
+        revisions
+
+            Any time the SIP is updated, the previous version of the SIP
+            is copied to the revisions directory and named according to
+            the current timestamp in the form YYYYMMDDTHHMMSS in UTC. For
+            example: 201020516T145512. This ensures a permanent record of
+            all revisions to the SIP and allows for a reversion to a
+            previous version if required.
+
+            The SIP may be updated by replacing its metadata record only.
+            In this case, a partial revision is made by creating a
+            revision directory as above with the suffix ".partial"
+            appended. This partial revision contains a copy of the
+            replaced metadata file and a complete copy of the
+            manifest-md5.txt file. This allows corrections or updates to
+            be made to a metadata record without duplicating all of the
+            digital content, but still retaining a record of the change
+            and the ability to revert to the previous version of the
+            record.
+
+        sip
+
+            This is a valid CSIP archive and forms the core of the AIP.
+            Once ingested, the contents of this directory are never
+            modified, though they may be superseded if the AIP is updated
+            with a revised SIP.
+
+Location
+
+    Each AIP occupies a specific designated place within the repository.
+    Each AIP has a unique TDR identifier which is the value of the
+    locally-unique identifier provided by the depositor in the
+    metadata.xml file within the SIP prefixed by the Canadiana-assigned
+    depositor code and a period. The depositor code consists only of
+    lowercase ASCII letters (a-z). Adding the prefix code and a dot makes
+    the locally-unique identifier globally within the TDR.
+
+    Example:
+
+        Local identifier: 00989
+        Depositor code: oocihm
+        TDR identifier: oocihm.00989
+
+    The AIP root directory name is the same as its globally-unique
+    identifier. It is stored in a hashing subdirectory which is a
+    three-digit number taken from the three least significant digits of
+    the unique identifier's CRC32 decimal checksum. This hashing
+    subdirectory is located in a depisitor directory named with depositor
+    code. The depositor directory is placed under the TDR root.
+
+    Example:
+
+        TDR identifier: oocihm.00989
+        AIP location (relative to TDR root): oocihm/594/oocihm.00989
+
+
+Modification
+
+    After initial ingest, an AIP may be updated by depositing a new SIP
+    with the same identifier. The existing SIP will be moved to the
+    revisions directory of the AIP and the new SIP will take its place.
+
+    From time to time, non-sip data may be added or updated to accommodate
+    new functional requirements of the TDR or applications which use it.
+
+    Once created, an AIP may never be deleted. A SIP may be withdrawn on
+    the request of the depositor, in which case the SIP, inclduing all
+    previous revisions, and the derived cmr.xml file will be deleted, but
+    the AIP structure, including the changelog.txt file, remain in place
+    to provide a record of all creation, modification and withdrawal
+    events.
+

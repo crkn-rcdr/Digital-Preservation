@@ -1,0 +1,97 @@
+CSIP: Canadiana.org TDR SIP Technical Specification (v. 0.3)
+http://canadiana.ca/schema/2012/txt/sip.txt
+
+
+Abstract
+
+    This document describes the technical specification for the
+    Canadiana.org Trustworthy Digital Repository (TDR) Submission Information
+    Package (SIP). Sumbissions to the TDR must meet all of the SIP
+    requirements described here in order to be accepted for ingest.
+
+
+Status
+
+    This is a working draft and is subject to change. The finalized
+    specification will be given the version number 1.0. The specification
+    may be extended from time to time to include additional features, such
+    as support for additional descriptive metadata formats or an expanded
+    range of digital object types.
+
+
+Purpose
+
+    CSIP is the standard SIP format for submitting digital content into
+    the Canadiana TDR.
+
+
+Scope
+
+    Each SIP contains metadata and digital assets associated with a single
+    digital object. Three types of objects are supported:
+
+    Documents are printed material. They may contain
+    individually-accessible pages or other sub-parts, each represented by
+    different digital resources, or they may consist of a single resource.
+    The standard document object is a book or similar paged item, but the
+    definition is broad enough to include maps, photographs, posters, or
+    other printed material, so long as it meets the general form
+    requirements.
+
+    Series are metadata-only objects which describe a collection of
+    documents. A series can be any sort of ordered collection of
+    documents, such as a periodical, monographic series, or collection of
+    photographs.
+
+    Issues are documents which belong to a series. They differ from
+    standard documents in the metadata standards used to describe them and
+    in the fact that they are linked to a series object. All issues
+    submitted to the TDR should be associated with a valid series in order
+    to provide the proper metadata and context for the issue.
+
+
+Standards
+
+    The following standards and schemas are used within CSIP:
+
+    BagIt v.0.97: http://tools.ietf.org/html/draft-kunze-bagit-07
+    METS 1.9.1: http://www.loc.gov/standards/mets/
+    CSIP METS Profile: http://www.canadiana.ca/schema/2012/mets/csip
+    MARCXML: http://www.loc.gov/standards/marcxml/
+    Simple Dublin Core: http://purl.org/dc/elements/1.1/
+    issueinfo: http://www.canadiana.ca/schema/2012/xsd/issueinfo
+    txtmap: http://www.canadiana.ca/schema/2012/xsd/txtmap
+
+
+Structure
+
+    A valid CSIP is a BagIt version 0.97 archive. The BagIt root must
+    contain a bagit.txt file with the correct declaration and a
+    manifest-md5.txt file containing MD5 hex digest checksums of all of
+    the files in the payload. Payload files may be included in the data
+    directory and/or specified in a fetch.txt file. All other files in the
+    bagit root are optional.
+
+    The payload consists of one required file called 'metadata.xml' and
+    two optional subdirectories called 'metadata' and 'files'
+
+    The metadata.txt file is a METS version 1.9.1 record which conforms to
+    the Canadiana Submission Information Package (CSIP) METS profile. The
+    CSIP profile specifies additional constraints on the content of the
+    archive, including required digital asset files and file naming
+    conventions.
+
+    The files directory must contain all digital assets referenced in
+    <FLocat> elements within the METS document.
+
+    The metadata firectory must contain all metadata files referenced by
+    <mdRef> elements within the METS document.
+
+
+Validity
+
+    A CSIP submission is considered valid if it meets all of the
+    requirements described in this document, including all of the
+    requirements of the CSIP METS profile. Invalid submissions will not be
+    accepted for ingest into the Canadiana TDR.
+

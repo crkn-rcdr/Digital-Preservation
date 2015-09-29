@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+  xmlns="http://canadiana.ca/schema/2012/xsd/cmr"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://canadiana.ca/schema/2012/xsd/cmr" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0"
+>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <h1>CMR version 1.2 WORKING DRAFT (November 2012)</h1>
+
+      <h2>Status</h2>
+
+      <p>This is a working draft of CMR version 1.2. It is
+      backwards-compatible with CMR 1.1 and 1.0, provided that the
+      appropriate namespace declarations are used.</p>
+
+      <h2>Changes from version 1.1</h2>
+
+      <p>Version 1.2 adds documentation and a target namespace to the
+      schema and allows image/jp2 as a MIME type. Version 1.1 and earlier
+      records should validate against the 1.2 schema provided that they
+      add the namespace declaration:
+      xmlns="http://canadiana.ca/schema/2012/xsd/cmr" to the root
+      &lt;recordset&gt; element. There are no other structural changes to
+      the CMR format itself.</p>
+
+      <h2>Abstract</h2>
+
+      <p>CMR is the metadata format used within the Canadiana Metadata
+      Repository as a normalized storage format. Metadata records
+      contributed to the Repository have CMR records derived from them,
+      which are then used to build the national index on which the
+      Canadiana Discovery Portal (http://search.canadiana.ca) is
+      based.</p>
+
+      <p>Contributors may elect to submit metadata to the repository
+      directly in CMR format. Those who do should follow the standards and
+      practices described in this document to ensure that their records
+      validate against the schema and function optimally within the
+      Discovery Portal.</p>
+
+      <h2>Important Notes About Usage</h2>
+
+      <p>CMR was originally intended for internal use for the purpose of
+      normalizing metadata from a variety of sources and in a variety of
+      formats so that they could be indexed into a single index for
+      inclusion in the Canadiana Discovery Portal. As a result, the
+      definition and application of various fields, particularly with
+      regards to descriptive metadata, is quite loose and subject to
+      change over time. The specificity of element names (e.g.,
+      &lt;author&gt; is, in many cases, accidental and, in general, are
+      meant to be interpreted liberally. The specific indexing and display
+      behaviour of the Discovery Portal may change over time;
+      documentation about the use of descriptive metadata (child elements
+      of the &lt;description&gt; element) should be viewed as provisional
+      guidelines.</p>
+
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="recordset">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>A &lt;recordset&gt; is the top-level element in a CMR record. It
+        contains zero or more &lt;record&gt; elements. The individual
+        records in a recordset do not have to be related in any particular
+        way, but all page records should be included in the same recordset
+        as their parent document record in order to be properly indexed
+        and linked. Orphaned page records cannot be properly indexed and
+        will have limited findability and accessibility.</p>
+
+        <p>The &lt;recordset&gt; element must include the version
+        attribute which indicates the version of CMR that is being used.
+        The correct value for this version is "1.2".</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+
+        <!-- Record -->
+        <xsd:element name="record" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>A record describes an addressable digital resource. It
+              can refer to a complete item (such as a book) or an sub-part
+              of an item (such as a page), so long as the item can be
+              accessed at the level described. For example, if a book is
+              only available as a single PDF document, only one record
+              should be created for the book as a whole. If, on the other
+              hand, each page of the book is also directly viewable (for
+              example as a JPEG image) and has a distinct URL for viewing,
+              then one record may be created for the book with a
+              &lt;type&gt; element of "document" and a linked child record
+              for each page with the &lt;type&gt; page.</p>
+              <p>The creation of multi-record hierarchical objects (e.g.
+              books + pages) is not required if it is desired to only
+              provide searchable access at the level of the item as a
+              whole.</p>
+              <p>Refer to the &lt;type&gt; element for more details on
+              hierarchical objects.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+
+              <!-- Required control fields -->
+              <xsd:element name="type">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>The &lt;type&gt; element is required for every
+                    record. Its value should be one of: "series", "document"
+                    or "page". Other values are deprecated and will be
+                    mapped as follows: "collection" and "serial" are
+                    treated the same as "series"; "issue" and "monograph"
+                    are treated the same as "document".</p>
+                    <p>"Document" is the base record type. A document can
+                    represent a book, pamphlet, photograph, video or audio
+                    recording, or just about any other kind of digital
+                    object.</p>
+                    <p>"Page" is used for records that describe an
+                    individually-addressible part of a document. These may
+                    be literal pages (as in the pages of a book) but they
+                    can also be any other sort of sub-part. For example,
+                    each individual track of a record album may be encoded
+                    as a page record.</p>
+                    <p>"Series" is used to denote a related set of
+                    sequentially-ordered documents, such as a serial or
+                    periodical.</p>
+                    <p>The &lt;type&gt; element is used to determine the
+                    functional behaviour of a record within the CMR.
+                    Specifically, general searches will locate only
+                    records of type "series" or "document". Page records
+                    are found only by specifically searching pages,
+                    usually in the context of a parent document record.
+                    This element is not used to provide descriptive
+                    information about the nature or format of the object:
+                    this is done in the &lt;description&gt; section.</p>
+                    <p>See the &lt;pkey&gt; documentation for details
+                    about linking records into a herarchical
+                    structure.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="series"/>
+                    <xsd:enumeration value="document"/>
+                    <xsd:enumeration value="page"/>
+                    <!-- The following values are deprecated: -->
+                    <xsd:enumeration value="collection"/>
+                    <xsd:enumeration value="issue"/>
+                    <xsd:enumeration value="serial"/>
+                    <xsd:enumeration value="monograph"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+
+              <xsd:element name="contributor" type="lcalpha">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>Each record must have a contributor code. These
+                    codes are assigned by Canadiana.org and are used to
+                    identify the provenance of a record and, along with
+                    the &lt;key&gt; element, to generate a unique
+                    identifier for the record.</p>
+                    <p>This field is mandatory and contributors should
+                    populate it with their assigned code. Records
+                    submitted with a &lt;contributor&gt; value of anything
+                    other than the contributor's assigned code will be
+                    replaced with the correct code.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="key" type="key">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>The &lt;key&gt; element is mandatory field used to
+                    denote a unique identifier for this record. The
+                    content of this field must be a string of no more than
+                    127 characters and consisting only of ASCII
+                    alphanumeric characters, underscores, dots and hyphens
+                    (A-Za-z0-9_.-).</p>
+                    <p>The key must be locally-unique to the contributor.
+                    If two records from the same contributor with the same
+                    key are encountered, the second will replace the
+                    first.</p>
+                    <p>A globally-unique CMR key is generated by
+                    concatenating the &lt;contributor&gt; and &lt;key&gt;
+                    fields together with a dot. This CMR key can be used
+                    to uniquely identify any object within the
+                    repository.</p>
+                    <p>It is recommended that page records be assigned a
+                    key that is an extension of the parent document's key
+                    (for example, by appending ".1", ".2", etc. to the
+                    parent key) but this is not a requirement.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="label" type="text">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This &lt;label&gt; is a required element and is
+                    used to store the standard label for the object. For
+                    documents and series, this is most often a title, but
+                    may be an abstract, identification number, or anything
+                    else that serves as a standard descriptive reference
+                    to the item.  For pages, it may be a page number or
+                    description (e.g. "5", "p. 5" or "Table of Contents").
+                    The label will appear as the main heading in search
+                    resutls, bibliographic record displays, and so
+                    forth.</p>
+                    <p>For pages and documents that are part of a series,
+                    the label should be relative to the context of the
+                    containing record. For example, the label for an issue
+                    of a series might consist of the volume and issue
+                    number, with the common name ommitted. When displayed
+                    out of context, the labels of the parent items will be
+                    prepended to the label of the object. (E.g. a page
+                    labeled "p. 5" from an issue labeled "vol. 1 no. 4"
+                    from a series labeled "Canadian Builder" may be
+                    displayed as "Canadian Builder: vol. 1 no. 4, p.
+                    5".)</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <!-- Optional control fields -->
+              <xsd:element name="pkey" type="key" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>The &lt;pkey&gt; field is used to link objects to
+                    their parent objects. A page record should have a &lt;pkey&gt;
+                    value equal to the &lt;key&gt; of the document it
+                    belongs to. A document which is part of a series
+                    should have a &lt;pkey&gt; equal to the &lt;key&gt; of
+                    the series to which it belongs. Series and documents
+                    which do not belong to a series should not have a
+                    &lt;pkey&gt; element.</p>
+                    <p>A &lt;pkey&gt; should only be specified if the
+                    parent record it references is also included. Dangling
+                    references may be ignored or may introduce invalid
+                    links.</p>
+                    <p>&lt;pkey&gt; values which reference documents of
+                    the incorrect type must be ignored. I.e., the pkey of
+                    a page must refer to a document, the pkey of a
+                    document must refer to a series, and series must not
+                    have pkeys.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="gkey" type="key" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This element is deprecated and will be ignored.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="seq" type="xsd:positiveInteger" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>Any page or document record which has a parent
+                    element (see &lt;pkey&gt;) should include a
+                    &lt;seq&gt; element. The &lt;seq&gt; element's value
+                    is a positive integer which specifies the position of
+                    the page or document within its parent document or
+                    series. The value is used to sort pages or issues into
+                    the correct order.</p>
+                    <p>It is recommended that the value of this element be
+                    the ordinal position of the object within its parent
+                    (e.g., the 5th page in a document object should have
+                    &lt;sedq&gt;5&lt;seq&gt;) but any value is acceptable
+                    as long as it places the object in correct numerical
+                    order. It is acceptable to leave gaps in the sequence
+                    for missing pages or issues.</p>
+                    <p>No two records should have identical &lt;pkey&gt;
+                    and &lt;seq&gt; values. If multiple records belonging
+                    to the same parent also have the same sequence value,
+                    they will in some cases sort in an indeterminate order
+                    and in others one will mask the existence of the
+                    others.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="group" type="group" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This element is for internal use by Canadiana.org
+                    and may be deprecated in future. If supplied, it will
+                    be ignored.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="pubdate" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This optional element specifies the date of
+                    publication. It consists of two attributes: min and
+                    max, each of which takes a date in ISO 8601 format.
+                    The date must be fully specified in UTC, except that
+                    fractional secords are optional. Example:
+                    2012-12-31T13:00:00.000Z/</p>
+                    <p>The &lt;pubdate&gt; element is used to limit
+                    searches by date range and to sort records by
+                    date.</p>
+                    <p>The min and max attributes define a range of
+                    possible publication dates for the item. For a
+                    document, this should be the estimated date of
+                    publication and for series it should be the estimated
+                    run from first to last issue. Example: a book with a
+                    publication date of 1905 should have &lt;pubdate
+                    min="1905-01-01T00:00:00.000Z"
+                    max="1905-12-31T23:59:259.999Z"/&gt;.</p>
+                    <p>Page records should not include this element unless
+                    it is different from the parent document's.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:attribute name="min" type="iso8601" use="required"/>
+                  <xsd:attribute name="max" type="iso8601" use="required"/>
+                </xsd:complexType>
+              </xsd:element>
+
+              <xsd:element name="lang" type="iso639-3" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This element is optional. Its value should be a
+                    3-character ISO 639-3 language code describing the
+                    language of the content of the object. This field may
+                    be repeated as required.</p>
+                    <p>It is important to note that some ISO 639-2 codes
+                    are not valid ISO 639-3 codes. In particular, keep in
+                    mind that "fra", "deu" and "zho" should be used and
+                    not "fre", "ger" and "chi".</p>
+                    <p>Page records should omit this element unless they
+                    are different from the parent document's.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <xsd:element name="media" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>This element is used to indicate the format(s) in
+                    which the digital object is available. It refers to
+                    the normal mode of access of the digital object
+                    itself, irrespective of the format of any original on
+                    which the object might be based. The &lt;media&gt;
+                    element is both descriptive and used to facet
+                    searches. It may be repeated as required. Page records
+                    should omit this element unless they are different
+                    from the media type of the parent document.</p>
+                    <p>Permissible values are any of the following:</p>
+                    <ul>
+                      <li>audio: a sound recording (e.g. an MP3 file)</li>
+                      <li>data: machine-readable structured data (e.g. a
+                      CSV file)</li>
+                      <li>image: an image (e.g. JPEG file) of something
+                      that is not primarily textual (photograph of an
+                      artifact, poster, painting, etc.)</li>
+                      <li>interactive: an interactive application
+                      (interactive Web site, computer program, etc.)</li>
+                      <li>plaintext: an unformatted machine-readable text
+                      file (in most cases, text should also be specified
+                      as a media type)</li>
+                      <li>text: formatted or unformatted text or a
+                      representation of text or primarily textual object
+                      (PDF of a digitized book, scanned
+                      page images encoded as JPEGs, etc.)</li>
+                      <li>video: any moving picture or video format (e.g.
+                      MPEG4)</li>
+                    </ul>
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="audio"/>
+                    <xsd:enumeration value="data"/>
+                    <xsd:enumeration value="image"/>
+                    <xsd:enumeration value="interactive"/>
+                    <xsd:enumeration value="plaintext"/>
+                    <xsd:enumeration value="text"/>
+                    <xsd:enumeration value="video"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+
+              <!-- Description and content: fields may appear in any quantity and order -->
+              <xsd:element name="description">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>The contents of this element are all free-form
+                    descriptive metadata for the object. All child
+                    elements are optional, repeatable and can be included
+                    in any order. The contents of these fields are indexed
+                    for keyword searching and are also used to construct
+                    the majority of the bibliographic record for the
+                    object.</p>
+                    <p>Metadata for page records should reflect content
+                    specific to that page. Usually, this is just the page
+                    text or OCR. It is permissible to do page-level
+                    subject assignments, notes, titles, etc., but note the
+                    following caution:</p>
+                    <p>Descriptive metadata in page records will be
+                    exported into the parent record at index time. This
+                    means that the content of a page's &lt;description&gt;
+                    section will match the containing document for keyword
+                    searches. It also means that metadata in the page
+                    records will appear as part of the bibliographic
+                    record for the parent document. Under normal
+                    circumstances, page records should contain only
+                    &lt;text&gt; elements in their &lt;description&gt;</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:group ref="descriptionFields" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:complexType>
+              </xsd:element>
+
+              <!-- Resource links: some of these are required -->
+              <xsd:element name="resource">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    <p>The &lt;resource&gt; element contains one or more
+                    child elements with local or public pointers to
+                    digital assets and other resources associated with the
+                    object.</p>
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="canonicalUri" type="xsd:anyURI">
+                      <xsd:annotation>
+                        <xsd:documentation>
+                          <p>This element is required and may only occur
+                          once. Its value should be the canonical or
+                          principal URI associated with the resource. This
+                          may be a direct link to a representation of the
+                          digital object itself (e.g. a PDF file) but is
+                          more often a reference to a Web page containing
+                          information about the object, an embedded
+                          representation of the object and/or links to
+                          access one or more digital representations of
+                          the object.</p>
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="canonicalPreviewUri" type="xsd:anyURI" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:documentation>
+                          <p>This element is optional. It should be a URI
+                          pointing to a thumbnail image or similar
+                          representation of the digital object in a format
+                          that can normally be used as the value of the
+                          src attribute of the HTML &lt;img&gt; element
+                          (normally a JPEG or PNG image).</p>
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="canonicalMaster" type="resource" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:documentation>
+                          <p>This element is used internally by
+                          Canadiana.org and will be ignored in contributed
+                          records.</p>
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="canonicalDownload" type="resource" minOccurs="0">
+                      <xsd:annotation>
+                        <xsd:documentation>
+                          <p>This element is used internally by
+                          Canadiana.org and will be ignored in contributed
+                          records.</p>
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="version" type="version" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- Description fields -->
+  <xsd:group name="descriptionFields">
+    <xsd:choice>
+        <xsd:element name="title" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>Use this element to indicate the title of the object. The
+              lang and type attributes may be used to specify additional
+              information about the title. Allowed values for type are
+              "main" and "uniform". These values are intended to
+              correspond roughly to MARC fields 245$a and 130 (or 730)
+              respectively.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+                <xsd:attribute name="type" use="optional">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="main"/>
+                      <xsd:enumeration value="uniform"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="author" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>Use this element to denote the author or any sort of
+              creator or similar contributor to the work. This element
+              should be interpreted broadly, similar to the Dublin Core
+              creator element. The optional type attribute may be assigned
+              the value of "editor" to indicate an editor rather than
+              principal creator of a work.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+                <xsd:attribute name="type" use="optional">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="editor"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="publication" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>Use this element to include a statement of publication.
+              It is intended to correspond roughtly to the MARC 260
+              field.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="subject" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>This element is used to describe a subject heading,
+              keyword, or other tag describing the subject coverage of the
+              object. An optional lang attribute may be used to indicate
+              the language of the subject heading. They should be used with
+              values of "eng" and "fra" if subject elements are included
+              for both languages, but ommitted otherwise. Subjects tagged
+              with one language may only display in bibliographic records
+              for that user interface language (though they will be
+              searchable irrespective of interface language).</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="note" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>The not element is used for general notes and information
+              that does not fit elsewhere. The type attribute may be used
+              to indicate the type of note.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+                <xsd:attribute name="type" use="optional">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="continued"/>
+                      <xsd:enumeration value="continues"/>
+                      <xsd:enumeration value="extent"/>
+                      <xsd:enumeration value="frequency"/>
+                      <xsd:enumeration value="identifier"/>
+                      <xsd:enumeration value="missing"/>
+                      <xsd:enumeration value="rights"/>
+                      <xsd:enumeration value="source"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="descriptor" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>This element may be used to enter descriptive terms. They
+              should be from a controlled vocabulary. The type attribute
+              may be used to indicate the type of descriptor. Otherwise,
+              descriptors are similar to subjects.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+                <xsd:attribute name="type" use="optional">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="corporate"/>
+                      <xsd:enumeration value="date"/>
+                      <xsd:enumeration value="location"/>
+                      <xsd:enumeration value="person"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="text" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <p>The text attribute is used to record large blocks of
+              textual content. The lang attribute may be used to indicate
+              the language of the text. The type attribute should be used
+              if applicable. Allowed values for type are "content" which
+              is used to indicate that the text is taken from the object
+              itself (e.g. OCR text) or "description" which is used to
+              indicate that the text is provided by an external source but
+              describes or comments upon the object.</p>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="text">
+                <xsd:attribute name="lang" type="iso639-3" use="optional"/>
+                <xsd:attribute name="type" use="optional">
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:enumeration value="content"/>
+                      <xsd:enumeration value="description"/>
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        
+    </xsd:choice>
+  </xsd:group>
+
+  <!-- Types -->
+
+  <xsd:complexType name="resource">
+    <xsd:simpleContent>
+      <xsd:extension base="text">
+        <xsd:attribute name="mime" type="mime" use="required"/>
+        <xsd:attribute name="size" type="xsd:positiveInteger" use="optional"/>
+        <xsd:attribute name="md5" type="md5digest" use="optional"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:simpleType name="iso639-3">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[a-z]{3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="iso8601">
+    <xsd:restriction base="xsd:dateTime">
+      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="key">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Za-z0-9_.-]{1,127}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="group">
+    <xsd:simpleContent>
+      <xsd:extension base="key">
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:simpleType name="text">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="lcalpha">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[a-z]+"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="md5digest">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-f]{32}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="mime">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="application/pdf"/>
+      <xsd:enumeration value="image/jpeg"/>
+      <xsd:enumeration value="image/tiff"/>
+      <xsd:enumeration value="image/jp2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="version">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="1.0"/>
+      <xsd:enumeration value="1.1"/>
+      <xsd:enumeration value="1.2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
+
