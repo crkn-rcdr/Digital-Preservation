@@ -15,7 +15,7 @@
       This profile documents the standard for supplying and encoding
       metadata within the Canadiana.org TDR.
     </abstract>
-    <date>2015-05-04T12:00:00Z</date>
+    <date>2017-01-25T12:00:00Z</date>
     <contact>
         <name>Julienne Pascoe</name>
         <institution>Canadiana.org</institution>
@@ -53,13 +53,20 @@
         <context>Used to encode OCR or other full text for document pages.</context>
     </extension_schema>
     <description_rules>
+      <p>UPDATE: As part of the seperation of the preservation and access platforms, 
+      	the CMR schema has been deprecated and replaced by an internal data format that is used to create search and 
+      	presentation documents. In addition some of the fields previosly used in CMR records have also been 
+      	discontinued. This does not prevent any of the valid elements being included in the descriptive metadata section of the 
+      	supplied METS records for preservation purposes.
+      </p>
       <p>
         MARC Records should follow standard cataloguing rules (i.e.
         AACR2).
       </p>
       <p>
-        Dublin Core records may use any of the standard DC elements.
-        During the creation of CMR records, three fields will be
+        Dublin Core records may use any of the standard DC elements. It is recommended to use the DC recommended guidelines 
+        best practices for usage.
+        During the creation of internal data structures for access, these fields will be
         interpreted in specific ways:
       </p>
       <p>
@@ -77,10 +84,7 @@
         formats might not be parsed correctly.
       </p>
       <p>
-        The dc:format field(s) will be used to determine the content type
-        of the document. Standard Canadiana Metadata Repository (CMR)
-        values (such as text, image, or video) should be used. Other
-        formats might not be parsed correctly.
+      	UPDATE: the dc:format field is not currently used in the access platform. 
       </p>
     </description_rules>
     <controlled_vocabularies/>
@@ -166,12 +170,16 @@
           </p>
           <p>
             Each part of a document must be represented by a &lt;div&gt;
-            with the attribute TYPE="page". Each page must have a
-            &lt;fptr&gt; which references the master image file for that
-            page. Note that a page in this context might not correspond to
+            with the attribute TYPE="page". If there is a master image file for that 
+            page then it must contain a &lt;fptr&gt; which references the master image 
+            file for that page. 
+            Note that a page in this context might not correspond to
             one physical page of the original book (e.g. if the book was
             digitized with two facing pages for each image, or if a large
             fold-out is split into multiple images).
+            In some cases, such as with born-digital content, there will 
+            not be a master image for each page, but one file for the entire object. A  
+            &lt;fptr&gt referencing the image file for each page is not required in these instances.
           </p>
           <p>
             Each &lt;div&gt; element must contain a LABEL attribute to
