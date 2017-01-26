@@ -179,7 +179,7 @@
             fold-out is split into multiple images).
             In some cases, such as with born-digital content, there will 
             not be a master image for each page, but one file for the entire object. A  
-            &lt;fptr&gt referencing the image file for each page is not required in these instances.
+            &lt;fptr&gt; referencing the image file for each page is not required in these instances.
           </p>
           <p>
             Each &lt;div&gt; element must contain a LABEL attribute to
