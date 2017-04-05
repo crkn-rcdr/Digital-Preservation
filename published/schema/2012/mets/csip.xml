@@ -15,7 +15,7 @@
       This profile documents the standard for supplying and encoding
       metadata within the Canadiana.org TDR.
     </abstract>
-    <date>2017-01-25T12:00:00Z</date>
+    <date>2017-04-5T12:00:00Z</date>
     <contact>
         <name>Julienne Pascoe</name>
         <institution>Canadiana.org</institution>
@@ -117,6 +117,29 @@
           <p>For pages, it must be a Txtmap record.</p>
         </requirement>
       </dmdSec>
+      <amdSec>
+      	<requirement>
+      		<p>Items with components and associated files (documents or issues) may contain
+      		an amdSec for the main item.</p>
+      	</requirement>
+      	<requirement>
+      		<p>Each amdSec contains at least one techMD element. Each techMD element
+			is provided an ADMID in the form "tmd_jhove", in which the first prefix identifies the amdSec sub-element
+      		and the remaining information identifies the type of technical metadata file. This version of the profile 
+      		supports the techMD sub-element and the technical metadata file: JHOVE.</p>
+      	</requirement>
+      	<requirement>
+      		<p>Each techMD element contains an mdRef element referencing the location of the XML file 
+      		containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" 
+      		and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URI" and an 
+      		xlink:href attribute which contains the name of the file as it appears in the files directory of 
+      		the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
+      	</requirement>
+      	<requirement>
+      		<p>For JHOVE files the following attributes could be set: MIMETYPE="text/xml", 
+      		LABEL="JHOVE file", LOCTYPE="URI", MDTYPE="OTHER", OTHERMDTYPE="Jhove", xlink:href="jhove.xml"</p>
+      	</requirement>
+      </amdSec>
       <fileSec>
         <requirement>
           <p>
@@ -130,8 +153,6 @@
             element for the root document/series and for each page (in a
             document) with an &lt;FLocat&gt; element with LOCTYPE="URL"
             and a href pointing to a URL associated with that object.
-          </p>
-          <p>
           </p>
           <p>
             For documents, the master images for each page in a document are placed in
@@ -194,6 +215,11 @@
             Each &lt;div&gt; element must include a DMDID attribute which
             references the ID attribute of the corresponding
             &lt;dmdSec&gt; element.
+          </p>
+          <p>
+            Each &lt;div&gt; element may also include a ADMID attribute which
+            references the ID attribute of the corresponding
+            &lt;amdSec&gt; sub-element.
           </p>
         </requirement>
       </structMap>
