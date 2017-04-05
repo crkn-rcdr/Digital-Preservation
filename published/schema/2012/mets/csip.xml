@@ -123,9 +123,15 @@
       		an amdSec for the main item.</p>
       	</requirement>
       	<requirement>
-      		<p>Each amdSec contains at least one techMD element. Each techMD element
-			is provided an ADMID in the form "tmd_jhove", in which the first prefix identifies the amdSec sub-element
-      		and the remaining information identifies the type of technical metadata file. This version of the profile 
+      		<p>Each amdSec contains at least one techMD element. Each techMD element contains 
+      		administrative metadata that corresponds to a file in the files 
+      		directory of the containing Bagit archive.</p>
+      	</requirement>
+      	<requirement>
+      		<p>Each techMD element is provided an ADMID in the form 
+      		"tmd_jhovemetsfileID", in which the prefix identifies the amdSec sub-element, 
+      		and the remaining section includes the type of administrative metadata, for 
+      		instance "jhove", and the corresponding mets:file ID. This version of the profile 
       		supports the techMD sub-element and the technical metadata file: JHOVE.</p>
       	</requirement>
       	<requirement>
@@ -168,6 +174,10 @@
             and an xlink:href attribute which contains the name of the
             file as it appears in the files directory of the containing
             Bagit archive.
+          </p>
+          <p>
+            An ADMID attribute on each file attribute points to the technical 
+            metadata for that file held within the admSec.
           </p>
         </requirement>
       </fileSec>
@@ -215,11 +225,6 @@
             Each &lt;div&gt; element must include a DMDID attribute which
             references the ID attribute of the corresponding
             &lt;dmdSec&gt; element.
-          </p>
-          <p>
-            Each &lt;div&gt; element may also include a ADMID attribute which
-            references the ID attribute of the corresponding
-            &lt;amdSec&gt; sub-element.
           </p>
         </requirement>
       </structMap>
