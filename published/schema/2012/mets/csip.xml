@@ -119,31 +119,20 @@
       </dmdSec>
       <amdSec>
       	<requirement>
-      		<p>Items with components and associated files (documents or issues) may contain
-      		an amdSec for the main item.</p>
+      		<p>Items with components and associated files (documents or issues) may contain an amdSec for the main item.</p>
       	</requirement>
       	<requirement>
-      		<p>Each amdSec contains at least one techMD element. Each techMD element contains 
-      		administrative metadata that corresponds to a file in the files 
-      		directory of the containing Bagit archive.</p>
+      		<p>Each amdSec contains at least one techMD element. Each techMD element contains technical metadata that corresponds to a file in the files directory of the containing Bagit archive.</p>
       	</requirement>
       	<requirement>
-      		<p>Each techMD element is provided an ADMID in the form 
-      		"tmd_jhovemetsfileID", in which the prefix identifies the amdSec sub-element, 
-      		and the remaining section includes the type of administrative metadata, for 
-      		instance "jhove", and the corresponding mets:file ID. This version of the profile 
-      		supports the techMD sub-element and the technical metadata file: JHOVE.</p>
+      		<p>Each techMD element is provided an ADMID in the form: "tmd_jhovemetsfileID", in which the prefix identifies the amdSec sub-element, and the remaining section includes the type of administrative metadata, for instance "jhove", and the corresponding mets:file ID. This version of the profile supports the techMD sub-element and the technical metadata file: JHOVE.</p>
       	</requirement>
       	<requirement>
-      		<p>Each techMD element contains an mdRef element referencing the location of the XML file 
-      		containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" 
-      		and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URI" and an 
-      		xlink:href attribute which contains the name of the file as it appears in the files directory of 
-      		the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
+      		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URI" and an 
+xlink:href attribute which contains the name of the file as it appears in the files directory of the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
       	</requirement>
       	<requirement>
-      		<p>For JHOVE files the following attributes could be set: MIMETYPE="text/xml", 
-      		LABEL="JHOVE file", LOCTYPE="URI", MDTYPE="OTHER", OTHERMDTYPE="Jhove", xlink:href="jhove.xml"</p>
+      		<p>For JHOVE files the following attributes could be set: MIMETYPE="text/xml", LABEL="JHOVE file", LOCTYPE="URI", MDTYPE="OTHER", OTHERMDTYPE="Jhove", xlink:href="jhove.xml"</p>
       	</requirement>
       </amdSec>
       <fileSec>
