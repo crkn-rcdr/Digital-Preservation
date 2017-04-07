@@ -129,7 +129,7 @@
       	</requirement>
       	<requirement>
       		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URI" and an 
-xlink:href attribute which contains the name of the file as it appears in the files directory of the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
+			xlink:href attribute which contains the name of the file as it appears in the files directory of the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
       	</requirement>
       	<requirement>
       		<p>For JHOVE files the following attributes could be set: MIMETYPE="text/xml", LABEL="JHOVE file", LOCTYPE="URI", MDTYPE="OTHER", OTHERMDTYPE="Jhove", xlink:href="jhove.xml"</p>
