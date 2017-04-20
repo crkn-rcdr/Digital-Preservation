@@ -125,7 +125,7 @@
       		<p>Each amdSec contains at least one techMD element. Each techMD element contains technical metadata that corresponds to a file in the files directory of the containing Bagit archive.</p>
       	</requirement>
       	<requirement>
-      		<p>Each techMD element is provided an ADMID in the form. This version of the profile supports the techMD sub-element and the technical metadata file: JHOVE.</p>
+      		<p>Each techMD element is provided an ADMID. This version of the profile supports the techMD sub-element and the technical metadata file: JHOVE.</p>
       	</requirement>
       	<requirement>
       		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URL" and an 
