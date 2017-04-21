@@ -128,11 +128,13 @@
       		<p>Each techMD element is provided an ADMID. This version of the profile supports the techMD sub-element and the technical metadata file: JHOVE.</p>
       	</requirement>
       	<requirement>
-      		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata itself. The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file. The LOCTYPE is set to "URL" and an 
-			xlink:href attribute which contains the name of the file as it appears in the files directory of the containing Bagit archive. Other optional attributes are MIMETYPE and LABEL.</p>
+      		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata. 
+      		The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file.
+      		Other optional attributes are MIMETYPE and LABEL.</p>
       	</requirement>
-      	<requirement>
-      		<p>For JHOVE files the following attributes are required: MIMETYPE="text/xml", LOCTYPE="URL", MDTYPE="OTHER", OTHERMDTYPE="Jhove", xlink:href="metadata/0001.jpg.jhove.xml"</p>
+      	<requirement> 
+      	<!-->If we upgrade to the latest METS version we can include an attribute referencing the example: EXAMPLES="ex01"-->
+      		<p>For JHOVE files the following attributes are required: MIMETYPE, LOCTYPE, MDTYPE, OTHERMDTYPE, xlink:href. See Example 1.</p>
       	</requirement>
       </amdSec>
       <fileSec>
@@ -217,6 +219,13 @@
           </p>
         </requirement>
       </structMap>
+      <structLink>
+      		<requirement>
+	      		<p>The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
+	      		For these elements the attribute LOCTYPE can be set to "URI" or "URL". If set to URL, the path is relative to the METS file, and includes the directory and corresponding name of the file as it appears in the directory.
+	      		If set to URI, and the element is FLocat, the files are located in the files directory. If the element is mdRef then the files are located in the metadata directory.</p>
+	      	</requirement>
+      </structLink>
     </structural_requirements>
     <technical_requirements>
       <content_files>
@@ -242,6 +251,15 @@
       </content_files>
     </technical_requirements>
     <tool/>
+    <!--> Example elements are included with the most recent version of METS v2
+    <Example ID="ex01">
+      		<mets:amdSec>
+    			<mets:techMD ID="jhove.master.MississaugaTimes_2.1">
+      				<mets:mdRef LOCTYPE="URL" xlink:href="metadata/0001.jpg.jhove.xml" MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="jhove"/>
+    			</mets:techMD>
+		 	 </mets:amdSec>
+    </Example>
+    -->
     <Appendix NUMBER="1">
         <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
           <mets:dmdSec ID="dmd.oocihm.00989">
