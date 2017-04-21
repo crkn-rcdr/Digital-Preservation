@@ -139,7 +139,7 @@
       		Other optional attributes are MIMETYPE and LABEL.</p>
       	</requirement>
       	<requirement> 
-      	<!-->If we upgrade to the latest METS version we can include an attribute referencing the example: EXAMPLES="ex01"-->
+      	<!-->Upgrade to latest METS v2 will include example attributes: EXAMPLES="ex01"-->
       		<p>For JHOVE files the following attributes are required: MIMETYPE, LOCTYPE, MDTYPE, OTHERMDTYPE, xlink:href. See Example 1.</p>
       	</requirement>
       </amdSec>
