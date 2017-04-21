@@ -52,6 +52,12 @@
         <URI>http://canadiana.ca/schema/2012/xsd/txtmap</URI>
         <context>Used to encode OCR or other full text for document pages.</context>
     </extension_schema>
+    <extension_schema>
+    	<name>JHOVE XML Handler Output Schema</name>
+		<URI>http://hul.harvard.edu/ois/xml/xsd/jhove/jhove.xsd</URI>
+		<context>JHoVE XML output may be included within the administrative techMD element.
+		For details on JHOVE see http://hul.harvard.edu/jhove/.</context>
+	</extension_schema>
     <description_rules>
       <p>UPDATE: As part of the seperation of the preservation and access platforms, 
       	the CMR schema has been deprecated and replaced by an internal data format that is used to create search and 
