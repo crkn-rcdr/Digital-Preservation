@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+  targetNamespace="http://canadiana.ca/schema/2012/xsd/issueinfo"
+  xmlns="http://canadiana.ca/schema/2012/xsd/issueinfo"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  xml:lang="en"
+>
+
+  <xsd:element name="issueinfo">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="series" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              This value must match the identifier of the series record to
+              which this issue belongs.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+             <xsd:pattern value="[A-Za-z0-9_]{5,127}"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="title" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              The full title of the issue, as it should display outside of
+              the context of its series. Typically, this would be the
+              series name followed by the issue identification (e.g.,
+              volume, number and publication date).
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="sequence" minOccurs="1" maxOccurs="1" type="xsd:positiveInteger">
+          <xsd:annotation>
+            <xsd:documentation>
+              This is the ordinal position of this issue within the
+              series. (First issue = 1, second issue = 2, etc.) No issue should
+              have the same series and sequence value as any other issue.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="language" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              The language of the content of the issue. This element is
+              optional and may be repeated as needed. The value should be
+              a 3-letter ISO 639-3 language code (eng, fra, deu, zho,
+              etc.)
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="coverage" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              The temporal coverage of the issue as expressed by the start
+              and end attributes, both of which may be specified as Y-M-D,
+              Y-M or Y. The end date should be equal to or later
+              than the start date.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:attribute name="start" type="date" use="required"/>
+            <xsd:attribute name="end" type="date" use="required"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="published" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              The date of publication of this issue. It may be specified
+              as Y-M-D, Y-M or Y. E.g.: 2010-12-01, 2010-12 and 2010 are all
+              accepatble. A publication date is optional but recommended.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:union memberTypes="xsd:date yearMonth year"/>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="pubstatement" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              An optional free-form statement of publication.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="source" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              An optional note describing the source of the original or
+              digital object. This is for informational purposes only. May
+              be repeated if necessary.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="identifier" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              Additional identifier fields may be included here. May be
+              repeated if necessary. The optional type attribute specifies
+              the kind of identifier and should be chosen from a
+              controlled list.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="type" type="xsd:string" use="optional"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="note" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              An optional general note field for information particular to
+              this issue. May be repeated if necessary.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:simpleType name="year">
+    <xsd:restriction base="xsd:string">
+     <xsd:pattern value="[0-9]{4}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="yearMonth">
+    <xsd:restriction base="xsd:string">
+     <xsd:pattern value="[0-9]{4}-(01|02|03|04|05|06|07|08|09|10|11|12)"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="date">
+    <xsd:union memberTypes="xsd:date yearMonth year"/>
+  </xsd:simpleType>
+
+</xsd:schema>
