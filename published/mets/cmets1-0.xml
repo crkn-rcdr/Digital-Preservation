@@ -109,7 +109,7 @@
         <requirement>
           <p>There must be a &lt;dmdSec&gt; element for the main item
           (series, issue or monographic document). If the item is a
-          document (issue or monograph) it must also contain child
+          document (issue or monograph) it may also contain child
           &lt;dmdSec&gt; elements for each page in the &lt;structMap&gt;.</p>
         </requirement>
         <requirement>
