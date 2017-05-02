@@ -149,7 +149,7 @@
         <requirement>
           <p>
             Series records will have one &lt;fileGrp&gt; with
-            USE="canonical" while document records will also have
+            USE="canonical" while document records may also have
             &lt;fileGrp&gt; elements with USE="master" and, optionally,
             USE="distribution".
           </p>
@@ -160,23 +160,33 @@
             and a href pointing to a URL associated with that object.
           </p>
           <p>
-            For documents, the master images for each page in a document are placed in
+          	There are two ways of grouping files: by fileGrp use such as Master or Distribution 
+          	or by their component representation (for instance all files that refer to a page). 
+          	The first option, by fileGrp use, is being deprecated. 
+          </p>
+          <p>
+          	If the files are grouped by use, the master images for each page in a document are placed in
             the master group and the PDF of the document is placed in the
-            distribution group. Each &lt;file&gt; element must have a
-            MIMETYPE attribute with the correct value for the file and an
-            ID attribute which is referenced by the FILEID attribute of
-            the corresponding &lt;fptr&gt; element of the structmap.
+            distribution group. 
           </p>
           <p>
-            Each &lt;file&gt; element in the distribution and master
-            groups must have one &lt;FLocat&gt; element with LOCTYPE="URL"
-            and an xlink:href attribute which contains the name of the
-            file as it appears in the files directory of the containing
-            Bagit archive.
+            If the files are grouped according to their referent, ie all manifestations of the component (eg a page
+            of a volume or issue) are grouped into the same fileGrp, the use of each file is indicated at the file level.        
           </p>
           <p>
-            An ADMID attribute on each file attribute points to the technical 
-            metadata for that file held within the amdSec.
+          	Use is first determined at the file level. Each &lt;file&gt; element may have a USE attribute containing one of the 
+          	following values: "master", "distributive", "ocr". If a file element does not contain a USE attribute
+          	then this information will be acquired from the parent fileGrp USE attribute.
+          </p>
+          <p>
+          	Each file element must contain an <FLocat> element which specifies external location of the content file in its xlink:href 
+          	attribute.The <FLocat> element must contain an xlink:href attribute, as well as a LOCTYPE attribute indicating the type of href being provided.
+          </p>
+          <p>
+          	The file element must also contain the following attributes: an ID for identifying this element and a MIMETYPE for the data file being referenced. Other optional attributes 
+          	include: SIZE, CREATED, CHECKSUM, CHECKSUMTYPE.
+          <p>
+            An ADMID attribute on each file attribute points to the technical metadata for that file held within the amdSec.
           </p>
         </requirement>
       </fileSec>
@@ -229,9 +239,11 @@
       </structMap>
       <structLink>
       		<requirement>
-	      		<p>The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
+	      		<p>
+	      		The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
 	      		For these elements the attribute LOCTYPE can be set to "URI" or "URL". If set to URL, the path is relative to the METS file, and includes the directory and corresponding name of the file as it appears in the directory.
-	      		If set to URI, and the element is FLocat, the files are located in the files directory. If the element is mdRef then the files are located in the metadata directory.</p>
+	      		If set to URI, and the element is FLocat, the files are located in the files directory. If the element is mdRef then the files are located in the metadata directory.
+	      		</p>
 	      	</requirement>
       </structLink>
     </structural_requirements>
