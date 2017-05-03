@@ -185,14 +185,13 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                 </p>
                 <p>
                     Use is first determined at the file level. Each &lt;file&gt; element may have a USE
-                    attribute containing one of the following values: "master", "distributive",
-                    "ocr". If a file element does not contain a USE attribute then
+                    attribute containing one of the following values: "master" or "derivative".
+                   	If a file element does not contain a USE attribute then
                     this information will be acquired from the parent fileGrp USE
                     attribute.
                 </p>
                 <p>
-                    Each file element must contain an
-                    FLocat element which specifies external location of the content file
+                    Each file element must contain an FLocat element which specifies external location of the content file
                     in its xlink:href attribute.The FLocat element must contain an xlink:href attribute, as well as
                    	a LOCTYPE attribute indicating the type of href being provided.
                 </p>
@@ -272,16 +271,11 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                     or JPEG 2000.</p>
             </requirement>
             <requirement>
-                <p>Distributable images must be PDF</p>
-            </requirement>
-            <requirement>
                 <p>
                     Filenames may consist only of the following ASCII characters: A-Za-z0-9._ and -.
                 </p>
                 <p>
-                    Files must have a suffix that can reliably be used to infer their MIME type based
-                    on standard conventions. The following suffixes are safe to use:
-                    .tif, .jpg, .jp2, .pdf. Other suffixes may or may not be recognized.
+                    The stated MIME type for a given file indicates the type of file it is based on standards.
                 </p>
             </requirement>
         </content_files>
