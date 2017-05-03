@@ -1,21 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--   CMETS Profile Schema Version 1.0  -->
 
-<METS_Profile xmlns="http://www.loc.gov/METS_Profile/"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:mets="http://www.loc.gov/METS/"
-    xsi:schemaLocation="
+<METS_Profile xmlns="http://www.loc.gov/METS_Profile/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
       http://www.loc.gov/METS_Profile/
       http://www.loc.gov/standards/mets/profile_docs/mets.profile.v1-2.xsd
       http://www.loc.gov/METS/
       http://www.loc.gov/standards/mets/mets.xsd
-    "
->
+    ">
     <URI LOCTYPE="URL">http://canadiana.ca/schema/2012/mets/cmets</URI>
     <title>Canadiana.org Trustworthy Digital Repository METS SIP Profile</title>
     <abstract>
-      This profile documents the standard for supplying and encoding
-      metadata within the Canadiana.org TDR.
+        This profile documents the standard for supplying and encoding metadata within the
+        Canadiana.org TDR.
     </abstract>
     <date>2017-04-19T12:00:00Z</date>
     <contact>
@@ -29,14 +26,15 @@
     <extension_schema>
         <name>MARCXML MARC 21 Schema</name>
         <URI>http://www.loc.gov/MARC21/slim</URI>
-        <context>Used for encoding descriptive metadata at the series or document level. Preferred for bibliographic material.</context>
+        <context>Used for encoding descriptive metadata at the series or document level. Preferred
+            for bibliographic material.</context>
     </extension_schema>
     <extension_schema>
         <name>Simple Dublin Core Container</name>
         <URI>http://dublincore.org/schemas/xmls/qdc/2008/02/11/simpledc.xsd</URI>
-        <context>Alternate format for encoding descriptive metadata at the
-        series or document level. Suitable for simple records, but see the
-        description rules below for use guidelines.</context>
+        <context>Alternate format for encoding descriptive metadata at the series or document
+            level. Suitable for simple records, but see the description rules below
+            for use guidelines.</context>
     </extension_schema>
     <extension_schema>
         <name>DCMI Metadata Terms</name>
@@ -46,8 +44,8 @@
     <extension_schema>
         <name>IssueInfo</name>
         <URI>http://canadiana.ca/schema/2012/xsd/issueinfo</URI>
-        <context>Used to encode issue metadata and linking information for
-        issue records.</context>
+        <context>Used to encode issue metadata and linking information for issue records.
+        </context>
     </extension_schema>
     <extension_schema>
         <name>Txtmap</name>
@@ -55,681 +53,740 @@
         <context>Used to encode OCR or other full text for document pages.</context>
     </extension_schema>
     <extension_schema>
-    	<name>JHOVE XML Handler Output Schema</name>
-		<URI>http://hul.harvard.edu/ois/xml/xsd/jhove/jhove.xsd</URI>
-		<context>JHoVE XML output may be included within the administrative techMD element.
-		For details on JHOVE see http://hul.harvard.edu/jhove/.</context>
-	</extension_schema>
+        <name>JHOVE XML Handler Output Schema</name>
+        <URI>http://hul.harvard.edu/ois/xml/xsd/jhove/jhove.xsd</URI>
+        <context>JHoVE XML output may be included within the administrative techMD element.
+            For details on JHOVE see http://hul.harvard.edu/jhove/.</context>
+    </extension_schema>
     <description_rules>
-      <p>UPDATE: As part of the seperation of the preservation and access platforms, 
-      	the CMR schema has been deprecated and replaced by an internal data format that is used to create search and 
-      	presentation documents. In addition some of the fields previosly used in CMR records have also been 
-      	discontinued. This does not prevent any of the valid elements being included in the descriptive metadata section of the 
-      	supplied METS records for preservation purposes.
-      </p>
-      <p>
-        MARC Records should follow standard cataloguing rules (i.e.
-        AACR2).
-      </p>
-      <p>
-        Dublin Core records may use any of the standard DC elements. It is recommended to use the DC recommended guidelines 
-        best practices for usage.
-        During the creation of internal data structures for access, these fields will be
-        interpreted in specific ways:
-      </p>
-      <p>
-        If there is one dc:date field, it will be treated as the date of
-        publication. If there are two or more dc:date fields, the first
-        two will be treated as the start and end of a publication date
-        range. Additional dc:date fields are ignored. To guarantee the
-        correct parsing of dates, they should be ISO 8601-compliant dates
-        in one of the following formats: YYYY, YYYY-MM,
-        YYYY-MM-DDTHH:MM:SS.sssZ.
-      </p>
-      <p>
-        The dc:language field(s) will be used to determine the language(s) of
-        the document. ISO 639-3 language codes should be used. Other
-        formats might not be parsed correctly.
-      </p>
-      <p>
-      	UPDATE: the dc:format field is not currently used in the access platform. 
-      </p>
+        <p>UPDATE: As part of the seperation of the preservation and access platforms,
+            the CMR schema has been deprecated and replaced by an internal data format
+            that is used to create search and presentation documents. In addition
+            some of the fields previosly used in CMR records have also been discontinued.
+            This does not prevent any of the valid elements being included in the
+            descriptive metadata section of the supplied METS records for preservation
+            purposes.
+        </p>
+        <p>
+            MARC Records should follow standard cataloguing rules (i.e. AACR2).
+        </p>
+        <p>
+            Dublin Core records may use any of the standard DC elements. It is recommended to
+            use the DC recommended guidelines best practices for usage. During the
+            creation of internal data structures for access, these fields will be
+            interpreted in specific ways:
+        </p>
+        <p>
+            If there is one dc:date field, it will be treated as the date of publication. If
+            there are two or more dc:date fields, the first two will be treated as
+            the start and end of a publication date range. Additional dc:date fields
+            are ignored. To guarantee the correct parsing of dates, they should be
+            ISO 8601-compliant dates in one of the following formats: YYYY, YYYY-MM,
+            YYYY-MM-DDTHH:MM:SS.sssZ.
+        </p>
+        <p>
+            The dc:language field(s) will be used to determine the language(s) of the document.
+            ISO 639-3 language codes should be used. Other formats might not be parsed
+            correctly.
+        </p>
+        <p>
+            UPDATE: the dc:format field is not currently used in the access platform.
+        </p>
     </description_rules>
     <controlled_vocabularies/>
     <structural_requirements>
-      <metsHdr>
-        <requirement>
-          <p>The OBJID attribute must uniquely identify the object among
-          all of the submitter's content. It must be between 5 and 64
-          characters in length and consist only of ASCII alphanumeric
-          characters and the underscore (A-Za-z0-9_).</p>
-        </requirement>
-      </metsHdr>
-      <dmdSec>
-        <requirement>
-          <p>There must be a &lt;dmdSec&gt; element for the main item
-          (series, issue or monographic document). If the item is a
-          document (issue or monograph) it may also contain child
-          &lt;dmdSec&gt; elements for each page in the &lt;structMap&gt;.</p>
-        </requirement>
-        <requirement>
-          <p>The content of each &lt;dmdSec&gt; element must be an inline
-          record wrapped in an &lt;xmlData&gt; element or an &lt;mdRef&gt;
-          element with a LOCTYPE attribute of 'URN' and an xlink:href
-          attribute set to the name of the external file containing the
-          descriptive record. The record format depends on the type of
-          object it references:</p>
-          <p>For series and monographic documents, it must be a MARCXML
-          record or a Simple Dublin Core record.</p>
-          <p>For issues, it must be an IssueInfo record.</p>
-          <p>For pages, it must be a Txtmap record.</p>
-        </requirement>
-      </dmdSec>
-      <amdSec>
-      	<requirement>
-      		<p>Items with components and associated files (documents or issues) may contain an amdSec for the main item with techMD sections for each component.</p>
-      	</requirement>
-      	<requirement>
-      		<p>Each amdSec contains at least one techMD element. Each techMD element contains technical metadata that corresponds to a file in the files directory of the containing Bagit archive.</p>
-      	</requirement>
-      	<requirement>
-      		<p>Each techMD element is provided an ADMID. This version of the profile supports the techMD sub-element and the technical metadata file: JHOVE.</p>
-      	</requirement>
-      	<requirement>
-      		<p>Each techMD element contains an mdRef element referencing the location of the XML file containing the administrative metadata. 
-      		The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute set to the metadata scheme of the file.
-      		Other optional attributes are MIMETYPE and LABEL.</p>
-      	</requirement>
-      	<requirement> 
-      	<!-->Upgrade to latest METS v2 will include example attributes: EXAMPLES="ex01"-->
-      		<p>For JHOVE files the following attributes are required: MIMETYPE, LOCTYPE, MDTYPE, OTHERMDTYPE, xlink:href. See Example 1.</p>
-      	</requirement>
-      </amdSec>
-      <fileSec>
-        <requirement>
-          <p>
-            Series records will have one &lt;fileGrp&gt; with
-            USE="canonical" while document records may also have
-            &lt;fileGrp&gt; elements with USE="master" and, optionally,
-            USE="distribution".
-          </p>
-          <p>
-            The canonical &lt;fileGrp&gt; must contain a &lt;file&gt;
-            element for the root document/series and for each page (in a
-            document) with an &lt;FLocat&gt; element with LOCTYPE="URL"
-            and a href pointing to a URL associated with that object.
-          </p>
-          <p>
-          	There are two ways of grouping files: by fileGrp use such as Master or Distribution 
-          	or by their component representation (for instance all files that refer to a page). 
-          	The first option, by fileGrp use, is being deprecated. 
-          </p>
-          <p>
-          	If the files are grouped by use, the master images for each page in a document are placed in
-            the master group and the PDF of the document is placed in the
-            distribution group. 
-          </p>
-          <p>
-            If the files are grouped according to their referent, ie all manifestations of the component (eg a page
-            of a volume or issue) are grouped into the same fileGrp, the use of each file is indicated at the file level.        
-          </p>
-          <p>
-          	Use is first determined at the file level. Each &lt;file&gt; element may have a USE attribute containing one of the 
-          	following values: "master", "distributive", "ocr". If a file element does not contain a USE attribute
-          	then this information will be acquired from the parent fileGrp USE attribute.
-          </p>
-          <p>
-          	Each file element must contain an <FLocat> element which specifies external location of the content file in its xlink:href 
-          	attribute.The <FLocat> element must contain an xlink:href attribute, as well as a LOCTYPE attribute indicating the type of href being provided.
-          </p>
-          <p>
-          	The file element must also contain the following attributes: an ID for identifying this element and a MIMETYPE for the data file being referenced. Other optional attributes 
-          	include: SIZE, CREATED, CHECKSUM, CHECKSUMTYPE.
-          <p>
-            An ADMID attribute on each file attribute points to the technical metadata for that file held within the amdSec.
-          </p>
-        </requirement>
-      </fileSec>
-      <structMap>
-        <requirement>
-          <p>
-            There must be a single &lt;structMap&gt; element with
-            attribute TYPE="physical".
-          </p>
-          <p>
-            The root &lt;div&gt; element must have the attribute
-            TYPE="document" for monographic documents, TYPE="series" for a series
-            metadata submission and TYPE="issue" for a document that is
-            part of a series. Series have no further &lt;div&gt; elements
-            and must not have any &lt;fptr&gt; elements, as they are
-            metadata-only submissions. Documents and issues must have one
-            &lt;div&gt; element for each page they contain, appearing in
-            sequential order. A document should include a &lt;fptr&gt; to
-            a distributable PDF version of the document as a whole, if one
-            exists.
-          </p>
-          <p>
-            Each part of a document must be represented by a &lt;div&gt;
-            with the attribute TYPE="page". If there is a master image file for that 
-            page then it must contain a &lt;fptr&gt; which references the master image 
-            file for that page. 
-            Note that a page in this context might not correspond to
-            one physical page of the original book (e.g. if the book was
-            digitized with two facing pages for each image, or if a large
-            fold-out is split into multiple images).
-            In some cases, such as with born-digital content, there will 
-            not be a master image for each page, but one file for the entire object. A  
-            &lt;fptr&gt; referencing the image file for each page is not required in these instances.
-          </p>
-          <p>
-            Each &lt;div&gt; element must contain a LABEL attribute to
-            describe the item. For a series or monographic document, it
-            should be the common title of the item. For an issue, it
-            should be the issue title without the common series title
-            (e.g., "vol. 5, issue 1 : January 1895"). For a page, it
-            should be the page number, sequence, or similar description
-            (e.g. "p. 9" or "Front Cover").
-          </p>
-          <p>
-            Each &lt;div&gt; element must include a DMDID attribute which
-            references the ID attribute of the corresponding
-            &lt;dmdSec&gt; element.
-          </p>
-        </requirement>
-      </structMap>
-      <structLink>
-      		<requirement>
-	      		<p>
-	      		The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
-	      		For these elements the attribute LOCTYPE can be set to "URI" or "URL". If set to URL, the path is relative to the METS file, and includes the directory and corresponding name of the file as it appears in the directory.
-	      		If set to URI, and the element is FLocat, the files are located in the files directory. If the element is mdRef then the files are located in the metadata directory.
-	      		</p>
-	      	</requirement>
-      </structLink>
+        <metsHdr>
+            <requirement>
+                <p>The OBJID attribute must uniquely identify the object among all of
+                    the submitter's content. It must be between 5 and 64 characters
+                    in length and consist only of ASCII alphanumeric characters and
+                    the underscore (A-Za-z0-9_).
+                </p>
+            </requirement>
+        </metsHdr>
+        <dmdSec>
+            <requirement>
+                <p>There must be a &lt;dmdSec&gt; element for the main item (series,
+                    issue or monographic document). If the item is a document (issue
+                    or monograph) it may also contain child &lt;dmdSec&gt; elements
+                    for each page in the &lt;structMap&gt;.
+                </p>
+            </requirement>
+            <requirement>
+                <p>The content of each &lt;dmdSec&gt; element must be an inline record
+                    wrapped in an &lt;xmlData&gt; element or an &lt;mdRef&gt; element
+                    with a LOCTYPE attribute of 'URN' and an xlink:href attribute
+                    set to the name of the external file containing the descriptive
+                    record. The record format depends on the type of object it references:</p>
+                <p>For series and monographic documents, it must be a MARCXML record
+                    or a Simple Dublin Core record.</p>
+                <p>For issues, it must be an IssueInfo record.</p>
+                <p>For pages, it must be a Txtmap record.
+                </p>
+            </requirement>
+        </dmdSec>
+        <amdSec>
+            <requirement>
+                <p>Items with components and associated files (documents or issues)
+                    may contain an amdSec for the main item with techMD sections
+                    for each component.</p>
+            </requirement>
+            <requirement>
+                <p>Each amdSec contains at least one techMD element. Each techMD element
+                    contains technical metadata that corresponds to a file in the
+                    files directory of the containing Bagit archive.
+                </p>
+            </requirement>
+            <requirement>
+                <p>Each techMD element is provided an ADMID. This version of the profile
+                    supports the techMD sub-element and the technical metadata file:
+                    JHOVE.</p>
+            </requirement>
+            <requirement>
+                <p>Each techMD element contains an mdRef element referencing the location
+                    of the XML file containing the administrative metadata. The MDTYPE
+                    attribute is set to "OTHER" and the OTHERMDTYPE attribute set
+                    to the metadata scheme of the file. Other optional attributes
+                    are MIMETYPE and LABEL.</p>
+            </requirement>
+            <requirement>
+                <!-->Upgrade to latest METS v2 will include example attributes: EXAMPLES="ex01"-->
+                <p>For JHOVE files the following attributes are required: MIMETYPE,
+                    LOCTYPE, MDTYPE, OTHERMDTYPE, xlink:href. See Example 1.</p>
+            </requirement>
+        </amdSec>
+        <fileSec>
+            <requirement>
+                <p>
+                    Series records will have one &lt;fileGrp&gt; with USE="canonical" while document
+                    records may also have &lt;fileGrp&gt; elements with USE="master"
+                    and, optionally, USE="distribution".
+                </p>
+                <p>
+                    The canonical &lt;fileGrp&gt; must contain a &lt;file&gt; element for the root document/series
+                    and for each page (in a document) with an &lt;FLocat&gt; element
+                    with LOCTYPE="URL" and a href pointing to a URL associated with
+                    that object.
+                </p>
+                <p>
+                    There are two ways of grouping files: by fileGrp use such as Master or Distribution
+                    or by their component representation (for instance all files
+                    that refer to a page). The first option, by fileGrp use, is being
+                    deprecated.
+                </p>
+                <p>
+                    If the files are grouped by use, the master images for each page in a document are
+                    placed in the master group and the PDF of the document is placed
+                    in the distribution group.
+                </p>
+                <p>
+                    If the files are grouped according to their referent, ie all manifestations of the
+                    component (eg a page of a volume or issue) are grouped into the
+                    same fileGrp, the use of each file is indicated at the file level.
+                </p>
+                <p>
+                    Use is first determined at the file level. Each &lt;file&gt; element may have a USE
+                    attribute containing one of the following values: "master", "distributive",
+                    "ocr". If a file element does not contain a USE attribute then
+                    this information will be acquired from the parent fileGrp USE
+                    attribute.
+                </p>
+                <p>
+                    Each file element must contain an
+                    <FLocat> element which specifies external location of the content file
+                        in its xlink:href attribute.The
+                        <FLocat> element must contain an xlink:href attribute, as well as
+                            a LOCTYPE attribute indicating the type of href being
+                            provided.
+                </p>
+                <p>
+                    The file element must also contain the following attributes: an ID for identifying
+                    this element and a MIMETYPE for the data file being referenced.
+                    Other optional attributes include: SIZE, CREATED, CHECKSUM, CHECKSUMTYPE.
+                    <p>
+                        An ADMID attribute on each file attribute points to the technical metadata for that
+                        file held within the amdSec.
+                    </p>
+            </requirement>
+        </fileSec>
+        <structMap>
+            <requirement>
+                <p>
+                    There must be a single &lt;structMap&gt; element with attribute TYPE="physical".
+                </p>
+                <p>
+                    The root &lt;div&gt; element must have the attribute TYPE="document" for monographic
+                    documents, TYPE="series" for a series metadata submission and
+                    TYPE="issue" for a document that is part of a series. Series
+                    have no further &lt;div&gt; elements and must not have any &lt;fptr&gt;
+                    elements, as they are metadata-only submissions. Documents and
+                    issues must have one &lt;div&gt; element for each page they contain,
+                    appearing in sequential order. A document should include a &lt;fptr&gt;
+                    to a distributable PDF version of the document as a whole, if
+                    one exists.
+                </p>
+                <p>
+                    Each part of a document must be represented by a &lt;div&gt; with the attribute TYPE="page".
+                    If there is a master image file for that page then it must contain
+                    a &lt;fptr&gt; which references the master image file for that
+                    page. Note that a page in this context might not correspond to
+                    one physical page of the original book (e.g. if the book was
+                    digitized with two facing pages for each image, or if a large
+                    fold-out is split into multiple images). In some cases, such
+                    as with born-digital content, there will not be a master image
+                    for each page, but one file for the entire object. A &lt;fptr&gt;
+                    referencing the image file for each page is not required in these
+                    instances.
+                </p>
+                <p>
+                    Each &lt;div&gt; element must contain a LABEL attribute to describe the item. For
+                    a series or monographic document, it should be the common title
+                    of the item. For an issue, it should be the issue title without
+                    the common series title (e.g., "vol. 5, issue 1 : January 1895").
+                    For a page, it should be the page number, sequence, or similar
+                    description (e.g. "p. 9" or "Front Cover").
+                </p>
+                <p>
+                    Each &lt;div&gt; element must include a DMDID attribute which references the ID attribute
+                    of the corresponding &lt;dmdSec&gt; element.
+                </p>
+            </requirement>
+        </structMap>
+        <structLink>
+            <requirement>
+                <p>
+                    The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
+                    For these elements the attribute LOCTYPE can be set to "URI"
+                    or "URL". If set to URL, the path is relative to the METS file,
+                    and includes the directory and corresponding name of the file
+                    as it appears in the directory. If set to URI, and the element
+                    is FLocat, the files are located in the files directory. If the
+                    element is mdRef then the files are located in the metadata directory.
+                </p>
+            </requirement>
+        </structLink>
     </structural_requirements>
     <technical_requirements>
-      <content_files>
-        <requirement>
-          <p>
-            Master images must be encoded as TIFF with GROUP 4 compression or uncompressed, JPEG or JPEG 2000.</p>
-        </requirement>
-        <requirement>
-          <p>Distributable images must be PDF</p>
-        </requirement>
-        <requirement>
-          <p>
-            Filenames may consist only of the following ASCII characters:
-            A-Za-z0-9._ and -.
-          </p>
-          <p>
-            Files must have a suffix that can reliably be used to infer
-            their MIME type based on standard conventions. The following
-            suffixes are safe to use: .tif, .jpg, .jp2, .pdf. Other
-            suffixes may or may not be recognized.
-          </p>
-        </requirement>
-      </content_files>
+        <content_files>
+            <requirement>
+                <p>
+                    Master images must be encoded as TIFF with GROUP 4 compression or uncompressed, JPEG
+                    or JPEG 2000.</p>
+            </requirement>
+            <requirement>
+                <p>Distributable images must be PDF</p>
+            </requirement>
+            <requirement>
+                <p>
+                    Filenames may consist only of the following ASCII characters: A-Za-z0-9._ and -.
+                </p>
+                <p>
+                    Files must have a suffix that can reliably be used to infer their MIME type based
+                    on standard conventions. The following suffixes are safe to use:
+                    .tif, .jpg, .jp2, .pdf. Other suffixes may or may not be recognized.
+                </p>
+            </requirement>
+        </content_files>
     </technical_requirements>
     <tool/>
-    <!--> Example elements are included with the most recent version of METS v2
+    <!-->Example elements are included with the most recent version of METS v2
     <Example ID="ex01">
-      		<mets:amdSec>
-    			<mets:techMD ID="jhove.master.MississaugaTimes_2.1">
-      				<mets:mdRef LOCTYPE="URL" xlink:href="metadata/0001.jpg.jhove.xml" MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="jhove"/>
-    			</mets:techMD>
-		 	 </mets:amdSec>
+        <mets:amdSec>
+            <mets:techMD ID="jhove.master.MississaugaTimes_2.1">
+                <mets:mdRef LOCTYPE="URL" xlink:href="metadata/0001.jpg.jhove.xml" MIMETYPE="text/xml"
+                MDTYPE="OTHER" OTHERMDTYPE="jhove" />
+            </mets:techMD>
+        </mets:amdSec>
     </Example>
     -->
     <Appendix NUMBER="1">
-        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
-          <mets:dmdSec ID="dmd.oocihm.00989">
-            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MARC">
-              <mets:xmlData>
-                <collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/MARC21/slim" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-        <record>
-          <leader>01206nam a2200301 a 4500</leader>
-          <controlfield tag="001">996014810</controlfield>
-          <controlfield tag="005">20120403      .0</controlfield>
-          <controlfield tag="007">cr bn</controlfield>
-          <controlfield tag="008">990118r19991868onc     s     000 0 eng d d</controlfield>
-          <datafield tag="016" ind1=" " ind2=" ">
-            <subfield code="a"> 996014810  </subfield>
-          </datafield>
-          <datafield tag="020" ind1=" " ind2=" ">
-            <subfield code="a">0659985187</subfield>
-          </datafield>
-          <datafield tag="040" ind1=" " ind2=" ">
-            <subfield code="a">CaOOCIHM</subfield>
-            <subfield code="b">eng</subfield>
-            <subfield code="c">CaOOCIHM</subfield>
-          </datafield>
-          <datafield tag="043" ind1=" " ind2=" ">
-            <subfield code="a">n-cn-on</subfield>
-          </datafield>
-          <datafield tag="082" ind1="0" ind2=" ">
-            <subfield code="a">345/.072</subfield>
-            <subfield code="2">19</subfield>
-          </datafield>
-          <datafield tag="245" ind1="0" ind2="0">
-            <subfield code="a">Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868</subfield>
-            <subfield code="h">[electronic resource] :</subfield>
-            <subfield code="b">evidence and correspondence in full : with comments of the Toronto Press.</subfield>
-          </datafield>
-          <datafield tag="260" ind1=" " ind2=" ">
-            <subfield code="a">Toronto :</subfield>
-            <subfield code="b">[s.n.],</subfield>
-            <subfield code="c">1868.</subfield>
-          </datafield>
-          <datafield tag="490" ind1="0" ind2=" ">
-            <subfield code="a">CIHM/ICMH Digital series = CIHM/ICMH collection numérisée ;</subfield>
-            <subfield code="v">no. 00989</subfield>
-          </datafield>
-          <datafield tag="500" ind1=" " ind2=" ">
-            <subfield code="a">Preface signed: D. Campbell, M.D.</subfield>
-          </datafield>
-          <datafield tag="500" ind1=" " ind2=" ">
-            <subfield code="a">Title from title screen.</subfield>
-          </datafield>
-          <datafield tag="533" ind1=" " ind2=" ">
-            <subfield code="a">Scanned from a CIHM microfiche of the original publication held by the Public Archives of Canada Library.</subfield>
-            <subfield code="b">Ottawa :</subfield>
-            <subfield code="c">Canadian Institute for Historical Microreproductions,</subfield>
-            <subfield code="d">1999.</subfield>
-          </datafield>
-          <datafield tag="534" ind1=" " ind2=" ">
-            <subfield code="e">x, 224 p.</subfield>
-          </datafield>
-          <datafield tag="600" ind1="1" ind2="0">
-            <subfield code="a">Boyd, Mary.</subfield>
-          </datafield>
-          <datafield tag="600" ind1="1" ind2="6">
-            <subfield code="a">Boyd, Mary.</subfield>
-          </datafield>
-          <datafield tag="698" ind1=" " ind2=" ">
-            <subfield code="a">WMHP</subfield>
-            <subfield code="v">WMHP-ATL</subfield>
-          </datafield>
-          <datafield tag="699" ind1="1" ind2="0">
-            <subfield code="a">Women's History</subfield>
-          </datafield>
-          <datafield tag="699" ind1="1" ind2="6">
-            <subfield code="a">Histoire des femmes</subfield>
-          </datafield>
-          <datafield tag="700" ind1="1" ind2=" ">
-            <subfield code="a">Campbell, Duncan,</subfield>
-            <subfield code="d">1811-1879.</subfield>
-          </datafield>
-          <datafield tag="856" ind1="4" ind2="0">
-            <subfield code="u">http://eco.canadiana.ca/view/oocihm.00989</subfield>
-          </datafield>
-        </record>
-        </collection>
-              </mets:xmlData>
-            </mets:mdWrap>
-          </mets:dmdSec>
-          <mets:dmdSec ID="dmd.oocihm.00989.0001">
-            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="txtmap">
-              <mets:xmlData>
-                <txt:txtmap>
-                  <txt:page>
-                    <txt:w T="284" L="1607" W="298" H="50">Technical</txt:w>
-                    <txt:w T="283" L="1938" W="182" H="52">Notes</txt:w>
-                    <txt:w T="283" L="2147" W="32" H="53">/</txt:w>
-                    <txt:w T="283" L="2210" W="184" H="52">Notes</txt:w>
-                    <txt:w T="289" L="2423" W="344" H="45">techniques</txt:w>
-                    <txt:w T="510" L="347" W="120" H="52">The</txt:w>
-                    <txt:w T="511" L="495" W="266" H="49">institute</txt:w>
-                    <txt:w T="509" L="788" W="104" H="50">has</txt:w>
-                    <txt:w T="521" L="918" W="332" H="37">attempted</txt:w>
-                    <txt:w T="515" L="1280" W="63" H="44">to</txt:w>
-                    <txt:w T="519" L="1371" W="203" H="38">obtain</txt:w>
-                    <txt:w T="514" L="1603" W="98" H="43">the</txt:w>
-                    <txt:w T="507" L="1730" W="129" H="50">best</txt:w>
-                    <txt:w T="599" L="350" W="238" H="35">original</txt:w>
-                    <txt:w T="597" L="619" W="150" H="49">copy</txt:w>
-                    <txt:w T="596" L="794" W="274" H="38">available</txt:w>
-                    <txt:w T="582" L="1096" W="93" H="50">for</txt:w>
-                    <txt:w T="581" L="1215" W="245" H="50">filming.</txt:w>
-                    <txt:w T="580" L="1495" W="259" H="50">Physical</txt:w>
-                    <txt:w T="659" L="348" W="265" H="51">feetures</txt:w>
-                    <txt:w T="671" L="641" W="62" H="37">of</txt:w>
-                    <txt:w T="665" L="728" W="112" H="43">this</txt:w>
-                    <txt:w T="670" L="867" W="150" H="48">copy</txt:w>
-                    <txt:w T="670" L="1044" W="194" H="36">which</txt:w>
-                    <txt:w T="669" L="1271" W="133" H="48">may</txt:w>
-                    <txt:w T="668" L="1431" W="145" H="37">alter</txt:w>
-                    <txt:w T="668" L="1602" W="111" H="48">any</txt:w>
-                    <txt:w T="668" L="1739" W="59" H="36">of</txt:w>
-                    <txt:w T="661" L="1827" W="97" H="43">the</txt:w>
-                    <txt:w T="734" L="350" W="230" H="50">images</txt:w>
-                    <txt:w T="734" L="608" W="53" H="49">in</txt:w>
-                    <txt:w T="741" L="687" W="99" H="42">the</txt:w>
-                    <txt:w T="745" L="814" W="410" H="35">reproduction</txt:w>
-                    <txt:w T="743" L="1254" W="96" H="37">are</txt:w>
-                    <txt:w T="743" L="1380" W="269" H="37">checked</txt:w>
-                    <txt:w T="729" L="1678" W="186" H="50">below</txt:w>
-                    <txt:w T="955" L="596" W="282" H="49">Coloured</txt:w>
-                    <txt:w T="967" L="907" W="241" H="38">covers/</txt:w>
-                    <txt:w T="1029" L="596" W="383" H="50">Couvertures</txt:w>
-                    <txt:w T="1028" L="1007" W="75" H="50">de</txt:w>
-                    <txt:w T="1040" L="1109" W="244" H="36">couleur</txt:w>
-                    <txt:w T="1251" L="595" W="282" H="50">Coloured</txt:w>
-                    <txt:w T="1264" L="909" W="203" H="39">maps/</txt:w>
-                    <txt:w T="1326" L="596" W="199" H="50">Cartes</txt:w>
-                    <txt:w T="1339" L="824" W="470" H="34">géographiques</txt:w>
-                    <txt:w T="1336" L="1327" W="74" H="37">en</txt:w>
-                    <txt:w T="1335" L="1428" W="241" H="36">couleur</txt:w>
-                    <txt:w T="1556" L="357" W="105" H="12">r---</txt:w>
-                    <txt:w T="1550" L="596" W="186" H="49">Pages</txt:w>
-                    <txt:w T="1549" L="808" W="388" H="53">discoloured,</txt:w>
-                    <txt:w T="1560" L="1230" W="231" H="36">stained</txt:w>
-                    <txt:w T="1560" L="1492" W="65" H="35">or</txt:w>
-                    <txt:w T="1545" L="1581" W="214" H="49">foxed/</txt:w>
-                    <txt:w T="1634" L="359" W="80" H="42">L-</txt:w>
-                    <txt:w T="1624" L="597" W="182" H="50">Pages</txt:w>
-                    <txt:w T="1624" L="808" W="362" H="53">décoîorées,</txt:w>
-                    <txt:w T="1629" L="1201" W="313" H="42">tachetées</txt:w>
-                    <txt:w T="1633" L="1545" W="76" H="38">ou</txt:w>
-                    <txt:w T="1633" L="1651" W="237" H="37">piquées</txt:w>
-                    <txt:w T="1853" L="356" W="114" H="23">r-,</txt:w>
-                    <txt:w T="1846" L="590" W="167" H="51">Tight</txt:w>
-                    <txt:w T="1846" L="782" W="230" H="62">bindîng</txt:w>
-                    <txt:w T="1844" L="1044" W="159" H="62">(may</txt:w>
-                    <txt:w T="1857" L="1229" W="186" H="38">cause</txt:w>
-                    <txt:w T="1856" L="1440" W="283" H="38">shadows</txt:w>
-                    <txt:w T="1855" L="1752" W="62" H="38">or</txt:w>
-                    <txt:w T="1925" L="356" W="29" H="48">L</txt:w>
-                    <txt:w T="1917" L="438" W="38" H="55">J</txt:w>
-                    <txt:w T="1921" L="594" W="301" H="49">distortion</txt:w>
-                    <txt:w T="1933" L="922" W="174" H="49">along</txt:w>
-                    <txt:w T="1934" L="1127" W="236" H="34">interior</txt:w>
-                    <txt:w T="1932" L="1391" W="277" H="38">margin)/</txt:w>
-                    <txt:w T="1996" L="595" W="218" H="49">Reliure</txt:w>
-                    <txt:w T="2007" L="838" W="155" H="38">serré</txt:w>
-                    <txt:w T="1993" L="1020" W="169" H="52">(peut</txt:w>
-                    <txt:w T="2006" L="1213" W="211" H="36">causer</txt:w>
-                    <txt:w T="1992" L="1451" W="76" H="51">de</txt:w>
-                    <txt:w T="1992" L="1555" W="238" H="50">l'ombre</txt:w>
-                    <txt:w T="2004" L="1820" W="75" H="37">ou</txt:w>
-                    <txt:w T="2071" L="593" W="74" H="50">de</txt:w>
-                    <txt:w T="2070" L="693" W="49" H="51">la</txt:w>
-                    <txt:w T="2070" L="769" W="304" H="48">distortion</txt:w>
-                    <txt:w T="2069" L="1103" W="53" H="50">le</txt:w>
-                    <txt:w T="2068" L="1184" W="137" H="62">long</txt:w>
-                    <txt:w T="2068" L="1349" W="76" H="50">de</txt:w>
-                    <txt:w T="2083" L="1448" W="55" H="34">da</txt:w>
-                    <txt:w T="2080" L="1534" W="198" H="37">marge</txt:w>
-                    <txt:w T="2154" L="594" W="316" H="44">intérieure)</txt:w>
-                    <txt:w T="2369" L="590" W="324" H="48">Additional</txt:w>
-                    <txt:w T="2380" L="943" W="378" H="39">comments/</txt:w>
-                    <txt:w T="2370" L="1809" W="124" H="47">Orgi</txt:w>
-                    <txt:w T="2441" L="353" W="91" H="53">L.</txt:w>
-                    <txt:w T="2441" L="592" W="461" H="50">Commentaires</txt:w>
-                    <txt:w T="2454" L="1081" W="537" H="36">supplémentaires</txt:w>
-                    <txt:w T="506" L="2360" W="290" H="51">L'institut</txt:w>
-                    <txt:w T="518" L="2677" W="30" H="38">a</txt:w>
-                    <txt:w T="518" L="2739" W="332" H="38">microfilmé</txt:w>
-                    <txt:w T="505" L="3104" W="49" H="50">le</txt:w>
-                    <txt:w T="517" L="3186" W="260" H="37">meilleur</txt:w>
-                    <txt:w T="517" L="3474" W="345" H="39">exemplaire</txt:w>
-                    <txt:w T="594" L="2361" W="132" H="36">qu'il</txt:w>
-                    <txt:w T="579" L="2525" W="71" H="51">lui</txt:w>
-                    <txt:w T="592" L="2624" W="32" H="38">a</txt:w>
-                    <txt:w T="579" L="2686" W="89" H="51">été</txt:w>
-                    <txt:w T="592" L="2807" W="251" H="37">possible</txt:w>
-                    <txt:w T="578" L="3087" W="75" H="51">de</txt:w>
-                    <txt:w T="591" L="3191" W="68" H="39">se</txt:w>
-                    <txt:w T="592" L="3290" W="272" H="37">procurer</txt:w>
-                    <txt:w T="577" L="3616" W="258" H="48">Certains</txt:w>
-                    <txt:w T="654" L="2361" W="238" H="50">défauts</txt:w>
-                    <txt:w T="666" L="2629" W="382" H="38">susceptibles</txt:w>
-                    <txt:w T="652" L="3043" W="72" H="51">de</txt:w>
-                    <txt:w T="666" L="3147" W="164" H="37">nuire</txt:w>
-                    <txt:w T="649" L="3335" W="31" H="50">à</txt:w>
-                    <txt:w T="653" L="3399" W="49" H="50">la</txt:w>
-                    <txt:w T="665" L="3479" W="214" H="38">qualité</txt:w>
-                    <txt:w T="653" L="3722" W="71" H="50">de</txt:w>
-                    <txt:w T="653" L="3821" W="45" H="50">la</txt:w>
-                    <txt:w T="741" L="2361" W="410" H="36">reproduction</txt:w>
-                    <txt:w T="739" L="2800" W="134" H="38">sont</txt:w>
-                    <txt:w T="740" L="2965" W="169" H="37">notés</txt:w>
-                    <txt:w T="739" L="3165" W="357" H="37">ci-dessous.</txt:w>
-                    <txt:w T="947" L="2607" W="281" H="50">Coloured</txt:w>
-                    <txt:w T="961" L="2920" W="213" H="39">pages/</txt:w>
-                    <txt:w T="1009" L="2369" W="121" H="64">LJ</txt:w>
-                    <txt:w T="1022" L="2610" W="182" H="48">Pages</txt:w>
-                    <txt:w T="1022" L="2821" W="71" H="51">de</txt:w>
-                    <txt:w T="1035" L="2919" W="236" H="37">couleur</txt:w>
-                    <txt:w T="1243" L="2607" W="282" H="52">Coloured</txt:w>
-                    <txt:w T="1258" L="2919" W="219" H="40">plates/</txt:w>
-                    <txt:w T="1318" L="2609" W="276" H="52">Planches</txt:w>
-                    <txt:w T="1332" L="2915" W="69" H="37">en</txt:w>
-                    <txt:w T="1332" L="3013" W="241" H="37">couleur</txt:w>
-                    <txt:w T="1520" L="2369" W="90" H="74">ri</txt:w>
-                    <txt:w T="1542" L="2606" W="177" H="51">Show</txt:w>
-                    <txt:w T="1549" L="2810" W="283" H="41">through/</txt:w>
-                    <txt:w T="1617" L="2603" W="424" H="50">Transparence</txt:w>
-                    <txt:w T="1914" L="2608" W="182" H="51">Pages</txt:w>
-                    <txt:w T="1914" L="2819" W="324" H="52">damaged/</txt:w>
-                    <txt:w T="1988" L="2609" W="180" H="51">Pages</txt:w>
-                    <txt:w T="2001" L="2819" W="468" H="38">endommagées</txt:w>
-                    <txt:w T="2382" L="1951" W="66" H="35">nal</txt:w>
-                    <txt:w T="2383" L="2038" W="133" H="44">copy</txt:w>
-                    <txt:w T="2384" L="2195" W="219" H="35">restored</txt:w>
-                    <txt:w T="2385" L="2432" W="99" H="36">and</txt:w>
-                    <txt:w T="2373" L="2552" W="276" H="51">laminated.</txt:w>
-                    <txt:w T="3004" L="1490" W="416" H="47">Bibliograpnic</txt:w>
-                    <txt:w T="3004" L="1936" W="183" H="51">Notes</txt:w>
-                    <txt:w T="3003" L="2143" W="33" H="54">/</txt:w>
-                    <txt:w T="3003" L="2208" W="183" H="51">Notes</txt:w>
-                    <txt:w T="3004" L="2424" W="519" H="50">bibliographiques</txt:w>
-                    <txt:w T="3239" L="592" W="145" H="62">Only</txt:w>
-                    <txt:w T="3253" L="761" W="214" H="36">edition</txt:w>
-                    <txt:w T="3252" L="1004" W="317" H="39">available/</txt:w>
-                    <txt:w T="3314" L="591" W="175" H="51">Seule</txt:w>
-                    <txt:w T="3315" L="790" W="216" H="50">édition</txt:w>
-                    <txt:w T="3314" L="1034" W="329" H="51">disponible</txt:w>
-                    <txt:w T="3538" L="593" W="203" H="50">Bound</txt:w>
-                    <txt:w T="3551" L="822" W="139" H="37">with</txt:w>
-                    <txt:w T="3550" L="989" W="172" H="37">other</txt:w>
-                    <txt:w T="3551" L="1188" W="296" H="38">material/</txt:w>
-                    <txt:w T="3613" L="593" W="154" H="50">Relié</txt:w>
-                    <txt:w T="3625" L="770" W="143" H="38">avec</txt:w>
-                    <txt:w T="3611" L="939" W="261" H="51">d'autres</txt:w>
-                    <txt:w T="3611" L="1228" W="361" H="50">documents</txt:w>
-                    <txt:w T="3835" L="591" W="185" H="39">Cover</txt:w>
-                    <txt:w T="3843" L="799" W="120" H="43">title</txt:w>
-                    <txt:w T="3849" L="948" W="281" H="40">missing/</txt:w>
-                    <txt:w T="3911" L="584" W="75" H="50">'Le</txt:w>
-                    <txt:w T="3918" L="685" W="126" H="43">titre</txt:w>
-                    <txt:w T="3910" L="841" W="71" H="51">de</txt:w>
-                    <txt:w T="3922" L="940" W="350" H="37">couverture</txt:w>
-                    <txt:w T="3913" L="1321" W="255" H="47">mancue</txt:w>
-                    <txt:w T="4133" L="591" W="188" H="51">Plates</txt:w>
-                    <txt:w T="4145" L="809" W="278" H="40">missing/</txt:w>
-                    <txt:w T="4199" L="384" W="54" H="55">W</txt:w>
-                    <txt:w T="4247" L="428" W="11" H="12">.</txt:w>
-                    <txt:w T="4206" L="591" W="116" H="52">Des</txt:w>
-                    <txt:w T="4220" L="734" W="279" H="37">planches</txt:w>
-                    <txt:w T="4219" L="1041" W="330" H="37">manquent</txt:w>
-                    <txt:w T="4430" L="586" W="327" H="50">Additional</txt:w>
-                    <txt:w T="4443" L="940" W="380" H="39">comments/</txt:w>
-                    <txt:w T="4504" L="587" W="465" H="52">Commentaires</txt:w>
-                    <txt:w T="4517" L="1078" W="540" H="37">supplémentaires</txt:w>
-                    <txt:w T="3243" L="2372" W="77" H="12">----</txt:w>
-                    <txt:w T="3237" L="2597" W="334" H="51">Pagination</txt:w>
-                    <txt:w T="3237" L="2960" W="328" H="53">incorrect/</txt:w>
-                    <txt:w T="3298" L="2393" W="52" H="15">vo</txt:w>
-                    <txt:w T="3311" L="2600" W="221" H="52">Erreurs</txt:w>
-                    <txt:w T="3311" L="2849" W="72" H="52">de</txt:w>
-                    <txt:w T="3325" L="2948" W="340" H="36">pagination</txt:w>
-                    <txt:w T="3535" L="2601" W="182" H="52">Pages</txt:w>
-                    <txt:w T="3549" L="2813" W="273" H="39">missing/</txt:w>
-                    <txt:w T="3599" L="2393" W="55" H="55">W</txt:w>
-                    <txt:w T="3610" L="2600" W="116" H="51">Des</txt:w>
-                    <txt:w T="3624" L="2743" W="180" H="37">pages</txt:w>
-                    <txt:w T="3623" L="2952" W="329" H="37">manquent</txt:w>
-                    <txt:w T="3839" L="2593" W="63" H="12">'-</txt:w>
-                    <txt:w T="3846" L="2661" W="107" H="39">aps</txt:w>
-                    <txt:w T="3847" L="2798" W="269" H="39">missing/</txt:w>
-                    <txt:w T="3908" L="2599" W="113" H="51">Des</txt:w>
-                    <txt:w T="3920" L="2741" W="185" H="39">cartes</txt:w>
-                    <txt:w T="3921" L="2958" W="474" H="38">géograohiques</txt:w>
-                    <txt:w T="3921" L="3469" W="317" H="37">manouent</txt:w>
-                    <txt:w T="4431" L="1798" W="116" H="51">Page</txt:w>
-                    <txt:w T="4439" L="1930" W="47" H="48">iv</txt:w>
-                    <txt:w T="4451" L="1997" W="364" H="38">msnumbered</txt:w>
-                    <txt:w T="4440" L="2387" W="63" H="53">ii.</txt:w>
-                    <txt:w T="4507" L="1799" W="150" H="43">Blank</txt:w>
-                    <txt:w T="4507" L="1968" W="155" H="51">leaves</txt:w>
-                    <txt:w T="4520" L="2141" W="163" H="38">which</txt:w>
-                    <txt:w T="4523" L="2325" W="128" H="36">were</txt:w>
-                    <txt:w T="4524" L="2472" W="160" H="38">added</txt:w>
-                    <txt:w T="4513" L="2653" W="170" H="47">during</txt:w>
-                    <txt:w T="4527" L="2842" W="285" H="37">restoration</txt:w>
-                    <txt:w T="4529" L="3150" W="120" H="47">may</txt:w>
-                    <txt:w T="4531" L="3290" W="179" H="36">apoear</txt:w>
-                    <txt:w T="4514" L="3490" W="168" H="53">within</txt:w>
-                    <txt:w T="4527" L="3681" W="82" H="42">the</txt:w>
-                    <txt:w T="4528" L="3783" W="123" H="29">text.</txt:w>
-                    <txt:w T="4568" L="1795" W="256" H="54">Whenevr</txt:w>
-                    <txt:w T="4587" L="2071" W="235" H="49">possible,</txt:w>
-                    <txt:w T="4583" L="2324" W="141" H="43">these</txt:w>
-                    <txt:w T="4579" L="2484" W="120" H="48">have</txt:w>
-                    <txt:w T="4580" L="2625" W="123" H="48">been</txt:w>
-                    <txt:w T="4593" L="2767" W="208" H="38">omitted</txt:w>
-                    <txt:w T="4582" L="2991" W="130" H="49">from</txt:w>
-                    <txt:w T="4582" L="3143" W="214" H="54">filming.</txt:w>
-                  </txt:page>
-                </txt:txtmap>
-              </mets:xmlData>
-            </mets:mdWrap>
-          </mets:dmdSec>
-          <mets:fileSec>
-            <mets:fileGrp USE="master">
-              <mets:file ID="master.oocihm.00989.0001" MIMETYPE="image/tiff">
-                <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.0001.tif"/>
-              </mets:file>
-            </mets:fileGrp>
-            <mets:fileGrp USE="distribution">
-              <mets:file ID="distribution.oocihm.00989" MIMETYPE="application/pdf">
-                <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.pdf"/>
-              </mets:file>
-            </mets:fileGrp>
-            <mets:fileGrp USE="canonical">
-              <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
-                <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"/>
-              </mets:file>
-              <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
-                <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"/>
-              </mets:file>
-            </mets:fileGrp>
-          </mets:fileSec>
-          <mets:structMap TYPE="physical">
-            <mets:div ID="oocihm.00989" TYPE="document" LABEL="Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868 : evidence and correspondence in full : with comments of the Toronto Press." DMDID="dmd.oocihm.00989">
-              <mets:fptr FILEID="distribution.oocihm.00989"/>
-              <mets:fptr FILEID="canonical.oocihm.00989"/>
-              <mets:div ID="oocihm.00989.0001" TYPE="page" LABEL="technical data sheet" DMDID="dmd.oocihm.00989.0001">
-                <mets:fptr FILEID="master.oocihm.00989.0001"/>
-                <mets:fptr FILEID="canonical.oocihm.00989.0001"/>
-              </mets:div>
-            </mets:div>
-          </mets:structMap>
+        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
+            <mets:dmdSec ID="dmd.oocihm.00989">
+                <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MARC">
+                    <mets:xmlData>
+                        <collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/MARC21/slim"
+                        xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+                            <record>
+                                <leader>01206nam a2200301 a 4500</leader>
+                                <controlfield tag="001">996014810</controlfield>
+                                <controlfield tag="005">20120403 .0
+                                </controlfield>
+                                <controlfield tag="007">cr bn</controlfield>
+                                <controlfield tag="008">990118r19991868onc s 000 0 eng d d</controlfield>
+                                <datafield tag="016" ind1=" " ind2=" ">
+                                    <subfield code="a"> 996014810
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="020" ind1=" " ind2=" ">
+                                    <subfield code="a">0659985187</subfield>
+                                </datafield>
+                                <datafield tag="040" ind1=" " ind2=" ">
+                                    <subfield code="a">CaOOCIHM</subfield>
+                                    <subfield code="b">eng</subfield>
+                                    <subfield code="c">CaOOCIHM</subfield>
+                                </datafield>
+                                <datafield tag="043" ind1=" " ind2=" ">
+                                    <subfield code="a">n-cn-on</subfield>
+                                </datafield>
+                                <datafield tag="082" ind1="0" ind2=" ">
+                                    <subfield code="a">345/.072</subfield>
+                                    <subfield code="2">19</subfield>
+                                </datafield>
+                                <datafield tag="245" ind1="0" ind2="0">
+                                    <subfield code="a">Inquest on Mary Boyd, held at Provincial Lunatic
+                                        Asylum, Toronto 5th and 6th of May, 1868
+                                    </subfield>
+                                    <subfield code="h">[electronic resource] :
+                                    </subfield>
+                                    <subfield code="b">evidence and correspondence in full : with comments
+                                        of the Toronto Press.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="260" ind1=" " ind2=" ">
+                                    <subfield code="a">Toronto :
+                                    </subfield>
+                                    <subfield code="b">[s.n.],</subfield>
+                                    <subfield code="c">1868.</subfield>
+                                </datafield>
+                                <datafield tag="490" ind1="0" ind2=" ">
+                                    <subfield code="a">CIHM/ICMH Digital series = CIHM/ICMH collection
+                                        numérisée ;
+                                    </subfield>
+                                    <subfield code="v">no. 00989</subfield>
+                                </datafield>
+                                <datafield tag="500" ind1=" " ind2=" ">
+                                    <subfield code="a">Preface signed: D. Campbell, M.D.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="500" ind1=" " ind2=" ">
+                                    <subfield code="a">Title from title screen.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="533" ind1=" " ind2=" ">
+                                    <subfield code="a">Scanned from a CIHM microfiche of the original
+                                        publication held by the Public Archives of
+                                        Canada Library.
+                                    </subfield>
+                                    <subfield code="b">Ottawa :
+                                    </subfield>
+                                    <subfield code="c">Canadian Institute for Historical Microreproductions,
+                                    </subfield>
+                                    <subfield code="d">1999.</subfield>
+                                </datafield>
+                                <datafield tag="534" ind1=" " ind2=" ">
+                                    <subfield code="e">x, 224 p.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="600" ind1="1" ind2="0">
+                                    <subfield code="a">Boyd, Mary.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="600" ind1="1" ind2="6">
+                                    <subfield code="a">Boyd, Mary.
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="698" ind1=" " ind2=" ">
+                                    <subfield code="a">WMHP</subfield>
+                                    <subfield code="v">WMHP-ATL</subfield>
+                                </datafield>
+                                <datafield tag="699" ind1="1" ind2="0">
+                                    <subfield code="a">Women's History
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="699" ind1="1" ind2="6">
+                                    <subfield code="a">Histoire des femmes
+                                    </subfield>
+                                </datafield>
+                                <datafield tag="700" ind1="1" ind2=" ">
+                                    <subfield code="a">Campbell, Duncan,
+                                    </subfield>
+                                    <subfield code="d">1811-1879.</subfield>
+                                </datafield>
+                                <datafield tag="856" ind1="4" ind2="0">
+                                    <subfield code="u">http://eco.canadiana.ca/view/oocihm.00989</subfield>
+                                </datafield>
+                            </record>
+                        </collection>
+                    </mets:xmlData>
+                </mets:mdWrap>
+            </mets:dmdSec>
+            <mets:dmdSec ID="dmd.oocihm.00989.0001">
+                <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="txtmap">
+                    <mets:xmlData>
+                        <txt:txtmap>
+                            <txt:page>
+                                <txt:w T="284" L="1607" W="298" H="50">Technical</txt:w>
+                                <txt:w T="283" L="1938" W="182" H="52">Notes</txt:w>
+                                <txt:w T="283" L="2147" W="32" H="53">/</txt:w>
+                                <txt:w T="283" L="2210" W="184" H="52">Notes</txt:w>
+                                <txt:w T="289" L="2423" W="344" H="45">techniques</txt:w>
+                                <txt:w T="510" L="347" W="120" H="52">The</txt:w>
+                                <txt:w T="511" L="495" W="266" H="49">institute</txt:w>
+                                <txt:w T="509" L="788" W="104" H="50">has</txt:w>
+                                <txt:w T="521" L="918" W="332" H="37">attempted</txt:w>
+                                <txt:w T="515" L="1280" W="63" H="44">to</txt:w>
+                                <txt:w T="519" L="1371" W="203" H="38">obtain</txt:w>
+                                <txt:w T="514" L="1603" W="98" H="43">the</txt:w>
+                                <txt:w T="507" L="1730" W="129" H="50">best</txt:w>
+                                <txt:w T="599" L="350" W="238" H="35">original</txt:w>
+                                <txt:w T="597" L="619" W="150" H="49">copy</txt:w>
+                                <txt:w T="596" L="794" W="274" H="38">available</txt:w>
+                                <txt:w T="582" L="1096" W="93" H="50">for</txt:w>
+                                <txt:w T="581" L="1215" W="245" H="50">filming.</txt:w>
+                                <txt:w T="580" L="1495" W="259" H="50">Physical</txt:w>
+                                <txt:w T="659" L="348" W="265" H="51">feetures</txt:w>
+                                <txt:w T="671" L="641" W="62" H="37">of</txt:w>
+                                <txt:w T="665" L="728" W="112" H="43">this</txt:w>
+                                <txt:w T="670" L="867" W="150" H="48">copy</txt:w>
+                                <txt:w T="670" L="1044" W="194" H="36">which</txt:w>
+                                <txt:w T="669" L="1271" W="133" H="48">may</txt:w>
+                                <txt:w T="668" L="1431" W="145" H="37">alter</txt:w>
+                                <txt:w T="668" L="1602" W="111" H="48">any</txt:w>
+                                <txt:w T="668" L="1739" W="59" H="36">of</txt:w>
+                                <txt:w T="661" L="1827" W="97" H="43">the</txt:w>
+                                <txt:w T="734" L="350" W="230" H="50">images</txt:w>
+                                <txt:w T="734" L="608" W="53" H="49">in</txt:w>
+                                <txt:w T="741" L="687" W="99" H="42">the</txt:w>
+                                <txt:w T="745" L="814" W="410" H="35">reproduction</txt:w>
+                                <txt:w T="743" L="1254" W="96" H="37">are</txt:w>
+                                <txt:w T="743" L="1380" W="269" H="37">checked</txt:w>
+                                <txt:w T="729" L="1678" W="186" H="50">below</txt:w>
+                                <txt:w T="955" L="596" W="282" H="49">Coloured</txt:w>
+                                <txt:w T="967" L="907" W="241" H="38">covers/</txt:w>
+                                <txt:w T="1029" L="596" W="383" H="50">Couvertures</txt:w>
+                                <txt:w T="1028" L="1007" W="75" H="50">de</txt:w>
+                                <txt:w T="1040" L="1109" W="244" H="36">couleur</txt:w>
+                                <txt:w T="1251" L="595" W="282" H="50">Coloured</txt:w>
+                                <txt:w T="1264" L="909" W="203" H="39">maps/</txt:w>
+                                <txt:w T="1326" L="596" W="199" H="50">Cartes</txt:w>
+                                <txt:w T="1339" L="824" W="470" H="34">géographiques</txt:w>
+                                <txt:w T="1336" L="1327" W="74" H="37">en</txt:w>
+                                <txt:w T="1335" L="1428" W="241" H="36">couleur</txt:w>
+                                <txt:w T="1556" L="357" W="105" H="12">r---</txt:w>
+                                <txt:w T="1550" L="596" W="186" H="49">Pages</txt:w>
+                                <txt:w T="1549" L="808" W="388" H="53">discoloured,</txt:w>
+                                <txt:w T="1560" L="1230" W="231" H="36">stained</txt:w>
+                                <txt:w T="1560" L="1492" W="65" H="35">or</txt:w>
+                                <txt:w T="1545" L="1581" W="214" H="49">foxed/</txt:w>
+                                <txt:w T="1634" L="359" W="80" H="42">L-</txt:w>
+                                <txt:w T="1624" L="597" W="182" H="50">Pages</txt:w>
+                                <txt:w T="1624" L="808" W="362" H="53">décoîorées,</txt:w>
+                                <txt:w T="1629" L="1201" W="313" H="42">tachetées</txt:w>
+                                <txt:w T="1633" L="1545" W="76" H="38">ou</txt:w>
+                                <txt:w T="1633" L="1651" W="237" H="37">piquées</txt:w>
+                                <txt:w T="1853" L="356" W="114" H="23">r-,</txt:w>
+                                <txt:w T="1846" L="590" W="167" H="51">Tight</txt:w>
+                                <txt:w T="1846" L="782" W="230" H="62">bindîng</txt:w>
+                                <txt:w T="1844" L="1044" W="159" H="62">(may</txt:w>
+                                <txt:w T="1857" L="1229" W="186" H="38">cause</txt:w>
+                                <txt:w T="1856" L="1440" W="283" H="38">shadows</txt:w>
+                                <txt:w T="1855" L="1752" W="62" H="38">or</txt:w>
+                                <txt:w T="1925" L="356" W="29" H="48">L</txt:w>
+                                <txt:w T="1917" L="438" W="38" H="55">J</txt:w>
+                                <txt:w T="1921" L="594" W="301" H="49">distortion</txt:w>
+                                <txt:w T="1933" L="922" W="174" H="49">along</txt:w>
+                                <txt:w T="1934" L="1127" W="236" H="34">interior</txt:w>
+                                <txt:w T="1932" L="1391" W="277" H="38">margin)/</txt:w>
+                                <txt:w T="1996" L="595" W="218" H="49">Reliure</txt:w>
+                                <txt:w T="2007" L="838" W="155" H="38">serré</txt:w>
+                                <txt:w T="1993" L="1020" W="169" H="52">(peut</txt:w>
+                                <txt:w T="2006" L="1213" W="211" H="36">causer</txt:w>
+                                <txt:w T="1992" L="1451" W="76" H="51">de</txt:w>
+                                <txt:w T="1992" L="1555" W="238" H="50">l'ombre</txt:w>
+                                <txt:w T="2004" L="1820" W="75" H="37">ou</txt:w>
+                                <txt:w T="2071" L="593" W="74" H="50">de</txt:w>
+                                <txt:w T="2070" L="693" W="49" H="51">la</txt:w>
+                                <txt:w T="2070" L="769" W="304" H="48">distortion</txt:w>
+                                <txt:w T="2069" L="1103" W="53" H="50">le</txt:w>
+                                <txt:w T="2068" L="1184" W="137" H="62">long</txt:w>
+                                <txt:w T="2068" L="1349" W="76" H="50">de</txt:w>
+                                <txt:w T="2083" L="1448" W="55" H="34">da</txt:w>
+                                <txt:w T="2080" L="1534" W="198" H="37">marge</txt:w>
+                                <txt:w T="2154" L="594" W="316" H="44">intérieure)</txt:w>
+                                <txt:w T="2369" L="590" W="324" H="48">Additional</txt:w>
+                                <txt:w T="2380" L="943" W="378" H="39">comments/</txt:w>
+                                <txt:w T="2370" L="1809" W="124" H="47">Orgi</txt:w>
+                                <txt:w T="2441" L="353" W="91" H="53">L.</txt:w>
+                                <txt:w T="2441" L="592" W="461" H="50">Commentaires</txt:w>
+                                <txt:w T="2454" L="1081" W="537" H="36">supplémentaires</txt:w>
+                                <txt:w T="506" L="2360" W="290" H="51">L'institut</txt:w>
+                                <txt:w T="518" L="2677" W="30" H="38">a</txt:w>
+                                <txt:w T="518" L="2739" W="332" H="38">microfilmé</txt:w>
+                                <txt:w T="505" L="3104" W="49" H="50">le</txt:w>
+                                <txt:w T="517" L="3186" W="260" H="37">meilleur</txt:w>
+                                <txt:w T="517" L="3474" W="345" H="39">exemplaire</txt:w>
+                                <txt:w T="594" L="2361" W="132" H="36">qu'il</txt:w>
+                                <txt:w T="579" L="2525" W="71" H="51">lui</txt:w>
+                                <txt:w T="592" L="2624" W="32" H="38">a</txt:w>
+                                <txt:w T="579" L="2686" W="89" H="51">été</txt:w>
+                                <txt:w T="592" L="2807" W="251" H="37">possible</txt:w>
+                                <txt:w T="578" L="3087" W="75" H="51">de</txt:w>
+                                <txt:w T="591" L="3191" W="68" H="39">se</txt:w>
+                                <txt:w T="592" L="3290" W="272" H="37">procurer</txt:w>
+                                <txt:w T="577" L="3616" W="258" H="48">Certains</txt:w>
+                                <txt:w T="654" L="2361" W="238" H="50">défauts</txt:w>
+                                <txt:w T="666" L="2629" W="382" H="38">susceptibles</txt:w>
+                                <txt:w T="652" L="3043" W="72" H="51">de</txt:w>
+                                <txt:w T="666" L="3147" W="164" H="37">nuire</txt:w>
+                                <txt:w T="649" L="3335" W="31" H="50">à</txt:w>
+                                <txt:w T="653" L="3399" W="49" H="50">la</txt:w>
+                                <txt:w T="665" L="3479" W="214" H="38">qualité</txt:w>
+                                <txt:w T="653" L="3722" W="71" H="50">de</txt:w>
+                                <txt:w T="653" L="3821" W="45" H="50">la</txt:w>
+                                <txt:w T="741" L="2361" W="410" H="36">reproduction</txt:w>
+                                <txt:w T="739" L="2800" W="134" H="38">sont</txt:w>
+                                <txt:w T="740" L="2965" W="169" H="37">notés</txt:w>
+                                <txt:w T="739" L="3165" W="357" H="37">ci-dessous.</txt:w>
+                                <txt:w T="947" L="2607" W="281" H="50">Coloured</txt:w>
+                                <txt:w T="961" L="2920" W="213" H="39">pages/</txt:w>
+                                <txt:w T="1009" L="2369" W="121" H="64">LJ</txt:w>
+                                <txt:w T="1022" L="2610" W="182" H="48">Pages</txt:w>
+                                <txt:w T="1022" L="2821" W="71" H="51">de</txt:w>
+                                <txt:w T="1035" L="2919" W="236" H="37">couleur</txt:w>
+                                <txt:w T="1243" L="2607" W="282" H="52">Coloured</txt:w>
+                                <txt:w T="1258" L="2919" W="219" H="40">plates/</txt:w>
+                                <txt:w T="1318" L="2609" W="276" H="52">Planches</txt:w>
+                                <txt:w T="1332" L="2915" W="69" H="37">en</txt:w>
+                                <txt:w T="1332" L="3013" W="241" H="37">couleur</txt:w>
+                                <txt:w T="1520" L="2369" W="90" H="74">ri</txt:w>
+                                <txt:w T="1542" L="2606" W="177" H="51">Show</txt:w>
+                                <txt:w T="1549" L="2810" W="283" H="41">through/</txt:w>
+                                <txt:w T="1617" L="2603" W="424" H="50">Transparence</txt:w>
+                                <txt:w T="1914" L="2608" W="182" H="51">Pages</txt:w>
+                                <txt:w T="1914" L="2819" W="324" H="52">damaged/</txt:w>
+                                <txt:w T="1988" L="2609" W="180" H="51">Pages</txt:w>
+                                <txt:w T="2001" L="2819" W="468" H="38">endommagées</txt:w>
+                                <txt:w T="2382" L="1951" W="66" H="35">nal</txt:w>
+                                <txt:w T="2383" L="2038" W="133" H="44">copy</txt:w>
+                                <txt:w T="2384" L="2195" W="219" H="35">restored</txt:w>
+                                <txt:w T="2385" L="2432" W="99" H="36">and</txt:w>
+                                <txt:w T="2373" L="2552" W="276" H="51">laminated.</txt:w>
+                                <txt:w T="3004" L="1490" W="416" H="47">Bibliograpnic</txt:w>
+                                <txt:w T="3004" L="1936" W="183" H="51">Notes</txt:w>
+                                <txt:w T="3003" L="2143" W="33" H="54">/</txt:w>
+                                <txt:w T="3003" L="2208" W="183" H="51">Notes</txt:w>
+                                <txt:w T="3004" L="2424" W="519" H="50">bibliographiques</txt:w>
+                                <txt:w T="3239" L="592" W="145" H="62">Only</txt:w>
+                                <txt:w T="3253" L="761" W="214" H="36">edition</txt:w>
+                                <txt:w T="3252" L="1004" W="317" H="39">available/</txt:w>
+                                <txt:w T="3314" L="591" W="175" H="51">Seule</txt:w>
+                                <txt:w T="3315" L="790" W="216" H="50">édition</txt:w>
+                                <txt:w T="3314" L="1034" W="329" H="51">disponible</txt:w>
+                                <txt:w T="3538" L="593" W="203" H="50">Bound</txt:w>
+                                <txt:w T="3551" L="822" W="139" H="37">with</txt:w>
+                                <txt:w T="3550" L="989" W="172" H="37">other</txt:w>
+                                <txt:w T="3551" L="1188" W="296" H="38">material/</txt:w>
+                                <txt:w T="3613" L="593" W="154" H="50">Relié</txt:w>
+                                <txt:w T="3625" L="770" W="143" H="38">avec</txt:w>
+                                <txt:w T="3611" L="939" W="261" H="51">d'autres</txt:w>
+                                <txt:w T="3611" L="1228" W="361" H="50">documents</txt:w>
+                                <txt:w T="3835" L="591" W="185" H="39">Cover</txt:w>
+                                <txt:w T="3843" L="799" W="120" H="43">title</txt:w>
+                                <txt:w T="3849" L="948" W="281" H="40">missing/</txt:w>
+                                <txt:w T="3911" L="584" W="75" H="50">'Le</txt:w>
+                                <txt:w T="3918" L="685" W="126" H="43">titre</txt:w>
+                                <txt:w T="3910" L="841" W="71" H="51">de</txt:w>
+                                <txt:w T="3922" L="940" W="350" H="37">couverture</txt:w>
+                                <txt:w T="3913" L="1321" W="255" H="47">mancue</txt:w>
+                                <txt:w T="4133" L="591" W="188" H="51">Plates</txt:w>
+                                <txt:w T="4145" L="809" W="278" H="40">missing/</txt:w>
+                                <txt:w T="4199" L="384" W="54" H="55">W</txt:w>
+                                <txt:w T="4247" L="428" W="11" H="12">.</txt:w>
+                                <txt:w T="4206" L="591" W="116" H="52">Des</txt:w>
+                                <txt:w T="4220" L="734" W="279" H="37">planches</txt:w>
+                                <txt:w T="4219" L="1041" W="330" H="37">manquent</txt:w>
+                                <txt:w T="4430" L="586" W="327" H="50">Additional</txt:w>
+                                <txt:w T="4443" L="940" W="380" H="39">comments/</txt:w>
+                                <txt:w T="4504" L="587" W="465" H="52">Commentaires</txt:w>
+                                <txt:w T="4517" L="1078" W="540" H="37">supplémentaires</txt:w>
+                                <txt:w T="3243" L="2372" W="77" H="12">----</txt:w>
+                                <txt:w T="3237" L="2597" W="334" H="51">Pagination</txt:w>
+                                <txt:w T="3237" L="2960" W="328" H="53">incorrect/</txt:w>
+                                <txt:w T="3298" L="2393" W="52" H="15">vo</txt:w>
+                                <txt:w T="3311" L="2600" W="221" H="52">Erreurs</txt:w>
+                                <txt:w T="3311" L="2849" W="72" H="52">de</txt:w>
+                                <txt:w T="3325" L="2948" W="340" H="36">pagination</txt:w>
+                                <txt:w T="3535" L="2601" W="182" H="52">Pages</txt:w>
+                                <txt:w T="3549" L="2813" W="273" H="39">missing/</txt:w>
+                                <txt:w T="3599" L="2393" W="55" H="55">W</txt:w>
+                                <txt:w T="3610" L="2600" W="116" H="51">Des</txt:w>
+                                <txt:w T="3624" L="2743" W="180" H="37">pages</txt:w>
+                                <txt:w T="3623" L="2952" W="329" H="37">manquent</txt:w>
+                                <txt:w T="3839" L="2593" W="63" H="12">'-</txt:w>
+                                <txt:w T="3846" L="2661" W="107" H="39">aps</txt:w>
+                                <txt:w T="3847" L="2798" W="269" H="39">missing/</txt:w>
+                                <txt:w T="3908" L="2599" W="113" H="51">Des</txt:w>
+                                <txt:w T="3920" L="2741" W="185" H="39">cartes</txt:w>
+                                <txt:w T="3921" L="2958" W="474" H="38">géograohiques</txt:w>
+                                <txt:w T="3921" L="3469" W="317" H="37">manouent</txt:w>
+                                <txt:w T="4431" L="1798" W="116" H="51">Page</txt:w>
+                                <txt:w T="4439" L="1930" W="47" H="48">iv</txt:w>
+                                <txt:w T="4451" L="1997" W="364" H="38">msnumbered</txt:w>
+                                <txt:w T="4440" L="2387" W="63" H="53">ii.</txt:w>
+                                <txt:w T="4507" L="1799" W="150" H="43">Blank</txt:w>
+                                <txt:w T="4507" L="1968" W="155" H="51">leaves</txt:w>
+                                <txt:w T="4520" L="2141" W="163" H="38">which</txt:w>
+                                <txt:w T="4523" L="2325" W="128" H="36">were</txt:w>
+                                <txt:w T="4524" L="2472" W="160" H="38">added</txt:w>
+                                <txt:w T="4513" L="2653" W="170" H="47">during</txt:w>
+                                <txt:w T="4527" L="2842" W="285" H="37">restoration</txt:w>
+                                <txt:w T="4529" L="3150" W="120" H="47">may</txt:w>
+                                <txt:w T="4531" L="3290" W="179" H="36">apoear</txt:w>
+                                <txt:w T="4514" L="3490" W="168" H="53">within</txt:w>
+                                <txt:w T="4527" L="3681" W="82" H="42">the</txt:w>
+                                <txt:w T="4528" L="3783" W="123" H="29">text.</txt:w>
+                                <txt:w T="4568" L="1795" W="256" H="54">Whenevr</txt:w>
+                                <txt:w T="4587" L="2071" W="235" H="49">possible,</txt:w>
+                                <txt:w T="4583" L="2324" W="141" H="43">these</txt:w>
+                                <txt:w T="4579" L="2484" W="120" H="48">have</txt:w>
+                                <txt:w T="4580" L="2625" W="123" H="48">been</txt:w>
+                                <txt:w T="4593" L="2767" W="208" H="38">omitted</txt:w>
+                                <txt:w T="4582" L="2991" W="130" H="49">from</txt:w>
+                                <txt:w T="4582" L="3143" W="214" H="54">filming.</txt:w>
+                            </txt:page>
+                        </txt:txtmap>
+                    </mets:xmlData>
+                </mets:mdWrap>
+            </mets:dmdSec>
+            <mets:fileSec>
+                <mets:fileGrp USE="master">
+                    <mets:file ID="master.oocihm.00989.0001" MIMETYPE="image/tiff">
+                        <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.0001.tif" />
+                    </mets:file>
+                </mets:fileGrp>
+                <mets:fileGrp USE="distribution">
+                    <mets:file ID="distribution.oocihm.00989" MIMETYPE="application/pdf">
+                        <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.pdf" />
+                    </mets:file>
+                </mets:fileGrp>
+                <mets:fileGrp USE="canonical">
+                    <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"
+                        />
+                    </mets:file>
+                    <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"
+                        />
+                    </mets:file>
+                </mets:fileGrp>
+            </mets:fileSec>
+            <mets:structMap TYPE="physical">
+                <mets:div ID="oocihm.00989" TYPE="document" LABEL="Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868 : evidence and correspondence in full : with comments of the Toronto Press."
+                DMDID="dmd.oocihm.00989">
+                    <mets:fptr FILEID="distribution.oocihm.00989" />
+                    <mets:fptr FILEID="canonical.oocihm.00989" />
+                    <mets:div ID="oocihm.00989.0001" TYPE="page" LABEL="technical data sheet" DMDID="dmd.oocihm.00989.0001">
+                        <mets:fptr FILEID="master.oocihm.00989.0001" />
+                        <mets:fptr FILEID="canonical.oocihm.00989.0001" />
+                    </mets:div>
+                </mets:div>
+            </mets:structMap>
         </mets:mets>
     </Appendix>
     <Appendix NUMBER="2">
-        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
-          <mets:dmdSec ID="dmd.oocihm.00989">
-            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="DC">
-              <mets:xmlData>
-                <simpledc xmlns:dc="http://purl.org/dc/elements/1.1/">
-                  <dc:title>Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868 : evidence and correspondence in full : with comments of the Toronto Press.</dc:title>
-                  <dc:creator>Campbell, Duncan, 1811-1879.</dc:creator>
-                  <dc:date>1868</dc:date>
-                  <dc:publisher>Toronto : [s.n.], 1868</dc:publisher>
-                  <dc:source>Scanned from a CIHM microfiche of the original publication held by the Public Archives of Canada Library.</dc:source>
-                  <dc:identifier>00989</dc:identifier>
-                  <dc:identifier>http://eco.canadiana.ca/view/oocihm.00989</dc:identifier>
-                  <dc:language>eng</dc:language>
-                  <dc:subject>Boyd, Mary</dc:subject>
-                </simpledc>
-              </mets:xmlData>
-            </mets:mdWrap>
-          </mets:dmdSec>
-          <mets:dmdSec ID="dmd.oocihm.00989.0001">
-            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="txtmap">
-              <mets:xmlData>
-                <txt:txtmap>
-                  <txt:page>
-                    <txt:t>
-                      Technical Notes / Notes techniques The
-                      institute has attempted to obtain the best original
-                      copy available for filming.  Physical feetures of this
-                      copy which may alter any of the images in the
-                      reproduction are checked below Coloured covers/
-                      Couvertures de couleur Coloured maps/ Cartes
-                      géographiques en couleur r--- Pages discoloured,
-                      stained or foxed/ L- Pages décoîorées, tachetées ou
-                      piquées r-, Tight bindîng (may cause shadows or L J
-                      distortion along interior margin)/ Reliure serré (peut
-                      causer de l'ombre ou de la distortion le long de da
-                      marge intérieure) Additional comments/ Orgi L.
-                      Commentaires supplémentaires L'institut a microfilmé
-                      le meilleur exemplaire qu'il lui a été possible de se
-                      procurer Certains défauts susceptibles de nuire à la
-                      qualité de la reproduction sont notés ci-dessous.
-                      Coloured pages/ LJ Pages de couleur Coloured plates/
-                      Planches en couleur ri Show through/ Transparence
-                      Pages damaged/ Pages endommagées nal copy restored and
-                      laminated.  Bibliograpnic Notes / Notes
-                      bibliographiques Only edition available/ Seule édition
-                      disponible Bound with other material/ Relié avec
-                      d'autres documents Cover title missing/ 'Le titre de
-                      couverture mancue Plates missing/ W .  Des planches
-                      manquent Additional comments/ Commentaires
-                      supplémentaires ---- Pagination incorrect/ vo Erreurs
-                      de pagination Pages missing/ W Des pages manquent '-
-                      aps missing/ Des cartes géograohiques manouent Page iv
-                      msnumbered ii.  Blank leaves which were added during
-                      restoration may apoear within the text.  Whenevr
-                      possible, these have been omitted from
-                      filming.
-                    </txt:t>
-                  </txt:page>
-                </txt:txtmap>
-              </mets:xmlData>
-            </mets:mdWrap>
-          </mets:dmdSec>
-          <mets:fileSec>
-            <mets:fileGrp USE="master">
-              <mets:file ID="master.oocihm.00989.0001" MIMETYPE="image/tiff">
-                <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.0001.tif"/>
-              </mets:file>
-            </mets:fileGrp>
-            <mets:fileGrp USE="distribution">
-              <mets:file ID="distribution.oocihm.00989" MIMETYPE="application/pdf">
-                <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.pdf"/>
-              </mets:file>
-            </mets:fileGrp>
-            <mets:fileGrp USE="canonical">
-              <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
-                <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"/>
-              </mets:file>
-              <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
-                <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"/>
-              </mets:file>
-            </mets:fileGrp>
-          </mets:fileSec>
-          <mets:structMap TYPE="physical">
-            <mets:div ID="oocihm.00989" TYPE="document" LABEL="Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868 : evidence and correspondence in full : with comments of the Toronto Press." DMDID="dmd.oocihm.00989">
-              <mets:fptr FILEID="distribution.oocihm.00989"/>
-              <mets:fptr FILEID="canonical.oocihm.00989"/>
-              <mets:div ID="oocihm.00989.0001" TYPE="page" LABEL="technical data sheet" DMDID="dmd.oocihm.00989.0001">
-                <mets:fptr FILEID="master.oocihm.00989.0001"/>
-                <mets:fptr FILEID="canonical.oocihm.00989.0001"/>
-              </mets:div>
-            </mets:div>
-          </mets:structMap>
+        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
+            <mets:dmdSec ID="dmd.oocihm.00989">
+                <mets:mdWrap MIMETYPE="text/xml" MDTYPE="DC">
+                    <mets:xmlData>
+                        <simpledc xmlns:dc="http://purl.org/dc/elements/1.1/">
+                            <dc:title>Inquest on Mary Boyd, held at Provincial Lunatic Asylum,
+                                Toronto 5th and 6th of May, 1868 : evidence and correspondence
+                                in full : with comments of the Toronto Press.
+                            </dc:title>
+                            <dc:creator>Campbell, Duncan, 1811-1879.
+                            </dc:creator>
+                            <dc:date>1868</dc:date>
+                            <dc:publisher>Toronto : [s.n.], 1868
+                            </dc:publisher>
+                            <dc:source>Scanned from a CIHM microfiche of the original publication
+                                held by the Public Archives of Canada Library.
+                            </dc:source>
+                            <dc:identifier>00989</dc:identifier>
+                            <dc:identifier>http://eco.canadiana.ca/view/oocihm.00989</dc:identifier>
+                            <dc:language>eng</dc:language>
+                            <dc:subject>Boyd, Mary</dc:subject>
+                        </simpledc>
+                    </mets:xmlData>
+                </mets:mdWrap>
+            </mets:dmdSec>
+            <mets:dmdSec ID="dmd.oocihm.00989.0001">
+                <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="txtmap">
+                    <mets:xmlData>
+                        <txt:txtmap>
+                            <txt:page>
+                                <txt:t>
+                                    Technical Notes / Notes techniques The institute has attempted to obtain the best
+                                    original copy available for filming. Physical
+                                    feetures of this copy which may alter any of
+                                    the images in the reproduction are checked below
+                                    Coloured covers/ Couvertures de couleur Coloured
+                                    maps/ Cartes géographiques en couleur r--- Pages
+                                    discoloured, stained or foxed/ L- Pages décoîorées,
+                                    tachetées ou piquées r-, Tight bindîng (may cause
+                                    shadows or L J distortion along interior margin)/
+                                    Reliure serré (peut causer de l'ombre ou de la
+                                    distortion le long de da marge intérieure) Additional
+                                    comments/ Orgi L. Commentaires supplémentaires
+                                    L'institut a microfilmé le meilleur exemplaire
+                                    qu'il lui a été possible de se procurer Certains
+                                    défauts susceptibles de nuire à la qualité de
+                                    la reproduction sont notés ci-dessous. Coloured
+                                    pages/ LJ Pages de couleur Coloured plates/ Planches
+                                    en couleur ri Show through/ Transparence Pages
+                                    damaged/ Pages endommagées nal copy restored
+                                    and laminated. Bibliograpnic Notes / Notes bibliographiques
+                                    Only edition available/ Seule édition disponible
+                                    Bound with other material/ Relié avec d'autres
+                                    documents Cover title missing/ 'Le titre de couverture
+                                    mancue Plates missing/ W . Des planches manquent
+                                    Additional comments/ Commentaires supplémentaires
+                                    ---- Pagination incorrect/ vo Erreurs de pagination
+                                    Pages missing/ W Des pages manquent '- aps missing/
+                                    Des cartes géograohiques manouent Page iv msnumbered
+                                    ii. Blank leaves which were added during restoration
+                                    may apoear within the text. Whenevr possible,
+                                    these have been omitted from filming.
+                                </txt:t>
+                            </txt:page>
+                        </txt:txtmap>
+                    </mets:xmlData>
+                </mets:mdWrap>
+            </mets:dmdSec>
+            <mets:fileSec>
+                <mets:fileGrp USE="master">
+                    <mets:file ID="master.oocihm.00989.0001" MIMETYPE="image/tiff">
+                        <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.0001.tif" />
+                    </mets:file>
+                </mets:fileGrp>
+                <mets:fileGrp USE="distribution">
+                    <mets:file ID="distribution.oocihm.00989" MIMETYPE="application/pdf">
+                        <mets:FLocat LOCTYPE="URN" xlink:href="oocihm.00989.pdf" />
+                    </mets:file>
+                </mets:fileGrp>
+                <mets:fileGrp USE="canonical">
+                    <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"
+                        />
+                    </mets:file>
+                    <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"
+                        />
+                    </mets:file>
+                </mets:fileGrp>
+            </mets:fileSec>
+            <mets:structMap TYPE="physical">
+                <mets:div ID="oocihm.00989" TYPE="document" LABEL="Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May, 1868 : evidence and correspondence in full : with comments of the Toronto Press."
+                DMDID="dmd.oocihm.00989">
+                    <mets:fptr FILEID="distribution.oocihm.00989" />
+                    <mets:fptr FILEID="canonical.oocihm.00989" />
+                    <mets:div ID="oocihm.00989.0001" TYPE="page" LABEL="technical data sheet" DMDID="dmd.oocihm.00989.0001">
+                        <mets:fptr FILEID="master.oocihm.00989.0001" />
+                        <mets:fptr FILEID="canonical.oocihm.00989.0001" />
+                    </mets:div>
+                </mets:div>
+            </mets:structMap>
         </mets:mets>
     </Appendix>
 </METS_Profile>
