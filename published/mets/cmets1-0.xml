@@ -121,8 +121,7 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                 <p>For series and monographic documents, it must be a MARCXML record
                     or a Simple Dublin Core record.</p>
                 <p>For issues, it must be an IssueInfo record.</p>
-                <p>For pages, it must be a Txtmap record.
-                </p>
+                <p>For pages, it must be a Txtmap record.</p>
             </requirement>
         </dmdSec>
         <amdSec>
@@ -193,20 +192,19 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                 </p>
                 <p>
                     Each file element must contain an
-                    <FLocat> element which specifies external location of the content file
-                        in its xlink:href attribute.The
-                        <FLocat> element must contain an xlink:href attribute, as well as
-                            a LOCTYPE attribute indicating the type of href being
-                            provided.
+                    FLocat element which specifies external location of the content file
+                    in its xlink:href attribute.The FLocat element must contain an xlink:href attribute, as well as
+                   	a LOCTYPE attribute indicating the type of href being provided.
                 </p>
                 <p>
                     The file element must also contain the following attributes: an ID for identifying
                     this element and a MIMETYPE for the data file being referenced.
                     Other optional attributes include: SIZE, CREATED, CHECKSUM, CHECKSUMTYPE.
-                    <p>
-                        An ADMID attribute on each file attribute points to the technical metadata for that
-                        file held within the amdSec.
-                    </p>
+               	</p>
+                <p>
+                    An ADMID attribute on each file attribute points to the technical metadata for that
+                    file held within the amdSec.
+                </p>
             </requirement>
         </fileSec>
         <structMap>
