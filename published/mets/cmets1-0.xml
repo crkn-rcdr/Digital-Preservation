@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--   CMETS Profile Schema Version 1.0  -->
 
-<METS_Profile xmlns="http://www.loc.gov/METS_Profile/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
+<METS_Profile xmlns="http://www.loc.gov/METS_Profile/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mets="http://www.loc.gov/METS/"
+xsi:schemaLocation="
       http://www.loc.gov/METS_Profile/
       http://www.loc.gov/standards/mets/profile_docs/mets.profile.v1-2.xsd
       http://www.loc.gov/METS/
       http://www.loc.gov/standards/mets/mets.xsd
     ">
     <URI LOCTYPE="URL">http://canadiana.ca/schema/2012/mets/cmets</URI>
-    <title>Canadiana.org Trustworthy Digital Repository METS SIP Profile</title>
+    <title>Canadiana.org Trustworthy Digital Repository METS Profile</title>
     <abstract>
-        This profile documents the standard for supplying and encoding metadata within the
-        Canadiana.org TDR.
+        This profile documents the standard for supplying and encoding metadata within the Canadiana.org TDR.
     </abstract>
     <date>2017-04-19T12:00:00Z</date>
     <contact>
@@ -26,15 +25,13 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
     <extension_schema>
         <name>MARCXML MARC 21 Schema</name>
         <URI>http://www.loc.gov/MARC21/slim</URI>
-        <context>Used for encoding descriptive metadata at the series or document level. Preferred
-            for bibliographic material.</context>
+        <context>Used for encoding descriptive metadata at the series or document level. Preferred for bibliographic material.</context>
     </extension_schema>
     <extension_schema>
         <name>Simple Dublin Core Container</name>
         <URI>http://dublincore.org/schemas/xmls/qdc/2008/02/11/simpledc.xsd</URI>
-        <context>Alternate format for encoding descriptive metadata at the series or document
-            level. Suitable for simple records, but see the description rules below
-            for use guidelines.</context>
+        <context>Alternate format for encoding descriptive metadata at the series or document level. Suitable for simple
+            records, but see the description rules below for use guidelines.</context>
     </extension_schema>
     <extension_schema>
         <name>DCMI Metadata Terms</name>
@@ -48,6 +45,12 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
         </context>
     </extension_schema>
     <extension_schema>
+        <name>ALTO</name>
+        <URI>https://www.loc.gov/standards/alto/v3/alto.xsd</URI>
+        <context>A standardized XML format used to store layout information and OCR for document pages. This format is preferred
+            over the other accepted OCR format, txtmap.</context>
+    </extension_schema>
+    <extension_schema>
         <name>Txtmap</name>
         <URI>http://canadiana.ca/schema/2012/xsd/txtmap</URI>
         <context>Used to encode OCR or other full text for document pages.</context>
@@ -55,154 +58,122 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
     <extension_schema>
         <name>JHOVE XML Handler Output Schema</name>
         <URI>http://hul.harvard.edu/ois/xml/xsd/jhove/jhove.xsd</URI>
-        <context>JHoVE XML output may be included within the administrative techMD element.
-            For details on JHOVE see http://hul.harvard.edu/jhove/.</context>
+        <context>JHoVE XML output may be included within the administrative techMD element. For details on JHOVE see http://hul.harvard.edu/jhove/.</context>
     </extension_schema>
     <description_rules>
-        <p>UPDATE: As part of the seperation of the preservation and access platforms,
-            the CMR schema has been deprecated and replaced by an internal data format
-            that is used to create search and presentation documents. In addition
-            some of the fields previosly used in CMR records have also been discontinued.
-            This does not prevent any of the valid elements being included in the
-            descriptive metadata section of the supplied METS records for preservation
-            purposes.
+        <p>
+            MARC Records should follow standard cataloguing rules (i.e. AACR2 or RDA).
         </p>
         <p>
-            MARC Records should follow standard cataloguing rules (i.e. AACR2).
+            Dublin Core records may use any of the standard DC elements. It is recommended to use the DC recommended guidelines
+            best practices for usage. During the creation of internal data structures for access, these fields
+            will be interpreted in specific ways:
         </p>
         <p>
-            Dublin Core records may use any of the standard DC elements. It is recommended to
-            use the DC recommended guidelines best practices for usage. During the
-            creation of internal data structures for access, these fields will be
-            interpreted in specific ways:
+            If there is one dc:date field, it will be treated as the date of publication. If there are two or more dc:date
+            fields, the first two will be treated as the start and end of a publication date range. Additional
+            dc:date fields are ignored. To guarantee the correct parsing of dates, they should be ISO 8601-compliant
+            dates in one of the following formats: YYYY, YYYY-MM, YYYY-MM-DDTHH:MM:SS.sssZ.
         </p>
         <p>
-            If there is one dc:date field, it will be treated as the date of publication. If
-            there are two or more dc:date fields, the first two will be treated as
-            the start and end of a publication date range. Additional dc:date fields
-            are ignored. To guarantee the correct parsing of dates, they should be
-            ISO 8601-compliant dates in one of the following formats: YYYY, YYYY-MM,
-            YYYY-MM-DDTHH:MM:SS.sssZ.
-        </p>
-        <p>
-            The dc:language field(s) will be used to determine the language(s) of the document.
-            ISO 639-3 language codes should be used. Other formats might not be parsed
-            correctly.
-        </p>
-        <p>
-            UPDATE: the dc:format field is not currently used in the access platform.
+            The dc:language field(s) will be used to determine the language(s) of the document. ISO 639-3 language codes should
+            be used. Other formats might not be parsed correctly.
         </p>
     </description_rules>
     <controlled_vocabularies/>
     <structural_requirements>
         <metsHdr>
             <requirement>
-                <p>The OBJID attribute must uniquely identify the object among all of
-                    the submitter's content. It must be between 5 and 64 characters
-                    in length and consist only of ASCII alphanumeric characters and
-                    the underscore (A-Za-z0-9_).
+                <p>The OBJID attribute must uniquely identify the object among all of the submitter's content. It
+                    must be between 5 and 64 characters in length and consist only of ASCII alphanumeric characters
+                    and the underscore (A-Za-z0-9_).
                 </p>
             </requirement>
         </metsHdr>
         <dmdSec>
             <requirement>
-                <p>There must be a &lt;dmdSec&gt; element for the main item (series,
-                    issue or monographic document). If the item is a document (issue
-                    or monograph) it may also contain child &lt;dmdSec&gt; elements
+                <p>There must be a &lt;dmdSec&gt; element for the main item (series, issue or monographic document).
+                    If the item is a document (issue or monograph) it may also contain child &lt;dmdSec&gt; elements
                     for each page in the &lt;structMap&gt;.
                 </p>
             </requirement>
             <requirement>
-                <p>The content of each &lt;dmdSec&gt; element must be an inline record
-                    wrapped in an &lt;xmlData&gt; element or an &lt;mdRef&gt; element
-                    with a LOCTYPE attribute of 'URN' and an xlink:href attribute
-                    set to the name of the external file containing the descriptive
-                    record. The record format depends on the type of object it references:</p>
-                <p>For series and monographic documents, it must be a MARCXML record
-                    or a Simple Dublin Core record.</p>
+                <p>The content of each &lt;dmdSec&gt; element must be an inline record wrapped in an &lt;xmlData&gt;
+                    element or an &lt;mdRef&gt; element The record format depends on the type of object it references:</p>
+                <p>For series and monographic documents, it must be a MARCXML record or a Simple Dublin Core record.</p>
                 <p>For issues, it must be an IssueInfo record.</p>
-                <p>For pages, it must be a Txtmap record.</p>
+                <p>For components, there are legacy METS records that have txtmap records stored as a dmdSec. As of
+                    this version of our proile, all Txtmap data is optional and will be stored as files rather
+                    than described as metadata. A Txtmap in a dmdSec or in a file element will be treated as equivalent.</p>
             </requirement>
         </dmdSec>
         <amdSec>
             <requirement>
-                <p>Items with components and associated files (documents or issues)
-                    may contain an amdSec for the main item with techMD sections
-                    for each component.</p>
+                <p>Items with components and associated files (documents or issues) may contain an amdSec for the
+                    main item with techMD sections for each component.</p>
             </requirement>
             <requirement>
-                <p>Each amdSec contains at least one techMD element. Each techMD element
-                    contains technical metadata that corresponds to a file in the
-                    files directory of the containing Bagit archive.
+                <p>Each amdSec contains at least one techMD element. Each techMD element contains technical metadata
+                    that corresponds to a file in the files directory of the containing Bagit archive.
                 </p>
             </requirement>
             <requirement>
-                <p>Each techMD element is provided an ADMID. This version of the profile
-                    supports the techMD sub-element and the technical metadata file:
-                    JHOVE.</p>
+                <p>Each techMD element is provided an ADMID. This version of the profile supports the techMD sub-element
+                    and the technical metadata file: JHOVE.
+                </p>
             </requirement>
             <requirement>
-                <p>Each techMD element contains an mdRef element referencing the location
-                    of the XML file containing the administrative metadata. The MDTYPE
-                    attribute is set to "OTHER" and the OTHERMDTYPE attribute set
-                    to the metadata scheme of the file. Other optional attributes
-                    are MIMETYPE and LABEL.</p>
+                <p>Each techMD element contains an mdRef element referencing the location of the XML file containing
+                    the administrative metadata. The MDTYPE attribute is set to "OTHER" and the OTHERMDTYPE attribute
+                    set to the metadata scheme of the file. Other optional attributes are MIMETYPE and LABEL.</p>
             </requirement>
             <requirement>
                 <!-->Upgrade to latest METS v2 will include example attributes: EXAMPLES="ex01"-->
-                <p>For JHOVE files the following attributes are required: MIMETYPE,
-                    LOCTYPE, MDTYPE, OTHERMDTYPE, xlink:href. See Example 1.</p>
+                <p>For JHOVE files the following attributes are required: MIMETYPE, LOCTYPE, MDTYPE, OTHERMDTYPE,
+                    xlink:href. See Example 1.</p>
             </requirement>
         </amdSec>
         <fileSec>
             <requirement>
                 <p>
-                    Series records will have one &lt;fileGrp&gt; with USE="canonical" while document
-                    records may also have &lt;fileGrp&gt; elements with USE="master"
-                    and, optionally, USE="distribution".
+                    Series records will have one &lt;fileGrp&gt; with USE="canonical" while document records may also have &lt;fileGrp&gt;
+                    elements with USE="master" and, optionally, USE="distribution".
                 </p>
                 <p>
-                    The canonical &lt;fileGrp&gt; must contain a &lt;file&gt; element for the root document/series
-                    and for each page (in a document) with an &lt;FLocat&gt; element
-                    with LOCTYPE="URL" and a href pointing to a URL associated with
-                    that object.
+                    The canonical &lt;fileGrp&gt; must contain a &lt;file&gt; element for the root document/series and for each page
+                    (in a document) with an &lt;FLocat&gt; element with LOCTYPE="URL" and a href pointing to a
+                    URL associated with that object.
                 </p>
                 <p>
-                    There are two ways of grouping files: by fileGrp use such as Master or Distribution
-                    or by their component representation (for instance all files
-                    that refer to a page). The first option, by fileGrp use, is being
-                    deprecated.
+                    There are two ways of grouping files: by fileGrp use such as Master or Distribution or by their component representation
+                    (for instance all files that refer to a page). The first option, by fileGrp use, is being deprecated.
                 </p>
                 <p>
-                    If the files are grouped by use, the master images for each page in a document are
-                    placed in the master group and the PDF of the document is placed
-                    in the distribution group.
+                    If the files are grouped by use, the master images for each page in a document are placed in the master group and
+                    the PDF of the document is placed in the distribution group.
                 </p>
                 <p>
-                    If the files are grouped according to their referent, ie all manifestations of the
-                    component (eg a page of a volume or issue) are grouped into the
-                    same fileGrp, the use of each file is indicated at the file level.
+                    If the files are grouped according to their referent, ie all manifestations of the component (eg a page of a volume
+                    or issue) are grouped into the same fileGrp, the use of each file is indicated at the file
+                    level.
                 </p>
                 <p>
-                    Use is first determined at the file level. Each &lt;file&gt; element may have a USE
-                    attribute containing one of the following values: "master" or "derivative".
-                   	If a file element does not contain a USE attribute then
-                    this information will be acquired from the parent fileGrp USE
-                    attribute.
+                    Use is first determined at the file level. Each &lt;file&gt; element may have a USE attribute containing one of
+                    the following values: "master" or "derivative". If a file element does not contain a USE attribute
+                    then this information will be acquired from the parent fileGrp USE attribute.
                 </p>
                 <p>
-                    Each file element must contain an FLocat element which specifies external location of the content file
-                    in its xlink:href attribute.The FLocat element must contain an xlink:href attribute, as well as
-                   	a LOCTYPE attribute indicating the type of href being provided.
+                    Each file element must contain an FLocat element which specifies external location of the content file in its xlink:href
+                    attribute.The FLocat element must contain an xlink:href attribute, as well as a LOCTYPE attribute
+                    indicating the type of href being provided.
                 </p>
                 <p>
-                    The file element must also contain the following attributes: an ID for identifying
-                    this element and a MIMETYPE for the data file being referenced.
-                    Other optional attributes include: SIZE, CREATED, CHECKSUM, CHECKSUMTYPE.
-               	</p>
+                    The file element must also contain the following attributes: an ID for identifying this element and a MIMETYPE
+                    for the data file being referenced. Other optional attributes include: SIZE, CREATED, CHECKSUM,
+                    CHECKSUMTYPE.
+                </p>
                 <p>
-                    An ADMID attribute on each file attribute points to the technical metadata for that
-                    file held within the amdSec.
+                    An ADMID attribute on each file attribute points to the technical metadata for that file held within the amdSec.
                 </p>
             </requirement>
         </fileSec>
@@ -212,53 +183,42 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                     There must be a single &lt;structMap&gt; element with attribute TYPE="physical".
                 </p>
                 <p>
-                    The root &lt;div&gt; element must have the attribute TYPE="document" for monographic
-                    documents, TYPE="series" for a series metadata submission and
-                    TYPE="issue" for a document that is part of a series. Series
-                    have no further &lt;div&gt; elements and must not have any &lt;fptr&gt;
-                    elements, as they are metadata-only submissions. Documents and
-                    issues must have one &lt;div&gt; element for each page they contain,
-                    appearing in sequential order. A document should include a &lt;fptr&gt;
-                    to a distributable PDF version of the document as a whole, if
-                    one exists.
+                    The root &lt;div&gt; element must have the attribute TYPE="document" for monographic documents, TYPE="series" for
+                    a series metadata submission and TYPE="issue" for a document that is part of a series. Series
+                    have no further &lt;div&gt; elements and must not have any &lt;fptr&gt; elements, as they are
+                    metadata-only submissions. Documents and issues must have one &lt;div&gt; element for each
+                    page they contain, appearing in sequential order. A document should include a &lt;fptr&gt;
+                    to a distributable PDF version of the document as a whole, if one exists.
                 </p>
                 <p>
-                    Each part of a document must be represented by a &lt;div&gt; with the attribute TYPE="page".
-                    If there is a master image file for that page then it must contain
-                    a &lt;fptr&gt; which references the master image file for that
-                    page. Note that a page in this context might not correspond to
-                    one physical page of the original book (e.g. if the book was
-                    digitized with two facing pages for each image, or if a large
-                    fold-out is split into multiple images). In some cases, such
-                    as with born-digital content, there will not be a master image
-                    for each page, but one file for the entire object. A &lt;fptr&gt;
-                    referencing the image file for each page is not required in these
-                    instances.
+                    Each part of a document must be represented by a &lt;div&gt; with the attribute TYPE="page". If there is a master
+                    image file for that page then it must contain a &lt;fptr&gt; which references the master image
+                    file for that page. Note that a page in this context might not correspond to one physical page
+                    of the original book (e.g. if the book was digitized with two facing pages for each image,
+                    or if a large fold-out is split into multiple images). In some cases, such as with born-digital
+                    content, there will not be a master image for each page, but one file for the entire object.
+                    A &lt;fptr&gt; referencing the image file for each page is not required in these instances.
                 </p>
                 <p>
-                    Each &lt;div&gt; element must contain a LABEL attribute to describe the item. For
-                    a series or monographic document, it should be the common title
-                    of the item. For an issue, it should be the issue title without
-                    the common series title (e.g., "vol. 5, issue 1 : January 1895").
-                    For a page, it should be the page number, sequence, or similar
-                    description (e.g. "p. 9" or "Front Cover").
+                    Each &lt;div&gt; element must contain a LABEL attribute to describe the item. For a series or monographic document,
+                    it should be the common title of the item. For an issue, it should be the issue title without
+                    the common series title (e.g., "vol. 5, issue 1 : January 1895"). For a page, it should be
+                    the page number, sequence, or similar description (e.g. "p. 9" or "Front Cover").
                 </p>
                 <p>
-                    Each &lt;div&gt; element must include a DMDID attribute which references the ID attribute
-                    of the corresponding &lt;dmdSec&gt; element.
+                    Each &lt;div&gt; element must include a DMDID attribute which references the ID attribute of the corresponding
+                    &lt;dmdSec&gt; element.
                 </p>
             </requirement>
         </structMap>
         <structLink>
             <requirement>
                 <p>
-                    The mdRef and FLocat elements use the xlink:href attribute to point to external resources.
-                    For these elements the attribute LOCTYPE can be set to "URI"
-                    or "URL". If set to URL, the path is relative to the METS file,
-                    and includes the directory and corresponding name of the file
-                    as it appears in the directory. If set to URI, and the element
-                    is FLocat, the files are located in the files directory. If the
-                    element is mdRef then the files are located in the metadata directory.
+                    The mdRef and FLocat elements use the xlink:href attribute to point to external resources. For these elements the
+                    attribute LOCTYPE can be set to "URI" or "URL". If set to URL, the path is relative to the
+                    METS file, and includes the directory and corresponding name of the file as it appears in the
+                    directory. If set to URI, and the element is FLocat, the files are located in the files directory.
+                    If the element is mdRef then the files are located in the metadata directory.
                 </p>
             </requirement>
         </structLink>
@@ -267,8 +227,7 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
         <content_files>
             <requirement>
                 <p>
-                    Master images must be encoded as TIFF with GROUP 4 compression or uncompressed, JPEG
-                    or JPEG 2000.</p>
+                    Master images must be encoded as TIFF with GROUP 4 compression or uncompressed, JPEG or JPEG 2000.</p>
             </requirement>
             <requirement>
                 <p>
@@ -285,20 +244,19 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
     <Example ID="ex01">
         <mets:amdSec>
             <mets:techMD ID="jhove.master.MississaugaTimes_2.1">
-                <mets:mdRef LOCTYPE="URL" xlink:href="metadata/0001.jpg.jhove.xml" MIMETYPE="text/xml"
-                MDTYPE="OTHER" OTHERMDTYPE="jhove" />
+                <mets:mdRef LOCTYPE="URL" xlink:href="metadata/0001.jpg.jhove.xml" MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="jhove"
+                />
             </mets:techMD>
         </mets:amdSec>
     </Example>
     -->
     <Appendix NUMBER="1">
-        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
+        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap"
+        OBJID="00989">
             <mets:dmdSec ID="dmd.oocihm.00989">
                 <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MARC">
                     <mets:xmlData>
-                        <collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/MARC21/slim"
-                        xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+                        <collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/MARC21/slim" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
                             <record>
                                 <leader>01206nam a2200301 a 4500</leader>
                                 <controlfield tag="001">996014810</controlfield>
@@ -326,13 +284,12 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                                     <subfield code="2">19</subfield>
                                 </datafield>
                                 <datafield tag="245" ind1="0" ind2="0">
-                                    <subfield code="a">Inquest on Mary Boyd, held at Provincial Lunatic
-                                        Asylum, Toronto 5th and 6th of May, 1868
+                                    <subfield code="a">Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th
+                                        of May, 1868
                                     </subfield>
                                     <subfield code="h">[electronic resource] :
                                     </subfield>
-                                    <subfield code="b">evidence and correspondence in full : with comments
-                                        of the Toronto Press.
+                                    <subfield code="b">evidence and correspondence in full : with comments of the Toronto Press.
                                     </subfield>
                                 </datafield>
                                 <datafield tag="260" ind1=" " ind2=" ">
@@ -342,8 +299,7 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                                     <subfield code="c">1868.</subfield>
                                 </datafield>
                                 <datafield tag="490" ind1="0" ind2=" ">
-                                    <subfield code="a">CIHM/ICMH Digital series = CIHM/ICMH collection
-                                        numérisée ;
+                                    <subfield code="a">CIHM/ICMH Digital series = CIHM/ICMH collection numérisée ;
                                     </subfield>
                                     <subfield code="v">no. 00989</subfield>
                                 </datafield>
@@ -356,9 +312,8 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                                     </subfield>
                                 </datafield>
                                 <datafield tag="533" ind1=" " ind2=" ">
-                                    <subfield code="a">Scanned from a CIHM microfiche of the original
-                                        publication held by the Public Archives of
-                                        Canada Library.
+                                    <subfield code="a">Scanned from a CIHM microfiche of the original publication held by the Public
+                                        Archives of Canada Library.
                                     </subfield>
                                     <subfield code="b">Ottawa :
                                     </subfield>
@@ -654,12 +609,10 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                 </mets:fileGrp>
                 <mets:fileGrp USE="canonical">
                     <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
-                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"
-                        />
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989" />
                     </mets:file>
                     <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
-                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"
-                        />
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1" />
                     </mets:file>
                 </mets:fileGrp>
             </mets:fileSec>
@@ -677,23 +630,22 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
         </mets:mets>
     </Appendix>
     <Appendix NUMBER="2">
-        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap" OBJID="00989">
+        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:txt="http://canadiana.ca/schema/2012/xsd/txtmap"
+        OBJID="00989">
             <mets:dmdSec ID="dmd.oocihm.00989">
                 <mets:mdWrap MIMETYPE="text/xml" MDTYPE="DC">
                     <mets:xmlData>
                         <simpledc xmlns:dc="http://purl.org/dc/elements/1.1/">
-                            <dc:title>Inquest on Mary Boyd, held at Provincial Lunatic Asylum,
-                                Toronto 5th and 6th of May, 1868 : evidence and correspondence
-                                in full : with comments of the Toronto Press.
+                            <dc:title>Inquest on Mary Boyd, held at Provincial Lunatic Asylum, Toronto 5th and 6th of May,
+                                1868 : evidence and correspondence in full : with comments of the Toronto Press.
                             </dc:title>
                             <dc:creator>Campbell, Duncan, 1811-1879.
                             </dc:creator>
                             <dc:date>1868</dc:date>
                             <dc:publisher>Toronto : [s.n.], 1868
                             </dc:publisher>
-                            <dc:source>Scanned from a CIHM microfiche of the original publication
-                                held by the Public Archives of Canada Library.
+                            <dc:source>Scanned from a CIHM microfiche of the original publication held by the Public Archives
+                                of Canada Library.
                             </dc:source>
                             <dc:identifier>00989</dc:identifier>
                             <dc:identifier>http://eco.canadiana.ca/view/oocihm.00989</dc:identifier>
@@ -709,37 +661,26 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                         <txt:txtmap>
                             <txt:page>
                                 <txt:t>
-                                    Technical Notes / Notes techniques The institute has attempted to obtain the best
-                                    original copy available for filming. Physical
-                                    feetures of this copy which may alter any of
-                                    the images in the reproduction are checked below
-                                    Coloured covers/ Couvertures de couleur Coloured
-                                    maps/ Cartes géographiques en couleur r--- Pages
-                                    discoloured, stained or foxed/ L- Pages décoîorées,
-                                    tachetées ou piquées r-, Tight bindîng (may cause
-                                    shadows or L J distortion along interior margin)/
-                                    Reliure serré (peut causer de l'ombre ou de la
-                                    distortion le long de da marge intérieure) Additional
-                                    comments/ Orgi L. Commentaires supplémentaires
-                                    L'institut a microfilmé le meilleur exemplaire
-                                    qu'il lui a été possible de se procurer Certains
-                                    défauts susceptibles de nuire à la qualité de
-                                    la reproduction sont notés ci-dessous. Coloured
-                                    pages/ LJ Pages de couleur Coloured plates/ Planches
-                                    en couleur ri Show through/ Transparence Pages
-                                    damaged/ Pages endommagées nal copy restored
-                                    and laminated. Bibliograpnic Notes / Notes bibliographiques
-                                    Only edition available/ Seule édition disponible
-                                    Bound with other material/ Relié avec d'autres
-                                    documents Cover title missing/ 'Le titre de couverture
-                                    mancue Plates missing/ W . Des planches manquent
-                                    Additional comments/ Commentaires supplémentaires
-                                    ---- Pagination incorrect/ vo Erreurs de pagination
-                                    Pages missing/ W Des pages manquent '- aps missing/
-                                    Des cartes géograohiques manouent Page iv msnumbered
-                                    ii. Blank leaves which were added during restoration
-                                    may apoear within the text. Whenevr possible,
-                                    these have been omitted from filming.
+                                    Technical Notes / Notes techniques The institute has attempted to obtain the best original copy available for filming.
+                                    Physical feetures of this copy which may alter any of the images in the reproduction
+                                    are checked below Coloured covers/ Couvertures de couleur Coloured maps/ Cartes
+                                    géographiques en couleur r--- Pages discoloured, stained or foxed/ L- Pages
+                                    décoîorées, tachetées ou piquées r-, Tight bindîng (may cause shadows or L
+                                    J distortion along interior margin)/ Reliure serré (peut causer de l'ombre
+                                    ou de la distortion le long de da marge intérieure) Additional comments/ Orgi
+                                    L. Commentaires supplémentaires L'institut a microfilmé le meilleur exemplaire
+                                    qu'il lui a été possible de se procurer Certains défauts susceptibles de nuire
+                                    à la qualité de la reproduction sont notés ci-dessous. Coloured pages/ LJ Pages
+                                    de couleur Coloured plates/ Planches en couleur ri Show through/ Transparence
+                                    Pages damaged/ Pages endommagées nal copy restored and laminated. Bibliograpnic
+                                    Notes / Notes bibliographiques Only edition available/ Seule édition disponible
+                                    Bound with other material/ Relié avec d'autres documents Cover title missing/
+                                    'Le titre de couverture mancue Plates missing/ W . Des planches manquent Additional
+                                    comments/ Commentaires supplémentaires ---- Pagination incorrect/ vo Erreurs
+                                    de pagination Pages missing/ W Des pages manquent '- aps missing/ Des cartes
+                                    géograohiques manouent Page iv msnumbered ii. Blank leaves which were added
+                                    during restoration may apoear within the text. Whenevr possible, these have
+                                    been omitted from filming.
                                 </txt:t>
                             </txt:page>
                         </txt:txtmap>
@@ -759,12 +700,10 @@ xmlns:mets="http://www.loc.gov/METS/" xsi:schemaLocation="
                 </mets:fileGrp>
                 <mets:fileGrp USE="canonical">
                     <mets:file ID="canonical.oocihm.00989" MIMETYPE="text/html">
-                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989"
-                        />
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989" />
                     </mets:file>
                     <mets:file ID="canonical.oocihm.00989.0001" MIMETYPE="text/html">
-                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1"
-                        />
+                        <mets:FLocat LOCTYPE="URL" xlink:href="http://eco.canadiana.ca/view/oocihm.00989.1" />
                     </mets:file>
                 </mets:fileGrp>
             </mets:fileSec>
