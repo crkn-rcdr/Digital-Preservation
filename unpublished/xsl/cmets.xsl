@@ -11,8 +11,8 @@
 >
   
   <!--
-    Validate a CSIP METS document. Any errors will be output in <error>
-    elements. A valid document will result in an empty <csipValidation> root element.
+    Validate a Canadiana METS document. Any errors will be output in <error>
+    elements. A valid document will result in an empty <cmetsValidation> root element.
   -->
 
   <xsl:output method="xml" encoding="utf-8" indent="yes"/>
@@ -21,7 +21,7 @@
   <xsl:key name="file" match="mets:file" use="@ID"/>
 
   <xsl:template match="/mets:mets">
-    <csipValidation id="{@OBJID}">
+    <cmetsValidation id="{@OBJID}">
       
       <!-- Test the validity of the OBJID attribute -->
       <xsl:if test="string-length(@OBJID) &lt; 5">
@@ -44,7 +44,7 @@
 
       <xsl:apply-templates select="mets:structMap"/>
 
-    </csipValidation>
+    </cmetsValidation>
   </xsl:template>
 
   <xsl:template match="mets:structMap">
@@ -124,7 +124,7 @@
   <xsl:template match="mets:file">
     <!-- Check that the declared MIME type is acceptable -->
     <xsl:choose>
-      <xsl:when test="../@USE = 'master'">
+      <xsl:when test="@USE = 'master' or ../@USE = 'master'">
           <xsl:if test="not(@MIMETYPE = 'image/tiff' or @MIMETYPE = 'image/jpeg' or @MIMETYPE = 'image/jp2')">
             <error>MIME type for file ID="<xsl:value-of select="@ID"/>" should be one of: image/tiff, image/jpeg or image/jp2</error>
           </xsl:if>
@@ -132,7 +132,7 @@
             <error>file element with ID="<xsl:value-of select="@ID"/>" does not have an FLocat child with LOCTYPE="URN" and a valid XLink href attribute</error>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="../@USE = 'distribution'">
+      <xsl:when test="@USE = 'distribution' or ../@USE = 'distribution'">
         <xsl:if test="not(@MIMETYPE = 'application/pdf')">
           <error>MIME type for file ID="<xsl:value-of select="@ID"/>" must be application/pdf</error>
         </xsl:if>
@@ -140,7 +140,7 @@
           <error>file element with ID="<xsl:value-of select="@ID"/>" does not have an FLocat child with LOCTYPE="URN" and a valid XLink href attribute</error>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="../@USE = 'canonical'">
+      <xsl:when test="@USE = 'canonical' or ../@USE = 'canonical'">
         <!-- no specific rules yet ... -->
       </xsl:when>
       <xsl:otherwise>
