@@ -100,7 +100,7 @@
           <error>Issue <xsl:value-of select="@ID"/> does not have a matching dmdSec with issueinfo record</error>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="@TYPE = 'page'">
+      <xsl:when test="@TYPE = 'page' and @DMDID">
         <xsl:if test="not(key('dmd', @DMDID)/descendant::txt:txtmap)">
           <error>Page <xsl:value-of select="@ID"/> does not have a matching dmdSec with txtmap record</error>
         </xsl:if>
@@ -125,16 +125,16 @@
     <!-- Check that the declared MIME type is acceptable -->
     <xsl:choose>
       <xsl:when test="@USE = 'master' or ../@USE = 'master'">
-          <xsl:if test="not(@MIMETYPE = 'image/tiff' or @MIMETYPE = 'image/jpeg' or @MIMETYPE = 'image/jp2')">
-            <error>MIME type for file ID="<xsl:value-of select="@ID"/>" should be one of: image/tiff, image/jpeg or image/jp2</error>
+          <xsl:if test="not(@MIMETYPE = 'image/tiff' or @MIMETYPE = 'image/jpeg' or @MIMETYPE = 'image/jp2' or @MIMETYPE = 'application/pdf')">
+            <error>MIME type for file ID="<xsl:value-of select="@ID"/>" should be one of: image/tiff, image/jpeg , image/jp2, or application/pdf</error>
           </xsl:if>
           <xsl:if test="not(count(mets:FLocat[@LOCTYPE = 'URN']) = 1 and mets:FLocat[@LOCTYPE = 'URN']/@xlink:href != '')">
             <error>file element with ID="<xsl:value-of select="@ID"/>" does not have an FLocat child with LOCTYPE="URN" and a valid XLink href attribute</error>
         </xsl:if>
       </xsl:when>
-      <xsl:when test="@USE = 'distribution' or ../@USE = 'distribution'">
-        <xsl:if test="not(@MIMETYPE = 'application/pdf')">
-          <error>MIME type for file ID="<xsl:value-of select="@ID"/>" must be application/pdf</error>
+      <xsl:when test="@USE = 'distribution' or ../@USE = 'distribution' or @USE = 'derivative' or ../@USE = 'derivative'">
+        <xsl:if test="not(@MIMETYPE = 'image/tiff' or @MIMETYPE = 'image/jpeg' or @MIMETYPE = 'image/jp2' or @MIMETYPE = 'application/pdf' or @MIMETYPE = 'application/xml')">
+          <error>MIME type for file ID="<xsl:value-of select="@ID"/>" should be one of: image/tiff, image/jpeg , image/jp2, application/pdf, or application/xml</error>
         </xsl:if>
         <xsl:if test="not(count(mets:FLocat[@LOCTYPE = 'URN']) = 1 and mets:FLocat[@LOCTYPE = 'URN']/@xlink:href != '')">
           <error>file element with ID="<xsl:value-of select="@ID"/>" does not have an FLocat child with LOCTYPE="URN" and a valid XLink href attribute</error>
@@ -144,7 +144,7 @@
         <!-- no specific rules yet ... -->
       </xsl:when>
       <xsl:otherwise>
-        <error>file element in fileSec with unsupported USE attribute {../@USE} (must be one of: master, distribution, canonical)</error>
+        <error>file element in fileSec with unsupported USE attribute {../@USE} (must be one of:  derivative, distribution, canonical, master)</error>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
