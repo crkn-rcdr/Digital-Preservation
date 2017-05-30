@@ -140,11 +140,6 @@ xsi:schemaLocation="
                     elements with USE="master" and, optionally, USE="distribution".
                 </p>
                 <p>
-                    The canonical &lt;fileGrp&gt; must contain a &lt;file&gt; element for the root document/series and for each page
-                    (in a document) with an &lt;FLocat&gt; element with LOCTYPE="URL" and a href pointing to a
-                    URL associated with that object.
-                </p>
-                <p>
                     There are two ways of grouping files: by fileGrp use such as Master or Distribution or by their component representation
                     (for instance all files that refer to a page). The first option, by fileGrp use, is being deprecated.
                 </p>
@@ -174,6 +169,10 @@ xsi:schemaLocation="
                 </p>
                 <p>
                     An ADMID attribute on each file attribute points to the technical metadata for that file held within the amdSec.
+                </p>
+                <p>
+                	Previously the value USE="canonical" was used to indicate the principal URI associated with the resource. This was for use with the CMR profile, 
+                	which has now been deprecated. The term "canonical" is no longer used.
                 </p>
             </requirement>
         </fileSec>
