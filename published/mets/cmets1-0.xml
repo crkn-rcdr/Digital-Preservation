@@ -99,7 +99,7 @@ xsi:schemaLocation="
             </requirement>
             <requirement>
                 <p>The content of each &lt;dmdSec&gt; element must be an inline record wrapped in an &lt;xmlData&gt;
-                    element or an &lt;mdRef&gt; element The record format depends on the type of object it references:</p>
+                    element or an &lt;mdRef&gt; element. The record format depends on the type of object it references:</p>
                 <p>For series and monographic documents, it must be a MARCXML record or a Simple Dublin Core record.</p>
                 <p>For issues, it must be an IssueInfo record.</p>
                 <p>For components, there are legacy METS records that have txtmap records stored as a dmdSec. As of
@@ -136,7 +136,7 @@ xsi:schemaLocation="
         <fileSec>
             <requirement>
                 <p>
-                    Series records will have one &lt;fileGrp&gt; with USE="canonical" while document records may also have &lt;fileGrp&gt;
+                    Series records may have one &lt;fileGrp&gt; with USE="canonical" although the canonical use value is being deprecated. Document records may also have &lt;fileGrp&gt;
                     elements with USE="master" and, optionally, USE="distribution".
                 </p>
                 <p>
@@ -171,8 +171,8 @@ xsi:schemaLocation="
                     An ADMID attribute on each file attribute points to the technical metadata for that file held within the amdSec.
                 </p>
                 <p>
-                	Previously the value USE="canonical" was used to indicate the principal URI associated with the resource. This was for use with the CMR profile, 
-                	which has now been deprecated. The term "canonical" is no longer used.
+                	The attribute USE="canonical" is being deprecated, it was previously used to indicate the principal URI associated with the 
+                	resource. This was created for use with the CMR profile, which has now been deprecated.
                 </p>
             </requirement>
         </fileSec>
@@ -233,7 +233,7 @@ xsi:schemaLocation="
                     Filenames may consist only of the following ASCII characters: A-Za-z0-9._ and -.
                 </p>
                 <p>
-                    The stated MIME type for a given file indicates the type of file it is based on standards.
+                    The stated MIME type for a given file indicates the type of file it is based on established file format standards.
                 </p>
             </requirement>
         </content_files>
