@@ -1,4 +1,4 @@
-# CCRKN digital preservation syste
+# CRKN digital preservation system
 
 The Canadian Research Knowledge Network (CRKN) maintains a preservation platform.  As of 2018 it is using a custom platform that was created by Canadiana staff when it was a separate organization, but the plan is to adopt existing software such as Archivematica and OpenStack Swift.
 
