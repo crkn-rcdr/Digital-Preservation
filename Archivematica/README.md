@@ -29,5 +29,5 @@ Some discussion, policy decisions, and planning will be required for differences
 * Canadiana stores full METS records whenever descriptive metadata is updated (See: [Issue #4](https://github.com/crkn-rcdr/Digital-Preservation/issues/4))
 * Canadiana has made use of PrimeOCR and Abbyy Recognition Server to generate XML and PDF files (See: [Issue #5](https://github.com/crkn-rcdr/Digital-Preservation/issues/5))
 * Canadiana uses 3 different formats for archival descriptive metadata, while Archivematica only uses Dublin Core (See: [Issue #6](https://github.com/crkn-rcdr/Digital-Preservation/issues/6))
-
+* Older Canadiana processes caused the ingest of duplicate data, and we may want to deduplicate as part of the transformation (See: [Issue #7](https://github.com/crkn-rcdr/Digital-Preservation/issues/7))
 * If the transformation should be lossless, how should we encode other information (past METS records and changelog.txt)
