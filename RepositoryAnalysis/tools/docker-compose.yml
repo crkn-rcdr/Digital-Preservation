@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  ratools:
+    build: .
+    image: ratools:latest
+    volumes:
+      - /etc/canadiana/tdr/tdr.conf:/home/tdr/tdr.conf
+      - ./bin:/home/tdr/bin
+      - ./lib:/home/tdr/lib
+      - ./results:/home/tdr/results
