@@ -6,9 +6,18 @@ use warnings;
 use FindBin;
 use lib "$FindBin::RealBin/../lib";
 use CRKN::Repository::RevisionsWalk;
+use Getopt::Long;
+
+
+my $conf = "/etc/canadiana/tdr/tdr.conf";
+my $couchdb = "http://10.200.1.58:5984/repoanalysis/";
+
+GetOptions (
+    'conf:s' => \$conf
+    );
 
 CRKN::Repository::RevisionsWalk->new({ 
-    configpath => "/etc/canadiana/tdr/tdr.conf"
+    configpath => $conf
                             })->walk;
 
 1;

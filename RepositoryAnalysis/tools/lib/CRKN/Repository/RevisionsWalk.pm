@@ -5,6 +5,7 @@ use Carp;
 use CIHM::TDR::TDRConfig;
 use CIHM::TDR::ContentServer;
 use CIHM::TDR::REST::internalmeta;
+use CRKN::REST::repoanalysis;
 use Data::Dumper;
 
 sub new {
@@ -32,6 +33,19 @@ sub new {
             );
     } else {
         croak "Missing <internalmeta> configuration block in config\n";
+    }
+
+    # Undefined if no <repoanalysis> config block
+    if (exists $confighash{repoanalysis}) {
+        $self->{repoanalysis} = new CRKN::REST::repoanalysis (
+            server => $confighash{repoanalysis}{server},
+            database => $confighash{repoanalysis}{database},
+            type   => 'application/json',
+            conf   => $args->{configpath},
+            clientattrs => {timeout => 3600},
+            );
+    } else {
+        croak "Missing <repoanalysis> configuration block in config\n";
     }
 
     my %cosargs = (
@@ -67,6 +81,10 @@ sub internalmeta {
     my $self = shift;
     return $self->{internalmeta};
 }
+sub repoanalysis {
+    my $self = shift;
+    return $self->{repoanalysis};
+}
 sub cos {
     my $self = shift;
     return $self->{cos};
@@ -82,7 +100,7 @@ sub walk {
     if ($res->code == 200) {
         if (exists $res->data->{rows}) {
             foreach my $hr (@{$res->data->{rows}}) {
-                $self->getmanifest($hr->{id});
+                $self->getmanifest($hr->{id},$hr->{key});
             }
         }
 	print STDERR "Only metadata updates: ".$self->{mdonly}."\n";
@@ -93,14 +111,14 @@ sub walk {
 }
 
 sub getmanifest {
-    my ($self,$aip) = @_;
+    my ($self,$aip,$metscount) = @_;
 
 
     my $file = $aip."/manifest-md5.txt";
     my $r = $self->cos->get("/$file");
 
     if ($r->code == 200) {
-	$self->processmanifest($aip,$r->response->content);
+	$self->processmanifest($aip,$metscount,$r->response->content);
     } elsif ($r->code == 404 ) {
         print STDERR "Not yet found: $file"."\n";
         return;
@@ -111,11 +129,13 @@ sub getmanifest {
 }
 
 sub processmanifest {
-    my ($self,$aip,$manifest) = @_;
+    my ($self,$aip,$metscount,$manifest) = @_;
 
 
     my @manifest;
     my %sipdfmd5;
+
+
 
     # Array of data files
     my @datafiles    = grep { /\/data\/files\// } 
@@ -127,40 +147,52 @@ sub processmanifest {
                             @datafiles;
 
 
-
     my $revfiles = scalar(@revdatafiles);
     my $sipfiles = scalar(@sipdatafiles);
     if (scalar(@datafiles) != ($revfiles+$sipfiles)) {
 	print STDERR "Mismatch on data file counts for $aip !!\n";
+	print STDERR Dumper(\@datafiles,\@revdatafiles,\@sipdatafiles)."\n";
     }
 
-    # No need to process (or possibly HEAD files) if there are no revision files
-    if ($revfiles == 0) {
-	$self->{mdonly}++;
-	return;
-    }
+
+    # Hash of information to be posted to CouchDB
+    my %repoanalysis = ( summary => {
+	metscount => $metscount,
+	sipfiles => $sipfiles,
+	revfiles => $revfiles
+			 }
+	);
 
     foreach my $line (@datafiles) {
 	my ($md5,$file) = split /\s+/, $line;
-	my $length=0;
-	
-	# Get the length of the file
-	my $r = $self->cos->head("/$aip/$file");
-	if ($r->code == 200) {
-	    $length=$r->response->header('Content-Length');
-	} else {
-	    croak ("HEAD of $file returned code: ". $r->code."\n");
+	my $length;
+
+	# Retry 3 times
+	for (my $count = 1; $count < 3 ; $count++) {
+	    # Get the length of the file
+	    my $r = $self->cos->head("/$aip/$file");
+	    if ($r->code == 200) {
+		$length=$r->response->header('Content-Length');
+		last;
+	    } else {
+		print STDERR ("HEAD of $file returned code: ". $r->code."\n");
+	    }
+	}
+	if (! defined $length) {
+	    croak ("Can't get length of $file\n");
 	}
 	
 	push @manifest, [$file,$md5,$length];
 
 	if (substr($file,0,20) eq 'data/sip/data/files/') {
-	    my $r = $self->cos->head("/$aip/$file");
+	    $repoanalysis{sipfiles}{$file}=[$md5,$length];
 	    if(defined $sipdfmd5{"$md5:$length"}) {
 		print STDERR ("$aip: $md5 with length $length is duplicate between $file and ".$sipdfmd5{"$md5:$length"}."\n");
 	    } else {
 		$sipdfmd5{"$md5:$length"}=$file;
 	    }
+	} else {
+	    $repoanalysis{revfiles}{$file}=[$md5,$length];
 	}
     }
 
@@ -168,7 +200,7 @@ sub processmanifest {
     my ($unique,$duplicate)=(0,0);
     foreach my $filemd5 (@manifest) {
 	my ($file,$md5,$length) = @{$filemd5};
-	
+
 	if ($file =~ /^data\/revisions\/([^\/]+)\/data\/files\//) {
 	    if (defined $sipdfmd5{"$md5:$length"}) {
 		$duplicate++;
@@ -177,7 +209,22 @@ sub processmanifest {
 	    }
 	}	
     }
-    print "$aip SIP:$sipfiles , Revision:$revfiles , Unique:$unique , Duplicate:$duplicate\n";
+    
+    $repoanalysis{summary}{unique}=$unique;
+    $repoanalysis{summary}{duplicate}=$duplicate;
+
+    
+    if ($revfiles == 0) {
+	$self->{mdonly}++;
+    } else {
+	print "$aip SIP:$sipfiles , Revision:$revfiles , Unique:$unique , Duplicate:$duplicate\n";
+    }
+
+    my $res = $self->repoanalysis->create_or_update($aip,\%repoanalysis);
+    if ($res) {
+	print "$res\n";
+    }
+
 }
 
 
