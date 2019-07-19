@@ -20,7 +20,7 @@ module.exports = function(doc, req) {
 	return [null, "Request body is not valid JSON:\n" + e.message];
     }
 
-    ["summary", "revfiles", "sipfiles"].forEach(function(key) {
+    ["summary", "revfiles", "sipfiles","metscount","manifestdate"].forEach(function(key) {
 	if (body[key]) {
 	    doc[key] = body[key];
 	}

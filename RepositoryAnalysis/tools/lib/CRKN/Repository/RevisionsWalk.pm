@@ -4,7 +4,6 @@ use strict;
 use Carp;
 use CIHM::TDR::TDRConfig;
 use CIHM::TDR::ContentServer;
-use CIHM::TDR::REST::internalmeta;
 use CRKN::REST::repoanalysis;
 use Data::Dumper;
 
@@ -21,19 +20,6 @@ sub new {
     $self->{logger} = $self->{config}->logger;
 
     my %confighash = %{$self->{config}->get_conf};
-
-    # Undefined if no <internalmeta> config block
-    if (exists $confighash{internalmeta}) {
-        $self->{internalmeta} = new CIHM::TDR::REST::internalmeta (
-            server => $confighash{internalmeta}{server},
-            database => $confighash{internalmeta}{database},
-            type   => 'application/json',
-            conf   => $args->{configpath},
-            clientattrs => {timeout => 3600},
-            );
-    } else {
-        croak "Missing <internalmeta> configuration block in config\n";
-    }
 
     # Undefined if no <repoanalysis> config block
     if (exists $confighash{repoanalysis}) {
@@ -77,10 +63,6 @@ sub log {
     my $self = shift;
     return $self->{logger};
 }
-sub internalmeta {
-    my $self = shift;
-    return $self->{internalmeta};
-}
 sub repoanalysis {
     my $self = shift;
     return $self->{repoanalysis};
@@ -95,12 +77,12 @@ sub walk {
     my ($self) = @_;
 
 
-    $self->internalmeta->type("application/json");
-    my $res = $self->internalmeta->get("/".$self->internalmeta->{database}."/_design/tdr/_view/metscount?reduce=false&startkey=2&endkey=7",{}, {deserializer => 'application/json'});
+    $self->repoanalysis->type("application/json");
+    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/walkq?reduce=false",{}, {deserializer => 'application/json'});
     if ($res->code == 200) {
         if (exists $res->data->{rows}) {
             foreach my $hr (@{$res->data->{rows}}) {
-                $self->getmanifest($hr->{id},$hr->{key});
+                $self->getmanifest($hr->{id},$hr->{key},$hr->{value});
             }
         }
 	print STDERR "Only metadata updates: ".$self->{mdonly}."\n";
@@ -111,14 +93,14 @@ sub walk {
 }
 
 sub getmanifest {
-    my ($self,$aip,$metscount) = @_;
+    my ($self,$aip,$manifestdate,$metscount) = @_;
 
 
     my $file = $aip."/manifest-md5.txt";
     my $r = $self->cos->get("/$file");
 
     if ($r->code == 200) {
-	$self->processmanifest($aip,$metscount,$r->response->content);
+	$self->processmanifest($aip,$manifestdate,$metscount,$r->response->content);
     } elsif ($r->code == 404 ) {
         print STDERR "Not yet found: $file"."\n";
         return;
@@ -129,7 +111,7 @@ sub getmanifest {
 }
 
 sub processmanifest {
-    my ($self,$aip,$metscount,$manifest) = @_;
+    my ($self,$aip,$manifestdate,$metscount,$manifest) = @_;
 
 
     my @manifest;
@@ -157,6 +139,7 @@ sub processmanifest {
 
     # Hash of information to be posted to CouchDB
     my %repoanalysis = ( summary => {
+	manifestdate => $manifestdate,
 	metscount => $metscount,
 	sipfiles => $sipfiles,
 	revfiles => $revfiles
@@ -176,6 +159,7 @@ sub processmanifest {
 		last;
 	    } else {
 		print STDERR ("HEAD of $file returned code: ". $r->code."\n");
+		sleep(20);
 	    }
 	}
 	if (! defined $length) {
