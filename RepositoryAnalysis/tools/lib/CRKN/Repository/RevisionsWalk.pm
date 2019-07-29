@@ -1,7 +1,6 @@
 package CRKN::Repository::RevisionsWalk;
 
 use strict;
-use Carp;
 use CIHM::TDR::TDRConfig;
 use CIHM::TDR::ContentServer;
 use CRKN::REST::repoanalysis;
@@ -31,7 +30,7 @@ sub new {
             clientattrs => {timeout => 3600},
             );
     } else {
-        croak "Missing <repoanalysis> configuration block in config\n";
+        die "Missing <repoanalysis> configuration block in config\n";
     }
 
     my %cosargs = (
@@ -40,7 +39,7 @@ sub new {
         );
     $self->{cos} = new CIHM::TDR::REST::ContentServer (\%cosargs);
     if (!$self->cos) {
-        croak "Missing ContentServer configuration\n";
+        die "Missing ContentServer configuration\n";
     }
 
     $self->{mdonly}=0;
@@ -156,14 +155,18 @@ sub processmanifest {
 	    my $r = $self->cos->head("/$aip/$file");
 	    if ($r->code == 200) {
 		$length=$r->response->header('Content-Length');
+		if (! defined $length) {
+		    warn ("HEAD of /$aip/$file didn't have Content-Length\n");
+		    $length=0;
+		}
 		last;
 	    } else {
-		print STDERR ("HEAD of $file returned code: ". $r->code."\n");
+		print STDERR ("HEAD of /$aip/$file returned code: ". $r->code."\n");
 		sleep(20);
 	    }
 	}
 	if (! defined $length) {
-	    croak ("Can't get length of $file\n");
+	    die("Can't get length of /$aip/$file\n");
 	}
 	
 	push @manifest, [$file,$md5,$length];

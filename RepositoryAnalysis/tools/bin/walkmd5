@@ -5,7 +5,7 @@ use warnings;
 
 use FindBin;
 use lib "$FindBin::RealBin/../lib";
-use CRKN::Repository::RevisionsWalk;
+use CRKN::Repository::walkmd5;
 use Getopt::Long;
 
 
@@ -15,7 +15,7 @@ GetOptions (
     'conf:s' => \$conf
     );
 
-CRKN::Repository::RevisionsWalk->new({ 
+CRKN::Repository::walkmd5->new({ 
     configpath => $conf
                             })->walk;
 

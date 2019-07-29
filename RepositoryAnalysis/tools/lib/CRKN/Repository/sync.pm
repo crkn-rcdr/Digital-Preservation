@@ -79,7 +79,7 @@ sub sync {
     my ($self) = @_;
 
     $self->internalmeta->type("application/json");
-    my $res = $self->internalmeta->get("/".$self->internalmeta->{database}."/_design/tdr/_view/metscount?reduce=false&startkey=2&endkey=7",{}, {deserializer => 'application/json'});
+    my $res = $self->internalmeta->get("/".$self->internalmeta->{database}."/_design/tdr/_view/metscount?reduce=false&startkey=1&endkey=7",{}, {deserializer => 'application/json'});
     if ($res->code == 200) {
         if (exists $res->data->{rows}) {
             foreach my $hr (@{$res->data->{rows}}) {
