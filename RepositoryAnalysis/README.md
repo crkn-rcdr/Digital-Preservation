@@ -11,12 +11,15 @@ As we move forward with developing the repository platform we will want to have 
 
 ## Traits to determine
 
-* Single SIP, or multiple SIP (excluding metadata updates)
-* Metadata updates, and what was different (dmdSec, structMap order, labels, ?other?)
-* Duplicate SIP?
-* Duplicate files across SIP revisions?
-* Files in SIP revisions that exist within other AIPs (current or previous revisions)
-* Image files which have OCR, and which format used (txtmap or Alto)
+* Files and structure
+   * Single SIP, or multiple SIP (excluding metadata updates)
+   * Duplicate SIP?
+   * Duplicate files across SIP revisions?
+   * Files in SIP revisions that exist within other AIPs (current or previous revisions)
+   * Only one type of file (image, PDF)
+* Metadata
+   * Metadata updates, and what was different (dmdSec, structMap order, labels, ?other?)
+   * Image files which have OCR, and which format used (txtmap or Alto)
 
 ## Questions to help answer
 
