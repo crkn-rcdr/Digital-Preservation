@@ -1,9 +1,9 @@
 package CRKN::Repository::RevisionsWalk;
 
 use strict;
-use CIHM::TDR::TDRConfig;
-use CIHM::TDR::ContentServer;
+use Config::General;
 use CRKN::REST::repoanalysis;
+use CIHM::Swift::Client;
 use Data::Dumper;
 
 sub new {
@@ -15,10 +15,9 @@ sub new {
     };
     $self->{args} = $args;
 
-    $self->{config} = CIHM::TDR::TDRConfig->instance($self->configpath);
-    $self->{logger} = $self->{config}->logger;
-
-    my %confighash = %{$self->{config}->get_conf};
+    my %confighash = new Config::General(
+	-ConfigFile => $args->{configpath},
+	)->getall;
 
     # Undefined if no <repoanalysis> config block
     if (exists $confighash{repoanalysis}) {
@@ -33,17 +32,24 @@ sub new {
         die "Missing <repoanalysis> configuration block in config\n";
     }
 
-    my %cosargs = (
-        jwt_payload => '{"uids":[".*"]}',
-        conf => $self->configpath
-        );
-    $self->{cos} = new CIHM::TDR::REST::ContentServer (\%cosargs);
-    if (!$self->cos) {
-        die "Missing ContentServer configuration\n";
+    # Undefined if no <swift> config block
+    if(exists $confighash{swift}) {
+	my %swiftopt = (
+	    furl_options => { timeout => 120 }
+	    );
+	foreach ("server","user","password","account", "furl_options") {
+	    if (exists  $confighash{swift}{$_}) {
+		$swiftopt{$_}=$confighash{swift}{$_};
+	    }
+	}
+        $self->{swift}=CIHM::Swift::Client->new(%swiftopt);
+	$self->{swiftconfig}=$confighash{swift};
+    } else {
+	die "No <swift> configuration block in ".$self->configpath."\n";
     }
-
-    $self->{mdonly}=0;
     
+    $self->{mdonly}=0;
+
     return $self;
 }
 sub args {
@@ -54,21 +60,25 @@ sub configpath {
     my $self = shift;
     return $self->{args}->{configpath};
 }
-sub config {
-    my $self = shift;
-    return $self->{config};
-}
-sub log {
-    my $self = shift;
-    return $self->{logger};
-}
 sub repoanalysis {
     my $self = shift;
     return $self->{repoanalysis};
 }
-sub cos {
+sub swift {
     my $self = shift;
-    return $self->{cos};
+    return $self->{swift};
+}
+sub swiftconfig {
+    my $self = shift;
+    return $self->{swiftconfig};
+}
+sub repository {
+    my $self = shift;
+    return $self->swiftconfig->{repository};
+}
+sub container {
+    my $self = shift;
+    return $self->swiftconfig->{container};
 }
 
 
@@ -81,7 +91,7 @@ sub walk {
     if ($res->code == 200) {
         if (exists $res->data->{rows}) {
             foreach my $hr (@{$res->data->{rows}}) {
-                $self->getmanifest($hr->{id},$hr->{key},$hr->{value});
+                $self->processaip($hr->{id},$hr->{key});
             }
         }
 	print STDERR "Only metadata updates: ".$self->{mdonly}."\n";
@@ -91,28 +101,23 @@ sub walk {
     }
 }
 
-sub getmanifest {
-    my ($self,$aip,$manifestdate,$metscount) = @_;
+sub processaip {
+    my ($self,$aip,$manifestdate) = @_;
 
 
     my $file = $aip."/manifest-md5.txt";
-    my $r = $self->cos->get("/$file");
+    my $r = $self->swift->object_get($self->container,"$file");
 
-    if ($r->code == 200) {
-	$self->processmanifest($aip,$manifestdate,$metscount,$r->response->content);
-    } elsif ($r->code == 404 ) {
+    if ($r->code == 404 ) {
         print STDERR "Not yet found: $file"."\n";
         return;
-    } else {
+    } elsif ($r->code != 200) {
         print STDERR "Accessing $file returned code: " . $r->code."\n";
         return;
     }
-}
-
-sub processmanifest {
-    my ($self,$aip,$manifestdate,$metscount,$manifest) = @_;
 
 
+    # Now process the manifest in $r->content
     my @manifest;
     my %sipdfmd5;
 
@@ -120,7 +125,10 @@ sub processmanifest {
 
     # Array of data files
     my @datafiles    = grep { /\/data\/files\// } 
-                            (split /\n/, $manifest);
+                            (split /\n/, $r->content);
+
+    # No longer need manifest.
+    undef $r;
 
     my @revdatafiles = grep { /\s+data\/revisions\/([^\/]+)\/data\/files\// }
                             @datafiles;
@@ -139,35 +147,50 @@ sub processmanifest {
     # Hash of information to be posted to CouchDB
     my %repoanalysis = ( summary => {
 	manifestdate => $manifestdate,
-	metscount => $metscount,
 	sipfiles => $sipfiles,
 	revfiles => $revfiles
 			 }
 	);
 
+    # Get a listing of files from Swift within this AIP
+    my %containeropt = (
+	"prefix" => $aip."/"
+	);
+    my %aipdata;
+    # Need to loop possibly multiple times as Swift has a maximum of
+    # 10,000 names.
+    my $more=1;
+    while ($more) {
+	my $aipdataresp = $self->swift->container_get($self->container,
+						      \%containeropt);
+	if ($aipdataresp->code != 200) {
+	    die "container_get(".$self->container.") for $aip returned ". $aipdataresp->code . " - " . $aipdataresp->message. "\n";
+	};
+	$more=scalar(@{$aipdataresp->content});
+	if ($more) {
+	    $containeropt{'marker'}=$aipdataresp->content->[$more-1]->{name};
+
+	    foreach my $object (@{$aipdataresp->content}) {
+		my $file=substr $object->{name},(length $aip)+1;
+		$aipdata{$file}=$object;
+	    }
+	}
+    }
+
     foreach my $line (@datafiles) {
 	my ($md5,$file) = split /\s+/, $line;
 	my $length;
 
-	# Retry 3 times
-	for (my $count = 1; $count < 3 ; $count++) {
-	    # Get the length of the file
-	    my $r = $self->cos->head("/$aip/$file");
-	    if ($r->code == 200) {
-		$length=$r->response->header('Content-Length');
-		if (! defined $length) {
-		    warn ("HEAD of /$aip/$file didn't have Content-Length\n");
-		    $length=0;
-		}
-		last;
-	    } else {
-		print STDERR ("HEAD of /$aip/$file returned code: ". $r->code."\n");
-		sleep(20);
-	    }
+	if (! exists $aipdata{$file}) {
+	    die "$file didn't exist in Swift\n";
 	}
-	if (! defined $length) {
+	if ($md5 ne $aipdata{$file}{'hash'}) {
+	    die "$file $md5 didn't match Swift hash ".$aipdata{$file}{'hash'}."\n";
+	}
+	if (! defined $aipdata{$file}{'bytes'}) {
 	    die("Can't get length of /$aip/$file\n");
 	}
+	my $length=$aipdata{$file}{'bytes'};
 	
 	push @manifest, [$file,$md5,$length];
 

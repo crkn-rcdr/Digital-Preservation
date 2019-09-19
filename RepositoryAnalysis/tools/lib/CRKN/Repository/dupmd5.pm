@@ -2,7 +2,7 @@ package CRKN::Repository::dupmd5;
 
 use strict;
 use Carp;
-use CIHM::TDR::TDRConfig;
+use Config::General;
 use CRKN::REST::repoanalysis;
 use Data::Dumper;
 
@@ -15,10 +15,9 @@ sub new {
     };
     $self->{args} = $args;
 
-    $self->{config} = CIHM::TDR::TDRConfig->instance($self->configpath);
-    $self->{logger} = $self->{config}->logger;
-
-    my %confighash = %{$self->{config}->get_conf};
+    my %confighash = new Config::General(
+        -ConfigFile => $args->{configpath},
+        )->getall;
 
     # Undefined if no <repoanalysis> config block
     if (exists $confighash{repoanalysis}) {
@@ -42,14 +41,6 @@ sub args {
 sub configpath {
     my $self = shift;
     return $self->{args}->{configpath};
-}
-sub config {
-    my $self = shift;
-    return $self->{config};
-}
-sub log {
-    my $self = shift;
-    return $self->{logger};
 }
 sub repoanalysis {
     my $self = shift;

@@ -1,6 +1,3 @@
-requires 'CIHM::TDR';
-requires 'CIHM::Meta';
-requires 'CIHM::METS::parse';
 requires 'Log::Log4perl';
 requires 'common::sense';
 requires 'MIME::Types';
@@ -22,3 +19,6 @@ requires 'Coro::Semaphore';
 requires 'AnyEvent';
 requires 'AnyEvent::Fork';
 requires 'AnyEvent::Fork::Pool';
+requires 'Furl';
+requires 'IO::Socket::SSL';
+requires 'XML::LibXML';

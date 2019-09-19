@@ -3,10 +3,10 @@ module.exports.map = function(doc) {
 	doc["summary"]["unique"] > 0 &&
 	(
 	    !("md5summary" in doc) ||
-		doc["manifestdate"] != doc["md5summary"]["manifestdate"]
+		doc["reposManifestDate"] != doc["md5summary"]["manifestdate"]
 	)
        ) {
-        emit(doc["manifestdate"],doc["metscount"]);
+        emit(doc["reposManifestDate"],null);
     };
 };
 module.exports.reduce = "_count";
