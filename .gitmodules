@@ -1,0 +1,3 @@
+[submodule "RepositoryAnalysis/tools/CIHM-Swift"]
+	path = RepositoryAnalysis/tools/CIHM-Swift
+	url = git@github.com:crkn-rcdr/CIHM-Swift.git
