@@ -1,8 +1,8 @@
 module.exports.map = function(doc) {
     if (("md5summary" in doc) &&
-        "duplicates" in doc["md5summary"]
+        "revduplicates" in doc["md5summary"]
        ) {
-	nummd5 = Object.keys(doc["md5summary"]["duplicates"]).length;
+	nummd5 = Object.keys(doc["md5summary"]["revduplicates"]).length;
 	if (nummd5 >0) {
             emit(nummd5,null);
 	}

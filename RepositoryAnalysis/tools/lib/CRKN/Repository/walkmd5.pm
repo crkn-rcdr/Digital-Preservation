@@ -92,7 +92,8 @@ sub process {
     my %repoanalysis = ( md5summary => {
         manifestdate => $manifestdate,
 	globaluniq => [],
-	duplicates => {}
+	revduplicates => {},
+	sipduplicates => {}
                          }
         );
 
@@ -100,8 +101,8 @@ sub process {
 	foreach my $file (keys %{$aipinfo->{revfiles}}) {
 	    my ($md5,$size) = @{$aipinfo->{revfiles}->{$file}};
 
-	    if (exists $repoanalysis{md5summary}{duplicates}{$md5} &&
-		exists $repoanalysis{md5summary}{duplicates}{$md5}{$size}) {
+	    if (exists $repoanalysis{md5summary}{revduplicates}{$md5} &&
+		exists $repoanalysis{md5summary}{revduplicates}{$md5}{$size}) {
 		# An existing file already caused this lookup
 		next;
 	    }
@@ -120,12 +121,11 @@ sub process {
 		    }
 		    if (! $inmysip ) {
 			foreach my $found (@{$res->data->{rows}}) {
-			    if (! exists $repoanalysis{md5summary}{duplicates}{$md5}{$size}) {
-				$repoanalysis{md5summary}{duplicates}{$md5}{$size} = [];
-			    } 
-			    push $repoanalysis{md5summary}{duplicates}{$md5}{$size},
+			    if (! exists $repoanalysis{md5summary}{revduplicates}{$md5}{$size}) {
+				$repoanalysis{md5summary}{revduplicates}{$md5}{$size} = [];
+			    }
+			    push $repoanalysis{md5summary}{revduplicates}{$md5}{$size},
 				$found->{'id'}."/".$found->{'value'};
-			    print "$aip has external duplicates\n";
 			}
 		    }
 		}
@@ -138,6 +138,43 @@ sub process {
 		warn "_view/md5sizesip GET return code: ".$res->code."\n"; 
 	    }
 	}
+    }
+
+    if (exists $aipinfo->{sipfiles}) {
+	foreach my $file (keys %{$aipinfo->{sipfiles}}) {
+	    my ($md5,$size) = @{$aipinfo->{sipfiles}->{$file}};
+
+	    if (exists $repoanalysis{md5summary}{sipduplicates}{$md5} &&
+		exists $repoanalysis{md5summary}{sipduplicates}{$md5}{$size}) {
+		# An existing file already caused this lookup
+		next;
+	    }
+
+	    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?reduce=false&key=\[\"$md5\",\"$size\"\]",{}, {deserializer => 'application/json'});
+	    if ($res->code == 200) {
+		# Files unique to this SIP will exist 1 time.
+		if ((scalar @{$res->data->{rows}}) > 1) {
+		    foreach my $found (@{$res->data->{rows}}) {
+			if (! exists $repoanalysis{md5summary}{sipduplicates}{$md5}{$size}) {
+			    $repoanalysis{md5summary}{sipduplicates}{$md5}{$size} = [];
+			}
+			push $repoanalysis{md5summary}{sipduplicates}{$md5}{$size},
+			    $found->{'id'}."/".$found->{'value'};
+		    }
+		}
+	    }
+	    else {
+		warn "_view/md5sizesip GET return code: ".$res->code."\n";
+	    }
+	}
+    }
+    my $sipduplicates= scalar(keys %{$repoanalysis{md5summary}{sipduplicates}});
+    my $revduplicates= scalar(keys %{$repoanalysis{md5summary}{revduplicates}});
+    if($sipduplicates) {
+	print "$aip SIP has $sipduplicates external duplicates\n";
+    }
+    if($revduplicates) {
+	print "$aip revisions have $revduplicates external duplicates\n";
     }
     my $res = $self->repoanalysis->create_or_update($aip,\%repoanalysis);
 }
