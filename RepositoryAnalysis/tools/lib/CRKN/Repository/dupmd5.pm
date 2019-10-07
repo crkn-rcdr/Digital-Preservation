@@ -6,6 +6,14 @@ use Config::General;
 use CRKN::REST::repoanalysis;
 use Data::Dumper;
 
+
+=head1 NAME
+
+CRKN::Repository::dupmd5 - detect duplicate MD5's and determine if they have different file sizes.
+
+=cut
+
+
 sub new {
     my($class, $args) = @_;
     my $self = bless {}, $class;
@@ -51,12 +59,10 @@ sub repoanalysis {
 sub walk {
     my ($self) = @_;
 
-    my @dupmd5;
-    
     $self->repoanalysis->type("application/json");
 
     my $skip=0;
-    my $limit=100;
+    my $limit=1000;
     my $rows=-1;
     until($rows == 0) {
 	my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?group=true&group_level=1&limit=$limit&skip=$skip",{}, {deserializer => 'application/json'});
@@ -65,8 +71,7 @@ sub walk {
 		$rows=scalar(@{$res->data->{rows}});
 		foreach my $hr (@{$res->data->{rows}}) {
 		    if ($hr->{value} > 1) {
-			push @dupmd5,$hr->{key}[0];
-			print "Found ".$hr->{key}[0] . " has " .$hr->{value}."\n";
+			$self->process_md5($hr->{key}[0]);
 		    }
 		}
 		$skip = $skip+$rows;
@@ -76,12 +81,39 @@ sub walk {
 	    }
 	}
 	else {
-	    warn "_view/hammerq GET return code: ".$res->code."\n";
+	    warn "_view/md5sizesip GET return code: ".$res->code."\n";
 	    $rows=0;
 	}
     }
-
-    print Dumper(\@dupmd5);
 }
+
+
+
+sub process_md5 {
+    my ($self,$md5) = @_;
+
+    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?reduce=false&startkey=\[\"$md5\"\]&endkey=\[\"$md5\",{}\]",{}, {deserializer => 'application/json'});
+    if ($res->code == 200) {
+	if (exists $res->data->{rows}) {
+	    my $size;
+	    foreach my $mss (@{$res->data->{rows}}) {
+		if (! defined $size) {
+		    $size = $mss->{key}[1]
+		} else {
+		    if ($size != $mss->{key}[1]) {
+			print "Found multiple sizs for $md5" . Dumper($res->data->{rows})."\n";
+			last;
+		    }
+		}
+	    }
+	} else {
+	    warn "No {rows} for $md5\n";
+	}
+    }
+    else {
+	warn "_view/md5sizesip POST return code: ".$res->code."\n";
+    }
+}
+
 
 1;
