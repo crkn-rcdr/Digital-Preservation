@@ -3,14 +3,18 @@ module.exports.map = function(doc) {
 	var partial = 0;
 	var full = 0;
 	doc.METS.forEach(function(mets) {
-	    if ((mets['path'].indexOf(".partial/metadata.xml")) != -1) {
-		partial++;
-	    } else {
-		full++;
+	    if (mets['path'] != 'data/sip/data/metadata.xml') {
+		if ((mets['path'].indexOf(".partial/metadata.xml")) != -1) {
+		    partial++;
+		} else {
+		    full++;
+		}
 	    }
 	});
-	emit(["partial",partial], null);
-	emit(["full",full], null);
+	if ((partial + full) > 0) {
+	    emit(["partial",partial], null);
+	    emit(["full",full], null);
+	}
     }
 };
 module.exports.reduce = "_count";
