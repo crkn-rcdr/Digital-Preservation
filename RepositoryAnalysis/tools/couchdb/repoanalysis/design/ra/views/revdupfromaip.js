@@ -1,9 +1,9 @@
 module.exports.map = function(doc) {
     if (("md5summary" in doc) &&
-        "dupfromaip" in doc["md5summary"] &&
-	Array.isArray(doc["md5summary"]["dupfromaip"])
+        "revdupfromaip" in doc["md5summary"] &&
+	Array.isArray(doc["md5summary"]["revdupfromaip"])
        ) {
-	numaip = doc["md5summary"]["dupfromaip"].length;
+	numaip = doc["md5summary"]["revdupfromaip"].length;
 	if (numaip >0) {
             emit(numaip,null);
 	}
