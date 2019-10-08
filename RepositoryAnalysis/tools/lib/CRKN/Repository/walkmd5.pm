@@ -97,7 +97,8 @@ sub process {
                          }
         );
 
-    my %dupinaip;
+    my %revdupinaip;
+    my %sipdupinaip;
 
     if (exists $aipinfo->{revfiles}) {
 	foreach my $file (keys %{$aipinfo->{revfiles}}) {
@@ -128,7 +129,7 @@ sub process {
 			    }
 			    push $repoanalysis{md5summary}{revduplicates}{$md5}{$size},
 				$found->{'id'}."/".$found->{'value'};
-			    $dupinaip{$found->{'id'}}=1;
+			    $revdupinaip{$found->{'id'}}=1;
 			}
 		    }
 		}
@@ -163,7 +164,7 @@ sub process {
 			}
 			push $repoanalysis{md5summary}{sipduplicates}{$md5}{$size},
 			    $found->{'id'}."/".$found->{'value'};
-			$dupinaip{$found->{'id'}}=1;
+			$sipdupinaip{$found->{'id'}}=1;
 		    }
 		}
 	    }
@@ -182,9 +183,13 @@ sub process {
     }
 
     # Array of AIPs that duplicates were found in, excluding this one.
-    delete $dupinaip{$aip};
-    my @dupfromaip = keys %dupinaip;
-    $repoanalysis{md5summary}{dupfromaip}=\@dupfromaip;
+    delete $revdupinaip{$aip};
+    my @revdupfromaip = keys %revdupinaip;
+    $repoanalysis{md5summary}{revdupfromaip}=\@revdupfromaip;
+
+    delete $sipdupinaip{$aip};
+    my @sipdupfromaip = keys %sipdupinaip;
+    $repoanalysis{md5summary}{sipdupfromaip}=\@sipdupfromaip;
 
     my $res = $self->repoanalysis->create_or_update($aip,\%repoanalysis);
 }

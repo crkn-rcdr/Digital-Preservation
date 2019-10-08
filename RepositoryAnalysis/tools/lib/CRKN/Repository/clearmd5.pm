@@ -73,9 +73,10 @@ sub getnext {
 
     $self->repoanalysis->type("application/json");
 
-    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/walkmd5r?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
+#    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/walkmd5r?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
 
 #    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/sipdupinother?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
+    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/dupinother?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
 
     if ($res->code == 200) {
 	if (exists $res->data->{rows}) {
