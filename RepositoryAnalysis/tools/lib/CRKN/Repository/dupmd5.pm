@@ -59,10 +59,13 @@ sub repoanalysis {
 sub walk {
     my ($self) = @_;
 
+
+    my @md5s;
+
     $self->repoanalysis->type("application/json");
 
     my $skip=0;
-    my $limit=1000;
+    my $limit=50000;
     my $rows=-1;
     until($rows == 0) {
 	my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?group=true&group_level=1&limit=$limit&skip=$skip",{}, {deserializer => 'application/json'});
@@ -71,10 +74,11 @@ sub walk {
 		$rows=scalar(@{$res->data->{rows}});
 		foreach my $hr (@{$res->data->{rows}}) {
 		    if ($hr->{value} > 1) {
-			$self->process_md5($hr->{key}[0]);
+			push @md5s,$hr->{key}[0];
 		    }
 		}
 		$skip = $skip+$rows;
+		print "Skip=$skip md5s=".scalar(@md5s)." First was=".$res->data->{rows}->[0]->{key}[0]."\n";
 	    } else {
 		warn "No {rows}\n";
 		$rows=0;
@@ -85,6 +89,11 @@ sub walk {
 	    $rows=0;
 	}
     }
+    print "There are ".scalar(@md5s)." md5's with more than 1 file\n";
+    print "Checking for duplidates....\n";
+    foreach my $md5 (@md5s) {
+	$self->process_md5($md5);
+    };
 }
 
 
@@ -101,7 +110,7 @@ sub process_md5 {
 		    $size = $mss->{key}[1]
 		} else {
 		    if ($size != $mss->{key}[1]) {
-			print "Found multiple sizs for $md5" . Dumper($res->data->{rows})."\n";
+			print "\nFound multiple sizes for $md5" . Dumper($res->data->{rows})."\n";
 			last;
 		    }
 		}
@@ -111,7 +120,7 @@ sub process_md5 {
 	}
     }
     else {
-	warn "_view/md5sizesip POST return code: ".$res->code."\n";
+	warn "process_md5() view/md5sizesip return code: ".$res->code."\n";
     }
 }
 
