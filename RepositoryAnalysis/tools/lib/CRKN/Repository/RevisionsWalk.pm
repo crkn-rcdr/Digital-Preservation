@@ -3,6 +3,7 @@ package CRKN::Repository::RevisionsWalk;
 use strict;
 use Config::General;
 use CRKN::REST::repoanalysis;
+use CRKN::REST::repoanalysisf;
 use CIHM::Swift::Client;
 use Data::Dumper;
 
@@ -30,6 +31,19 @@ sub new {
             );
     } else {
         die "Missing <repoanalysis> configuration block in config\n";
+    }
+
+    # Undefined if no <repoanalysisf> config block
+    if (exists $confighash{repoanalysisf}) {
+        $self->{repoanalysisf} = new CRKN::REST::repoanalysisf (
+            server => $confighash{repoanalysisf}{server},
+            database => $confighash{repoanalysisf}{database},
+            type   => 'application/json',
+            conf   => $args->{configpath},
+            clientattrs => {timeout => 3600},
+            );
+    } else {
+        die "Missing <repoanalysisf> configuration block in config\n";
     }
 
     # Undefined if no <swift> config block
@@ -64,6 +78,10 @@ sub repoanalysis {
     my $self = shift;
     return $self->{repoanalysis};
 }
+sub repoanalysisf {
+    my $self = shift;
+    return $self->{repoanalysisf};
+}
 sub swift {
     my $self = shift;
     return $self->{swift};
@@ -79,6 +97,10 @@ sub repository {
 sub container {
     my $self = shift;
     return $self->swiftconfig->{container};
+}
+sub swiftrepoanalysis {
+    my $self = shift;
+    return $self->swiftconfig->{repoanalysis};
 }
 
 
@@ -177,6 +199,28 @@ sub processaip {
 	}
     }
 
+    # Same get, but from the 'repoanalysis' container
+    my %repoanalysisdata;
+    # Need to loop possibly multiple times as Swift has a maximum of
+    # 10,000 names.
+    my $more=1;
+    while ($more) {
+	my $aipdataresp = $self->swift->container_get($self->swiftrepoanalysis,
+						      \%containeropt);
+	if ($aipdataresp->code != 200) {
+	    die "container_get(".$self->swiftrepoanalysis.") for $aip returned ". $aipdataresp->code . " - " . $aipdataresp->message. "\n";
+	};
+	$more=scalar(@{$aipdataresp->content});
+	if ($more) {
+	    $containeropt{'marker'}=$aipdataresp->content->[$more-1]->{name};
+
+	    foreach my $object (@{$aipdataresp->content}) {
+		my $file=substr $object->{name},(length $aip)+1;
+		$repoanalysisdata{$file}=$object;
+	    }
+	}
+    }
+
     foreach my $line (@datafiles) {
 	my ($md5,$file) = split /\s+/, $line;
 	my $length;
@@ -229,6 +273,11 @@ sub processaip {
     } else {
 	print "$aip SIP:$sipfiles , Revision:$revfiles , Unique:$unique , Duplicate:$duplicate\n";
     }
+
+
+    # Get JHove file metadata
+    # TODO
+
 
     my $res = $self->repoanalysis->create_or_update($aip,\%repoanalysis);
     if ($res) {
