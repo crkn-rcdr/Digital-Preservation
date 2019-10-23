@@ -1,4 +1,4 @@
-FROM perl:5.18.2
+FROM perl:5.30.0
 
 RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
     mkdir -p /etc/canadiana /var/log/tdr /var/lock/tdr && ln -s /home/tdr /etc/canadiana/tdr && chown tdr.tdr /var/log/tdr && \
