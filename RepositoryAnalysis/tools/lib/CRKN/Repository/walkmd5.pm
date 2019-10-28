@@ -127,14 +127,14 @@ sub process {
 			    if (! exists $repoanalysis{md5summary}{revduplicates}{$md5}{$size}) {
 				$repoanalysis{md5summary}{revduplicates}{$md5}{$size} = [];
 			    }
-			    push $repoanalysis{md5summary}{revduplicates}{$md5}{$size},
+			    push @{$repoanalysis{md5summary}{revduplicates}{$md5}{$size}},
 				$found->{'id'}."/".$found->{'value'};
 			    $revdupinaip{$found->{'id'}}=1;
 			}
 		    }
 		}
 		else {
-		    push $repoanalysis{md5summary}{globaluniq},
+		    push @{$repoanalysis{md5summary}{globaluniq}},
 			$file;
 		} 
 	    }
@@ -162,7 +162,7 @@ sub process {
 			if (! exists $repoanalysis{md5summary}{sipduplicates}{$md5}{$size}) {
 			    $repoanalysis{md5summary}{sipduplicates}{$md5}{$size} = [];
 			}
-			push $repoanalysis{md5summary}{sipduplicates}{$md5}{$size},
+			push @{$repoanalysis{md5summary}{sipduplicates}{$md5}{$size}},
 			    $found->{'id'}."/".$found->{'value'};
 			$sipdupinaip{$found->{'id'}}=1;
 		    }

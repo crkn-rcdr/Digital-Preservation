@@ -92,10 +92,12 @@ sub load {
     my $skip=0;
     my $limit=10000;
     my $rows=-1;
+    my $descending="true";
+    my $lastpath="none";
     until($rows == 0) {
 	$self->filemeta->type("application/json");
-	print "Limit=$limit Skip=$skip LastRows=$rows JhoveFiles=$jhovefiles\n";
-	my $res = $self->filemeta->get("/".$self->filemeta->database."/_all_docs?limit=$limit&skip=$skip&include_docs=true",{}, {deserializer => 'application/json'});
+	print "Limit=$limit Skip=$skip Lastpath=$lastpath LastRows=$rows JhoveFiles=$jhovefiles\n";
+	my $res = $self->filemeta->get("/".$self->filemeta->database."/_all_docs?limit=$limit&skip=$skip&include_docs=true&descending=$descending",{}, {deserializer => 'application/json'});
         if ($res->code == 200) {
 	    $rows = scalar(@{$res->data->{rows}});
 	    foreach my $row (@{$res->data->{rows}}) {
@@ -106,6 +108,7 @@ sub load {
 		    $jhovefiles++;
 		    # Copy attachment to Swift
 		    my $pathname = $row->{id};
+		    $lastpath=$pathname;
 		    my $jhovexml = $self->filemeta->get_attachment(uri_escape($pathname),"jhove.xml");
 
 		    my $putresp = $self->swift->object_put($self->swiftrepoanalysis,$pathname."/jhove.xml", $jhovexml);
