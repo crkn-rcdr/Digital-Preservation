@@ -1,4 +1,4 @@
-package CRKN::Repository::clearmd5;
+package CRKN::Repository::clearsum;
 
 use strict;
 use Carp;
@@ -51,24 +51,46 @@ sub repoanalysis {
 sub walk {
     my ($self) = @_;
 
-    # An empty summary
-    my %repoanalysis = ( md5summary => {});
-    
-    my $lastid='';
-    while (my $aipinfo = $self->getnext) {
-	my $id=$aipinfo->{"id"};
-	if($id eq $lastid) {
-	    warn "$id found - sleeping and trying again\n";
-	    sleep(5); # Do nothing, and try again
-	} else {
-	    $lastid=$id;
-	    my $res = $self->repoanalysis->create_or_update($id,\%repoanalysis);
+    if ($self->args->{md5} ) {
+	print "Clearing md5summary\n";
+
+	# An empty summary
+	my %repoanalysis = ( md5summary => {});
+
+	my $lastid='';
+	while (my $aipinfo = $self->getnextmd5) {
+	    my $id=$aipinfo->{"id"};
+	    if($id eq $lastid) {
+		warn "$id found - sleeping and trying again\n";
+		sleep(5); # Do nothing, and try again
+	    } else {
+		$lastid=$id;
+		my $res = $self->repoanalysis->create_or_update($id,\%repoanalysis);
+	    }
+	}
+    }
+    if ($self->args->{revisions} ) {
+	print "Clearing revision summaries\n";
+
+	# An empty summary
+	my %repoanalysis = ( summary => {});
+
+	my $lastid='';
+	while (my $aipinfo = $self->getnextwalkr) {
+	    my $id=$aipinfo->{"id"};
+	    if($id eq $lastid) {
+		warn "$id found - sleeping and trying again\n";
+		sleep(5); # Do nothing, and try again
+	    } else {
+		$lastid=$id;
+		my $res = $self->repoanalysis->create_or_update($id,\%repoanalysis);
+	    }
 	}
     }
 }
 
 
-sub getnext {
+sub getnextmd5 {
     my $self = shift;
 
     $self->repoanalysis->type("application/json");
@@ -82,11 +104,30 @@ sub getnext {
 	if (exists $res->data->{rows}) {
 	    return $res->data->{rows}[0];
 	} else {
-	    warn "_view/walkmd5r GET returned no rows\n"; 
+	    warn "_view/walkmd5r GET returned no rows\n";
 	}
     }
     else {
-        warn "_view/walkmd5r GET return code: ".$res->code."\n"; 
+        warn "_view/walkmd5r GET return code: ".$res->code."\n";
+    }
+}
+
+sub getnextwalkr {
+    my $self = shift;
+
+    $self->repoanalysis->type("application/json");
+
+    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/walkr?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
+
+    if ($res->code == 200) {
+	if (exists $res->data->{rows}) {
+	    return $res->data->{rows}[0];
+	} else {
+	    warn "_view/walkr GET returned no rows\n";
+	}
+    }
+    else {
+        warn "_view/walkr GET return code: ".$res->code."\n";
     }
 }
 
