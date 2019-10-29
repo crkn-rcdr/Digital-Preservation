@@ -1,6 +1,5 @@
 module.exports = {
   map: function(doc) {
-    if ("status" in doc) {
       var pathsp = doc["_id"].split("/");
       var aip = pathsp.shift();
       var filename = pathsp.pop();
@@ -18,7 +17,6 @@ module.exports = {
       }
 
       emit([ntype, dep], null);
-    }
   },
   reduce: "_count"
 };
