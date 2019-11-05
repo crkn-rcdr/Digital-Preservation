@@ -4,6 +4,7 @@ use strict;
 use Carp;
 use Config::General;
 use CRKN::REST::repoanalysis;
+use CRKN::REST::repoanalysisf;
 use Data::Dumper;
 
 sub new {
@@ -31,6 +32,19 @@ sub new {
     } else {
         croak "Missing <repoanalysis> configuration block in config\n";
     }
+
+    # Undefined if no <repoanalysis> config block
+    if (exists $confighash{repoanalysisf}) {
+        $self->{repoanalysisf} = new CRKN::REST::repoanalysisf (
+            server => $confighash{repoanalysisf}{server},
+            database => $confighash{repoanalysisf}{database},
+            type   => 'application/json',
+            conf   => $args->{configpath},
+            clientattrs => {timeout => 3600},
+            );
+    } else {
+        croak "Missing <repoanalysisf> configuration block in config\n";
+    }
     
     return $self;
 }
@@ -45,6 +59,10 @@ sub configpath {
 sub repoanalysis {
     my $self = shift;
     return $self->{repoanalysis};
+}
+sub repoanalysisf {
+    my $self = shift;
+    return $self->{repoanalysisf};
 }
 
 
@@ -78,7 +96,7 @@ sub getnext {
 	}
     }
     else {
-        warn "_view/walkmd5q GET return code: ".$res->code."\n"; 
+        warn "_view/walkmd5q GET return code: ".$res->code."\n";
     }
 }
 
@@ -110,7 +128,7 @@ sub process {
 		next;
 	    }
 
-	    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?reduce=false&key=\[\"$md5\",\"$size\"\]",{}, {deserializer => 'application/json'});
+	    my $res = $self->repoanalysisf->get("/".$self->repoanalysisf->{database}."/_design/ra/_view/md5size?reduce=false&key=\[\"$md5\",\"$size\"\]",{}, {deserializer => 'application/json'});
 	    if ($res->code == 200) {
 		if (scalar @{$res->data->{rows}}) {
 
@@ -139,7 +157,7 @@ sub process {
 		} 
 	    }
 	    else {
-		warn "_view/md5sizesip GET return code: ".$res->code."\n"; 
+		warn "_view/md5size GET return code: ".$res->code."\n";
 	    }
 	}
     }
@@ -154,7 +172,7 @@ sub process {
 		next;
 	    }
 
-	    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/filemap/_view/md5sizesip?reduce=false&key=\[\"$md5\",\"$size\"\]",{}, {deserializer => 'application/json'});
+	    my $res = $self->repoanalysisf->get("/".$self->repoanalysisf->{database}."/_design/ra/_view/md5size?reduce=false&key=\[\"$md5\",\"$size\"\]",{}, {deserializer => 'application/json'});
 	    if ($res->code == 200) {
 		# Files unique to this SIP will exist 1 time.
 		if ((scalar @{$res->data->{rows}}) > 1) {
