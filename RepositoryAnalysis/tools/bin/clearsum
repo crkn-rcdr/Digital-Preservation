@@ -12,16 +12,19 @@ use Getopt::Long;
 my $conf = "/etc/canadiana/tdr/tdr.conf";
 my $md5;
 my $revisions;
+my $nojhove;
 GetOptions (
     'conf:s' => \$conf,
     'md5' => \$md5,
-    'revisions' => \$revisions
+    'revisions' => \$revisions,
+    'nojhove' => \$nojhove
     );
 
 CRKN::Repository::clearsum->new({
     configpath => $conf,
     md5 => $md5,
-    revisions => $revisions
+    revisions => $revisions,
+    nojhove => $nojhove
 				})->walk;
 
 1;

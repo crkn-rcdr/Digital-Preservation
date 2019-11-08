@@ -4,6 +4,7 @@ use strict;
 use Carp;
 use Config::General;
 use CRKN::REST::repoanalysis;
+use CRKN::REST::repoanalysisf;
 use Data::Dumper;
 
 sub new {
@@ -31,7 +32,20 @@ sub new {
     } else {
         croak "Missing <repoanalysis> configuration block in config\n";
     }
-    
+
+    # Undefined if no <repoanalysisf> config block
+    if (exists $confighash{repoanalysisf}) {
+        $self->{repoanalysisf} = new CRKN::REST::repoanalysisf (
+            server => $confighash{repoanalysisf}{server},
+            database => $confighash{repoanalysisf}{database},
+            type   => 'application/json',
+            conf   => $args->{configpath},
+            clientattrs => {timeout => 3600},
+            );
+    } else {
+        croak "Missing <repoanalysisf> configuration block in config\n";
+    }
+
     return $self;
 }
 sub args {
@@ -45,6 +59,10 @@ sub configpath {
 sub repoanalysis {
     my $self = shift;
     return $self->{repoanalysis};
+}
+sub repoanalysisf {
+    my $self = shift;
+    return $self->{repoanalysisf};
 }
 
 
@@ -65,7 +83,7 @@ sub walk {
 		sleep(5); # Do nothing, and try again
 	    } else {
 		$lastid=$id;
-		my $res = $self->repoanalysis->create_or_update($id,\%repoanalysis);
+		print $self->repoanalysis->create_or_update($id,\%repoanalysis)."\n";
 	    }
 	}
     }
@@ -83,8 +101,32 @@ sub walk {
 		sleep(5); # Do nothing, and try again
 	    } else {
 		$lastid=$id;
-		my $res = $self->repoanalysis->create_or_update($id,\%repoanalysis);
+		print $self->repoanalysis->create_or_update($id,\%repoanalysis)."\n";
 	    }
+	}
+    }
+
+    if ($self->args->{nojhove} ) {
+	print "Clearing revision summaries where there are no JHOVE reports\n";
+
+	# An empty summary
+	my %repoanalysis = ( summary => {});
+
+	$self->repoanalysisf->type("application/json");
+	my $res = $self->repoanalysisf->get("/".$self->repoanalysisf->{database}."/_design/ra/_view/nojhove?reduce=true&group=true&include_docs=false",{}, {deserializer => 'application/json'});
+
+	if ($res->code == 200) {
+	    if (exists $res->data->{rows}) {
+		foreach my $row (@{$res->data->{rows}}) {
+		    my $id=$row->{key};
+		    print $self->repoanalysis->create_or_update($id,\%repoanalysis)."\n";
+		}
+	    } else {
+		warn "_view/nojhove GET returned no rows\n";
+	    }
+	}
+	else {
+	    warn "_view/nojhove GET return code: ".$res->code."\n";
 	}
     }
 }
