@@ -9,3 +9,5 @@ services:
       - ./bin:/home/tdr/bin
       - ./lib:/home/tdr/lib
       - ./results:/home/tdr/results
+      - /var/log/tdr:/var/log/tdr
+      - /var/lock/tdr:/var/lock/tdr

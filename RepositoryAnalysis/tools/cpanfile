@@ -22,3 +22,4 @@ requires 'AnyEvent::Fork::Pool';
 requires 'Furl';
 requires 'IO::Socket::SSL';
 requires 'XML::LibXML';
+requires 'Archive::Zip';

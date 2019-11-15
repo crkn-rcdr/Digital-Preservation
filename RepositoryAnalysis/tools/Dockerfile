@@ -5,7 +5,7 @@ RUN groupadd -g 1117 tdr && useradd -u 1117 -g tdr -m tdr && \
     groupadd -g 1115 cihm && useradd -u 1015 -g cihm -m cihm && \ 
     ln -s /home/tdr /etc/canadiana/wip && \
     apt-get update && \
-    apt-get install -y --force-yes --no-install-recommends sudo && \
+    apt-get install -y --force-yes --no-install-recommends sudo default-jre && \
     apt-get clean
 
 ENV TINI_VERSION 0.18.0
@@ -31,7 +31,12 @@ RUN set -ex; \
 
 
 WORKDIR /home/tdr
-COPY cpanfile* *.conf docker-entrypoint.sh /home/tdr/
+COPY cpanfile* *.conf *.xml docker-entrypoint.sh /home/tdr/
+
+# Build recent JHOVE.
+RUN curl -OL http://software.openpreservation.org/rel/jhove/jhove-1.22.jar && \
+    java -jar jhove-1.22.jar jhove-auto-install.xml && mv jhove.conf /opt/jhove/conf
+
 
 # Our application is perl code
 RUN cpanm -n --installdeps . && rm -rf /root/.cpanm || \
