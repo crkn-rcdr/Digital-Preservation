@@ -53,6 +53,10 @@ sub args {
     my $self = shift;
     return $self->{args};
 }
+sub cmdargs {
+    my $self = shift;
+    return $self->args->{args};
+}
 sub aip {
     my $self = shift;
     return $self->args->{aip};
@@ -114,17 +118,20 @@ sub process {
     my $zip = Archive::Zip->new();
     my $zipmodified;
     
-    my $r = $self->swift->object_get($self->swiftrepoanalysis,"$zipfile");
-    if ($r->code == 200) {
-	open(my $fh, '>:raw', $tempzipfile)
-	    or die "Could not open file $tempzipfile: $!";
-	print $fh $r->content;
-	close $fh;
-	unless ( $zip->read( $tempzipfile ) == AZ_OK ) {
-	    die "Error with ZIP reading $tempzipfile\n";
+    if (!($self->cmdargs->{regenerate})) {
+	# Try to load existing ZIP if we aren't regenerating JHOVE reports
+	my $r = $self->swift->object_get($self->swiftrepoanalysis,"$zipfile");
+	if ($r->code == 200) {
+	    open(my $fh, '>:raw', $tempzipfile)
+		or die "Could not open file $tempzipfile: $!";
+	    print $fh $r->content;
+	    close $fh;
+	    unless ( $zip->read( $tempzipfile ) == AZ_OK ) {
+		die "Error with ZIP reading $tempzipfile\n";
+	    }
+	} elsif ($r->code != 404) {
+	    die "object_get container: '".$self->swiftrepoanalysis."' , object: '/$zipfile'  returned ". $r->code . " - " . $r->message. "\n";
 	}
-    } elsif ($r->code != 404) {
-	die "object_get container: '".$self->swiftrepoanalysis."' , object: '/$zipfile'  returned ". $r->code . " - " . $r->message. "\n";
     }
 
     my @zipmembers = $zip->members();
@@ -138,6 +145,13 @@ sub process {
 
 	my $fileinfo=$self->raf->{$aip."/".$sipfile};
 	die "SIP file list mismatch for $sipfile\n" if (!$fileinfo);
+
+
+	if ($self->cmdargs->{regenerate}) {
+	    # Clear references to old reports if we are regenerating
+	    delete $fileinfo->{jhove_container};
+	    delete $fileinfo->{jhove_name};
+	}
 
 	my $jhovetxt;
 	my $xmlfilename="$sipfilebase.xml";

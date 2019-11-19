@@ -18,12 +18,16 @@ use Data::Dumper;
 our $self;
 
 sub initworker {
-    my $configpath = shift;
+    my $argjson = shift;
+
+
     our $self;
+    $self = bless {};
+
+    $self->{args}=decode_json $argjson;
+    my $configpath = $self->args->{configpath};
 
     AE::log debug => "Initworker ($$): $configpath";
-
-    $self = bless {};
 
     Log::Log4perl->init_once("/etc/canadiana/tdr/log4perl.conf");
     $self->{logger} = Log::Log4perl::get_logger("CIHM::TDR");
@@ -77,7 +81,11 @@ sub initworker {
 }
 
 
-# Simple accessors for now -- Do I want to Moo?
+# Simple accessors
+sub args {
+    my $self = shift;
+    return $self->{args};
+}
 sub log {
     my $self = shift;
     return $self->{logger};
@@ -127,14 +135,14 @@ sub warnings {
 
 
 sub job {
-  my ($aip,$configpath) = @_;
+  my ($aip,$argjson) = @_;
   our $self;
 
   # Capture warnings
   local $SIG{__WARN__} = sub { &warnings };
 
   if (!$self) {
-      initworker($configpath);
+      initworker($argjson);
   }
 
   # Debugging: http://lists.schmorp.de/pipermail/anyevent/2017q2/000870.html
@@ -157,6 +165,7 @@ sub job {
       new  CRKN::Repository::walkjhove::Process (
           {
               aip => $aip,
+	      args => $self->args,
 	      worker => $self,
               log => $self->log,
               swift => $self->swift,

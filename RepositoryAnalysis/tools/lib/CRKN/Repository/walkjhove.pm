@@ -161,11 +161,12 @@ sub walk {
     my $sem = new Coro::Semaphore ($self->maxprocs*2);
     my $somework;
 
+    my $argstring = encode_json $self->args;
     while (my $aip = $self->getNextAIP) {
         $somework=1;
         $self->{inprogress}->{$aip}=1;
         $sem->down;
-        $pool->($aip,$self->configpath,sub {
+        $pool->($aip,$argstring,sub {
             my $aip=shift;
             $sem->up;
             delete $self->{inprogress}->{$aip};

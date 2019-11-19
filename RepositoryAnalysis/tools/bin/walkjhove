@@ -17,6 +17,7 @@ my $skip = 0;
 my $maxprocs = 4;
 my $limit;
 my $timelimit;
+my $regenerate;
 
 GetOptions (
     'conf:s' => \$conf,
@@ -25,7 +26,8 @@ GetOptions (
     'skip:i' => \$skip,
     'maxprocs:i' => \$maxprocs,
     'limit:i' => \$limit,
-    'timelimit:i' => \$timelimit
+    'timelimit:i' => \$timelimit,
+    'regenerate' => \$regenerate
     );
 
 if (! $aip ) {
@@ -41,7 +43,7 @@ if (! $aip ) {
 CRKN::Repository::walkjhove->new({ 
     configpath => $conf,
     aip => $aip,
-    skip => $skip, maxprocs => $maxprocs,
+    skip => $skip, maxprocs => $maxprocs, regenerate => $regenerate,
     limit => $limit, timelimit => $timelimit
                             })->walk;
 
