@@ -232,7 +232,7 @@ sub getNextAIP {
 	} else {
 	    warn "_view/walkjhoveq GET return code: ".$res->code."\n";
 	}
-	$self->{walkjhoveqcount}=scalar @{$self->{nojhove}};
+	$self->{walkjhoveqcount}=scalar @{$self->{walkjhoveq}};
 	if ($self->{walkjhoveqcount}) {
 	    $self->log->info("There are ".$self->{walkjhoveqcount}." AIPs needing jhove reports processed");
 	}
