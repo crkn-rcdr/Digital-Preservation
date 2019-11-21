@@ -185,13 +185,19 @@ sub walk {
 sub getNextAIP {
     my $self = shift;
 
+    my $aip;
     return if $self->endtime && time() > $self->endtime;
 
-    if ($self->args->{aip}) {
+    if ($self->args->{aip} && ! (defined $self->{cmdaips})) {
 	return if $self->{processedaip};
 	$self->{processedaip}=1;
-	return $self->args->{aip};
+	my @cmdaips = split(/,\S/,$self->args->{aip});
+	$self->{cmdaips}=\@cmdaips;
+	print Data::Dumper->Dump([$self->{cmdaips}], [qw(AIPlist)]);
     }
+    $aip = shift @{$self->{cmdaips}};
+    return $aip if $aip;
+    return if ($self->args->{aip});
 
     if (! defined $self->{nojhove}) {
 	$self->{nojhove}=[];
@@ -214,7 +220,7 @@ sub getNextAIP {
 	    $self->log->info("There are ".$self->{nojhovecount}." AIPs with missing JHOVE reports");
 	}
     }
-    my $aip = shift @{$self->{nojhove}};
+    $aip = shift @{$self->{nojhove}};
     return $aip if $aip;
 
     if (! defined $self->{walkjhoveq}) {
@@ -238,8 +244,7 @@ sub getNextAIP {
 	    $self->log->info("There are ".$self->{walkjhoveqcount}." AIPs needing jhove reports processed");
 	}
     }
-
-    my $aip = shift @{$self->{walkjhoveq}};
+    $aip = shift @{$self->{walkjhoveq}};
     return $aip if $aip;
 
     $self->log->info("Lists empty");
