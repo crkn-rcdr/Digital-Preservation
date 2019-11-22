@@ -191,7 +191,7 @@ sub getNextAIP {
     if ($self->args->{aip} && ! (defined $self->{cmdaips})) {
 	return if $self->{processedaip};
 	$self->{processedaip}=1;
-	my @cmdaips = split(/,\S/,$self->args->{aip});
+	my @cmdaips = split(',',$self->args->{aip});
 	$self->{cmdaips}=\@cmdaips;
 	print Data::Dumper->Dump([$self->{cmdaips}], [qw(AIPlist)]);
     }
