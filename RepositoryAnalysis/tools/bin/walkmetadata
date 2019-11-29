@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+use CRKN::Repository::walkmetadata;
+use Getopt::Long;
+
+use Fcntl qw(:DEFAULT :flock);
+
+my $conf = "/etc/canadiana/tdr/tdr.conf";
+my $lockfile = '/var/lock/tdr/walkmetadata';
+my $aip;
+my $skip = 0;
+my $maxprocs = 4;
+my $limit;
+my $timelimit;
+my $regenerate;
+
+GetOptions (
+    'conf:s' => \$conf,
+    'lockfile:s' => \$lockfile,
+    'aip:s' => \$aip,
+    'skip:i' => \$skip,
+    'maxprocs:i' => \$maxprocs,
+    'limit:i' => \$limit,
+    'timelimit:i' => \$timelimit,
+    'regenerate' => \$regenerate
+    );
+
+if (! $aip ) {
+    # Only allow one instance to run at a time..
+    sysopen(FH, $lockfile, O_WRONLY | O_CREAT) 
+	or die "can't open lockfile=$lockfile: $!\n";
+    flock(FH, LOCK_EX | LOCK_NB)
+	or exit 0;
+}
+
+
+
+CRKN::Repository::walkmetadata->new({ 
+    configpath => $conf,
+    aip => $aip,
+    skip => $skip, maxprocs => $maxprocs, regenerate => $regenerate,
+    limit => $limit, timelimit => $timelimit
+                            })->walk;
+
+1;
