@@ -86,6 +86,12 @@ sub process {
     $self->loadRepoDoc();
     $self->worker->setResult("manifestdate",$self->repodoc->{reposManifestDate});
 
+    my @metspath;
+    foreach my $mets (@{$self->repodoc->{METS}}) {
+	push @metspath, $mets->{path};
+    }
+    @metspath = sort @metspath;
+
     my $changelogfile = $self->aip."/data/changelog.txt";
     my $r = $self->swift->object_get($self->swiftcontainer,$changelogfile);
     if ($r->code != 200) {
@@ -94,7 +100,7 @@ sub process {
     my @changelog=split /\n/, $r->content;
 
     my @changes;
-    foreach my $logline (@changelog) {
+    CHANGELOGLINE: foreach my $logline (@changelog) {
 	if ($logline =~ /^(\d\d\d\d\-\d\d-\d\dT\d\d:\d\d:\d\dZ)\s+(.*)$/) {
 	    my %change;
 	    $change{'date'}=$1;
@@ -104,7 +110,7 @@ sub process {
 		    $change{'operation'}='new';
 		}
 		elsif (/^Built CMR record$/) {
-		    $change{'operation'}='cmr';
+		    next CHANGELOGLINE;
 		}
 		elsif (/^Created new SIP in existing AIP$/) {
 		    $change{'operation'}='updatesip';
@@ -113,7 +119,7 @@ sub process {
 		    $change{'operation'}='updatesip';
 		    $change{'revision'}=$1;
 		}
-		elsif (/^Updated metadata record; old record stored in revision\s+(\w+)\s*$/) {
+		elsif (/^Updated metadata record; old record stored in revision\s+(\S+)\s*$/) {
 		    $change{'operation'}='mdupdate';
 		    $change{'revision'}=$1;
 		}
@@ -126,14 +132,32 @@ sub process {
 		    $change{'reason'}=$1;
 		}
 		else {
+		    if (scalar @changes) {
+			my $lastchange = $changes[$#changes];
+			if (($lastchange->{operation} eq 'mdupdate') ||
+			    ($lastchange->{operation} eq 'updatesip') ||
+			    ($lastchange->{operation} eq 'new')) {
+			    $lastchange->{changelog}=$line;
+			    $lastchange->{changelogdate}=$lastchange->{changelog};
+			    next CHANGELOGLINE;
+			}
+		    }
 		    $change{'line'}=$line;
-		    print $self->aip." line: $line\n";
 		}
 	    }
 	    push @changes, \%change;
 	} else {
 	    warn "Log line didn't start with date: $logline\n";
 	}
+    }
+
+
+    if (scalar(@metspath) == scalar(@changes)) {
+	for (0..$#metspath) {
+	    $changes[$_]{'metspath'}=$metspath[$_];
+	}
+    } else {
+	warn "Number of changelog entries didn't match number of METS records\n";
     }
     $self->worker->setResult("changes",\@changes);
 }
