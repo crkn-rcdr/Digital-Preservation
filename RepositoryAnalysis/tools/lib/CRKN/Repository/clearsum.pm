@@ -106,6 +106,25 @@ sub walk {
 	}
     }
 
+    if ($self->args->{metadata} ) {
+	print "Clearing metadata summaries\n";
+
+	# An empty summary
+	my %repoanalysis = ( metadatasummary => {});
+
+	my $lastid='';
+	while (my $aipinfo = $self->getnextwalkmetadatar) {
+	    my $id=$aipinfo->{"id"};
+	    if($id eq $lastid) {
+		warn "$id found - sleeping and trying again\n";
+		sleep(5); # Do nothing, and try again
+	    } else {
+		$lastid=$id;
+		print $self->repoanalysis->create_or_update($id,\%repoanalysis)."\n";
+	    }
+	}
+    }
+
     if ($self->args->{nojhove} ) {
 	print "Clearing revision summaries where there are no JHOVE reports\n";
 
@@ -170,6 +189,25 @@ sub getnextwalkr {
     }
     else {
         warn "_view/walkr GET return code: ".$res->code."\n";
+    }
+}
+
+sub getnextwalkmetadatar {
+    my $self = shift;
+
+    $self->repoanalysis->type("application/json");
+
+    my $res = $self->repoanalysis->get("/".$self->repoanalysis->{database}."/_design/ra/_view/walkmetadatar?reduce=false&limit=1&include_docs=false",{}, {deserializer => 'application/json'});
+
+    if ($res->code == 200) {
+	if (exists $res->data->{rows}) {
+	    return $res->data->{rows}[0];
+	} else {
+	    warn "_view/walkmetadatar GET returned no rows\n";
+	}
+    }
+    else {
+        warn "_view/walkmetadatar GET return code: ".$res->code."\n";
     }
 }
 

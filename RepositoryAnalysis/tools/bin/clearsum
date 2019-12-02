@@ -13,18 +13,21 @@ my $conf = "/etc/canadiana/tdr/tdr.conf";
 my $md5;
 my $revisions;
 my $nojhove;
+my $metadata;
 GetOptions (
     'conf:s' => \$conf,
     'md5' => \$md5,
     'revisions' => \$revisions,
-    'nojhove' => \$nojhove
+    'nojhove' => \$nojhove,
+    'metadata' => \$metadata
     );
 
 CRKN::Repository::clearsum->new({
     configpath => $conf,
     md5 => $md5,
     revisions => $revisions,
-    nojhove => $nojhove
+    nojhove => $nojhove,
+    metadata => $metadata
 				})->walk;
 
 1;
