@@ -6,10 +6,11 @@ module.exports.map = function(doc) {
 	    if (("operation" in logentry) && (logentry["operation"] === "updatesip")) {
 		if ("reason" in logentry) {
                     emit(logentry["reason"]);
-		};
-		if ("changelog" in logentry) {
+		} else if ("changelog" in logentry) {
                     emit(logentry["changelog"]);
-		};
+		} else {
+		    emit("Empty Log");
+		}
             }
 	});
     };
