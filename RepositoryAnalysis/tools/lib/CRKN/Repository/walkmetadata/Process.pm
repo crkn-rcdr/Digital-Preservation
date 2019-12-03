@@ -99,6 +99,8 @@ sub process {
     }
     my @changelog=split /\n/, $r->content;
 
+    # If a SIP and previous revisions deleted, then METS records start from next log entry.
+    my $delsipindex=0;
     my @changes;
     CHANGELOGLINE: foreach my $logline (@changelog) {
 	if ($logline =~ /^(\d\d\d\d\-\d\d-\d\dT\d\d:\d\d:\d\dZ)\s+(.*)$/) {
@@ -130,6 +132,7 @@ sub process {
 		elsif (/^Deleted SIP and all revisions from archive. Reason:\s+(.+)\s*$/) {
 		    $change{'operation'}='delsip';
 		    $change{'reason'}=$1;
+		    $delsipindex=$#changes+2;
 		}
 		else {
 		    if (scalar @changes) {
@@ -150,11 +153,9 @@ sub process {
 	    warn "Log line didn't start with date: $logline\n";
 	}
     }
-
-
-    if (scalar(@metspath) == scalar(@changes)) {
-	for (0..$#metspath) {
-	    $changes[$_]{'metspath'}=$metspath[$_];
+    if ((scalar(@metspath)+$delsipindex) == scalar(@changes)) {
+	for ($delsipindex..$#changes) {
+	    $changes[$_]{'metspath'}=$metspath[$_-$delsipindex];
 	}
     } else {
 	warn "Number of changelog entries didn't match number of METS records\n";
