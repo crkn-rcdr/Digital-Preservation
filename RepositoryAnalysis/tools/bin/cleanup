@@ -52,8 +52,13 @@ while ($more) {
     print "Container get: ".((exists $containeropt{'marker'})?$containeropt{'marker'} : "Start" ) ."\n";
     my $resp = $swift->container_get($container,
                                                       \%containeropt);
+    if ($resp->code == 403) {
+	warn "delimiter container_get($container) returned ". $resp->code . " - " . $resp->message. "\n";
+	$resp = $swift->container_get($container,
+                                                      \%containeropt);
+    }
     if ($resp->code != 200) {
-	die "container_get($container) returned ". $resp->code . " - " . $resp->message. "\n";
+	die "delimiter container_get($container) returned ". $resp->code . " - " . $resp->message. "\n";
     };
     $more=scalar(@{$resp->content});
     if ($more) {
@@ -101,8 +106,12 @@ sub deletefolder {
     my $more=1;
     while ($more) {
         my $resp = $swift->container_get($container, \%containeropt);
+	if ($resp->code == 403) {
+	    warn "prefix container_get($container) for $folder returned ". $resp->code . " - " . $resp->message. "\n";
+	    $resp = $swift->container_get($container, \%containeropt);
+	}
 	if ($resp->code != 200) {
-	    die "container_get($container) for $folder returned ". $resp->code . " - " . $resp->message. "\n";
+	    die "prefix container_get($container) for $folder returned ". $resp->code . " - " . $resp->message. "\n";
 	};
 	$more=scalar(@{$resp->content});
 	if ($more) {
