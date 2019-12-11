@@ -13,9 +13,11 @@ use Data::Dumper;
 
 my $conf = "/etc/canadiana/tdr/tdr.conf";
 my $marker;
+my $end_marker;
 GetOptions (
     'conf:s' => \$conf,
-    'marker:s' => \$marker
+    'marker:s' => \$marker,
+    'end_marker:s' => \$end_marker
     );
 
 my %confighash = new Config::General(
@@ -53,6 +55,9 @@ my %containeropt = (
 
 if ($marker) {
     $containeropt{'marker'}=$marker;
+}
+if ($end_marker) {
+    $containeropt{'end_marker'}=$end_marker;
 }
 
 while ($more) {
@@ -135,7 +140,7 @@ sub deletefolder {
 	    $swift->object_delete($container,$delfile);
 
 	if ($delresp->code == 404) {
-	    warn "object_delete of $delfile returned ".$delresp->code . " - " . $delresp->message."\n";
+	    warn "object_delete of $delfile returned ".$delresp->code . " - " . $delresp->message."  -- headers: " . $delresp->headers->as_string()."\n";
 	} elsif ($delresp->code != 204) {
 	    die "object_delete of $delfile returned ".$delresp->code . " - " . $delresp->message."\n";
 	}
