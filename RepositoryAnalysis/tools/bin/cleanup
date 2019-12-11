@@ -126,7 +126,10 @@ sub deletefolder {
     foreach my $delfile (@filelist) {
 	my $delresp =
 	    $swift->object_delete($container,$delfile);
-	if ($delresp->code != 204) {
+
+	if ($delresp->code == 404) {
+	    warn "object_delete of $delfile returned ".$delresp->code . " - " . $delresp->message."\n";
+	} elsif ($delresp->code != 204) {
 	    die "object_delete of $delfile returned ".$delresp->code . " - " . $delresp->message."\n";
 	}
     }
