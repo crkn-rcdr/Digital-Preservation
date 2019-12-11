@@ -12,8 +12,10 @@ use Data::Dumper;
 
 
 my $conf = "/etc/canadiana/tdr/tdr.conf";
+my $marker;
 GetOptions (
     'conf:s' => \$conf,
+    'marker:s' => \$marker
     );
 
 my %confighash = new Config::General(
@@ -48,6 +50,11 @@ my $more=1;
 my %containeropt = (
     delimiter => "/"
     );
+
+if ($marker) {
+    $containeropt{'marker'}=$marker;
+}
+
 while ($more) {
     print "Container get: ".((exists $containeropt{'marker'})?$containeropt{'marker'} : "Start" ) ."\n";
     my $resp = $swift->container_get($container,
