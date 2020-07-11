@@ -7,7 +7,7 @@ Clears md5summary, summary, and/or metadatasummary fields, to force other tools 
 
 * dupmd5
 
-detect duplicate MD5's and determine if they have different file sizes.
+Detect duplicate MD5's and determine if they have different file sizes.  Does not update database, and is used to determine how unique the MD5's are within our repository.
 
 * revisionswalk
 
