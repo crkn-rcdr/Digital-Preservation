@@ -152,11 +152,6 @@ sub repoanalysisdata {
     return $self->{repoanalysisdata};
 }
 
-sub filemetadata {
-    my $self = shift;
-    return $self->{filemetadata};
-}
-
 
 sub processaip {
     my ($self,$aip,$manifestdate) = @_;
