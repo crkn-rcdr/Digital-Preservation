@@ -1,7 +1,7 @@
 # Some notes on how these tools work.
 
 ```
-$ docker-compose build ; docker-compose run ratools bash -c "walkjhove ; walkmetadata ; revisionswalk ; walkmd5"
+$ docker-compose build ; docker-compose run ratools bash -c "revisionswalk ; walkmetadata ; walkmd5 ; walkjhove"
 ```
 
 
@@ -18,10 +18,6 @@ Detect duplicate MD5's and determine if they have different file sizes.  Does no
 Walks through AIPs and tries to determine how many revision files are globally unique.
 
 * walkjhove
-
-```
-$ docker-compose build ; docker-compose run ratools walkjhove
-```
 
 This will generate JHOVE reports, and put summary informtion in the per-AIP document in <i>repoanalysis</i> and per-file information in <i>repoanalysisf</i>.  This should be run regularly whenever new SIPs have been added to the repository.
 
