@@ -1,5 +1,9 @@
 # Some notes on how these tools work.
 
+```
+$ docker-compose build ; docker-compose run ratools bash -c "walkjhove ; walkmetadata ; revisionswalk ; walkmd5"
+```
+
 
 * clearsum
 
