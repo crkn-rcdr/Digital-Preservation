@@ -41,7 +41,8 @@ COPY cpanfile* *.conf *.xml docker-entrypoint.sh /home/tdr/
 
 # Build recent JHOVE.
 RUN curl -OL http://software.openpreservation.org/rel/jhove/jhove-1.24.jar && \
-    java -jar jhove-1.24.jar jhove-auto-install.xml && mv jhove.conf /opt/jhove/conf
+    java -jar jhove-1.24.jar jhove-auto-install.xml && mv jhove.conf /opt/jhove/conf && \
+    sed -i -e 's/^java -Xss1024k/java -Xss4096k/' /opt/jhove/jhove
 
 
 # Our application is perl code
