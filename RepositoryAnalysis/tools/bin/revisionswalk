@@ -8,15 +8,14 @@ use lib "$FindBin::RealBin/../lib";
 use CRKN::Repository::RevisionsWalk;
 use Getopt::Long;
 
-
 my $conf = "/etc/canadiana/tdr/tdr.conf";
 
-GetOptions (
-    'conf:s' => \$conf
-    );
+GetOptions( 'conf:s' => \$conf );
 
-CRKN::Repository::RevisionsWalk->new({ 
-    configpath => $conf
-                            })->walk;
+CRKN::Repository::RevisionsWalk->new(
+    {
+        configpath => $conf
+    }
+)->walk;
 
 1;

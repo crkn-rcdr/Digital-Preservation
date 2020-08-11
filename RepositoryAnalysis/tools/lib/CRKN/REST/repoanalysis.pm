@@ -14,10 +14,10 @@ sub BUILD {
     my $self = shift;
     my $args = shift;
 
-    $self->{LocalTZ} = DateTime::TimeZone->new( name => 'local' );
-    $self->{conf} = $args->{conf}; 
+    $self->{LocalTZ}  = DateTime::TimeZone->new( name => 'local' );
+    $self->{conf}     = $args->{conf};
     $self->{database} = $args->{database};
-    $self->set_persistent_header('Accept' => 'application/json');
+    $self->set_persistent_header( 'Accept' => 'application/json' );
 }
 
 # Simple accessors for now -- Do I want to Moo?
@@ -27,17 +27,24 @@ sub database {
 }
 
 sub create_or_update {
-  my ($self, $uid, $body) = @_;
-  my ($res, $code, $data);
+    my ( $self, $uid, $body ) = @_;
+    my ( $res, $code, $data );
 
-  # This encoding makes $updatedoc variables available as form data
-  $self->type("application/json");
-  $res = $self->post("/".$self->{database}."/_design/ra/_update/create_or_update/".$uid, $body, {});
+    # This encoding makes $updatedoc variables available as form data
+    $self->type("application/json");
+    $res = $self->post(
+        "/"
+          . $self->{database}
+          . "/_design/ra/_update/create_or_update/"
+          . $uid,
+        $body, {}
+    );
 
-  if ($res->code != 201 && $res->code != 200) {
-      warn "_update/create_or_update/$uid POST return code: " . $res->code . "\n";
-  }
-  return $res->data;
+    if ( $res->code != 201 && $res->code != 200 ) {
+        warn "_update/create_or_update/$uid POST return code: "
+          . $res->code . "\n";
+    }
+    return $res->data;
 }
 
 1;
