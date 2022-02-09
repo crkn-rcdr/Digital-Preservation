@@ -1,10 +1,10 @@
 # XML schemas and repository documentation
 
-The **published/** subdirectory contains documentation for the custom XML schemas that Canadiana created, as well as text file documents describing the internal structure of an AIP and a SIP.
+The **published/** subdirectory contains documentation for the custom XML schemas that Canadiana created, as well as text file documents describing the internal structure of the custom Canadiana OAIS AIP and a SIP.
 
-**published/schema** is currently available online as http://www.canadiana.ca/schema/ .
 
-We intended to publish the entire of **published/** to http://www.canadiana.ca/standards/ , but never created the required CMS entries (IE: http://www.canadiana.ca/standards/xsd/issueinfo.xsd exists, but no directory indexes were created).
+* **published/schema** is currently available online at http://www.canadiana.ca/schema/
+* **published/** is currently available online at http://www.canadiana.ca/standards/
 
 
 The **unpublished/** subdirectory contains a cache of xsl and xsd files used by repository tools during processing.
