@@ -93,6 +93,8 @@ This design enables distributed operation but requires explicit metadata changes
 
 ### A. Replication Planning `tdr-replicationwork`
 
+See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-replicationwork
+
 On preservation nodes (Orchis and Romano), the replication planning stage periodically runs:
 
 ```bash
@@ -216,6 +218,8 @@ function(doc) {
 ```
 
 ### B. Replication Execution `tdr-swiftreplicate`
+
+See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-swiftreplicate
 
 Each preservation node runs a replication loop for each item in the queue (see above) inside a Docker container:
 
@@ -555,6 +559,8 @@ Example Final Metadata
 
 ## 4) Verification & Fixity
 
+See: https://github.com/crkn-rcdr/cihm-repomanage
+
 ### A. Verification Process
 
 Each replication includes automatic verification:
@@ -568,7 +574,7 @@ Each replication includes automatic verification:
 Separate maintenance processes can re‑check all replicated AIPs:
 
 ```bash
-tdr-verifyrepo --conf /home/tdr/tdr.conf --repository orchis
+tdr verify --timelimit=72000 --maxprocs=8 ; date ; tdr walk ; date"'
 ```
 
 Verification ensures long‑term fixity by re‑computing hashes on stored content.
@@ -578,7 +584,7 @@ Verification ensures long‑term fixity by re‑computing hashes on stored conte
 Replication and verification logs are written to:
 
 ```
-/var/log/tdr/replicate.log
+/var/log/tdr
 ```
 
 Each event is also logged in CouchDB for audit and traceability.
