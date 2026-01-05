@@ -343,6 +343,8 @@ This staging area isolates incomplete downloads from live repository paths.
   - Update CouchDB
   - Abort replication
 
+Important: 'now' is interpreted by the CouchDB update handler to set the date to the current timestamp.
+
 ##### Step 10. Persist Verification Metadata
 - Write verification and size data to CouchDB before modifying the live repository copy
 - This ensures fixity results are preserved even if later steps fail.
@@ -590,10 +592,7 @@ See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
 
 Verification runs on Orchis and Romano ZFS nodes every 8 hours. 
 
-The verification algorithm used by the TDR ZFS verification command implemented in `CIHM::TDR::App::Verify` verifies BagIt AIPs stored on local ZFS pools (e.g., Orchis/Romano) and updates CouchDB (`tdrepo`) with verification timestamps and filesizes
-
-##### What this verifier does
-
+The verification algorithm used by the TDR ZFS verification command implemented in `CIHM::TDR::App::Verify` verifies BagIt AIPs stored on local ZFS pools (e.g., Orchis/Romano) and updates CouchDB (`tdrepo`) with verification timestamps and filesizes, it:
 - Selects AIPs from CouchDB least recently verified (per repo + pool)
 - Locates each AIP on local disk using repository pool mapping
 - Runs BagIt verification via a worker pool (`CIHM::TDR::VerifyWorker::bag_verify`)
@@ -601,20 +600,6 @@ The verification algorithm used by the TDR ZFS verification command implemented 
   - `verified` (timestamp via update handler)
   - `filesize` (computed from BagIt stats)
 
-##### Key inputs / controls
-
-CLI options (defaults shown in code):
-
-- `--limit` (default 20)  
-  *How many AIPs to request per CouchDB view query.*
-- `--timelimit` (default 86400 seconds / 24h)  
-  *Stop after this much wall-clock time.*
-- `--maxprocs` (default 4)  
-  *Max concurrent verification workers.*
-- `--workqueue` (default 2)  
-  *Worker queue load factor (queue depth per worker).*
-- `--verbose`  
-  *Extra console output.*
 
 ##### CouchDB selection mechanism (`get_pool_queue`)
 
