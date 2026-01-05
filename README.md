@@ -251,12 +251,12 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
 
 #### Algorithm Steps
 
-##### 1. Parse AIP Identifier
+##### Step 1. Parse AIP Identifier
 - Split the AIP ID into:
   - `contributor`
   - `identifier`
 
-##### 2. Determine Existing Local State
+##### Step 2. Determine Existing Local State
 - Attempt to locate an existing local copy:
   - `find_aip_pool(contributor, identifier)`
 - If found:
@@ -268,7 +268,7 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
   ```
   (marks replication attempt as handled)
 
-##### 3. Determine the Newest Source Copy
+##### Step 3. Determine the Newest Source Copy
 - Query CouchDB:
   ```perl
   get_newestaip({ keys => [aip] })
@@ -283,26 +283,26 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
   - Update CouchDB
   - Abort replication
 
-##### 4. Validate Replication Topology
+##### Step 4. Validate Replication Topology
 - Extract list of repositories that should contain the AIP
 - Confirm the current repository (e.g., Orchis) is included
 - If not included:
   - Update CouchDB
   - Abort replication
 
-##### 5. Fetch Source AIP Metadata
+##### Step 5. Fetch Source AIP Metadata
 - Retrieve authoritative AIP metadata from the source repository
 - If unavailable:
   - Log error
   - Abort replication
 
-##### 6. Short-Circuit if Already Up-to-Date
+##### Step 6. Short-Circuit if Already Up-to-Date
 - If both source and local copies have `manifest md5`
 - AND the checksums match:
   - Update CouchDB
   - Abort replication (no-op)
 
-##### 7. Select or Create Incoming Staging Path
+##### Step 7. Select or Create Incoming Staging Path
 - Attempt to reuse an existing incoming path:
   - `find_incoming_pool(contributor, identifier)`
 - Otherwise:
@@ -314,7 +314,7 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
 
 This staging area isolates incomplete downloads from live repository paths.
 
-##### 8. Download Bag from Swift (Retry Logic)
+##### Step 8. Download Bag from Swift (Retry Logic)
 - Attempt download up to 3 times:
   ```perl
   bag_download(aip, incomingpath)
@@ -323,7 +323,7 @@ This staging area isolates incomplete downloads from live repository paths.
   - Update CouchDB
   - Abort replication
 
-##### 9. Verify BagIt Package
+##### Step 9. Verify BagIt Package
 - Instantiate BagIt verifier:
   ```perl
   Archive::BagIt::Fast(incomingpath)
@@ -343,18 +343,18 @@ This staging area isolates incomplete downloads from live repository paths.
   - Update CouchDB
   - Abort replication
 
-##### 10. Persist Verification Metadata
+##### Step 10. Persist Verification Metadata
 - Write verification and size data to CouchDB before modifying the live repository copy
 - This ensures fixity results are preserved even if later steps fail.
 
-##### 11. Remove Existing Local AIP (If Present)
+##### Step 11. Remove Existing Local AIP (If Present)
 - If a previous local AIP revision exists:
   - Delete it using `aip_delete`
 - If deletion fails:
   - Update CouchDB with failure state
   - Abort replication
 
-##### 12. Promote New AIP into Repository
+##### Step 12. Promote New AIP into Repository
 - Move the verified bag into the live repository using:
   ```perl
   aip_add(contributor, identifier, updatedoc)
@@ -590,6 +590,129 @@ See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
 
 Verification runs on Orchis and Romano ZFS nodes every 8 hours. 
 
+The verification algorithm used by the TDR ZFS verification command implemented in `CIHM::TDR::App::Verify` verifies BagIt AIPs stored on local ZFS pools (e.g., Orchis/Romano) and updates CouchDB (`tdrepo`) with verification timestamps and filesizes
+
+##### What this verifier does
+
+- Selects AIPs from CouchDB least recently verified (per repo + pool)
+- Locates each AIP on local disk using repository pool mapping
+- Runs BagIt verification via a worker pool (`CIHM::TDR::VerifyWorker::bag_verify`)
+- Updates `item_repository.<repo>` documents in CouchDB:
+  - `verified` (timestamp via update handler)
+  - `filesize` (computed from BagIt stats)
+
+##### Key inputs / controls
+
+CLI options (defaults shown in code):
+
+- `--limit` (default 20)  
+  *How many AIPs to request per CouchDB view query.*
+- `--timelimit` (default 86400 seconds / 24h)  
+  *Stop after this much wall-clock time.*
+- `--maxprocs` (default 4)  
+  *Max concurrent verification workers.*
+- `--workqueue` (default 2)  
+  *Worker queue load factor (queue depth per worker).*
+- `--verbose`  
+  *Extra console output.*
+
+##### CouchDB selection mechanism (`get_pool_queue`)
+
+For a given pool, verification candidates are pulled from a CouchDB view:
+
+- Design doc: `_design/tdr`
+- View: `repopoolverified`
+- Key range:
+  - `startkey=[repository,pool]`
+  - `endkey=[repository,pool,{}]`
+- `reduce=false`
+- `limit=<limit>`
+
+The view returns rows with `value = <uid>`.
+
+Interpretation (conceptual):
+- The view is structured so that results are ordered by “least recently verified” for that repository and pool.
+- This ensures the verifier re-checks the oldest-checked bags first.
+
+#### Algorithm Steps
+
+###### Step 1. Initialize repository + counters
+1. Load TDR configuration and create a `CIHM::TDR::Repository` instance.
+2. Verify `tdrepo` is configured; abort if missing.
+3. Initialize counters:
+   - `verified.count`
+   - `error.count`
+4. Record `start_time`.
+
+
+###### Step 2. Create a parallel worker pool
+1. Create an `AnyEvent::Fork::Pool` executing:
+   - `CIHM::TDR::VerifyWorker::bag_verify`
+2. Configure:
+   - `max = maxprocs`
+   - `load = workqueue`
+3. Create a semaphore sized to:
+   - `maxprocs * workqueue`
+   (limits the number of in-flight jobs)
+
+###### Step 3. Select next AIP to verify (round-robin by pool)
+Loop:
+1. Call `next_uid()` to get an AIP UID (e.g., `aeu.00002`)
+2. Stop if:
+   - No UID returned, or
+   - `timelimit` exceeded
+
+Selection logic in `next_uid()`:
+- Discover all local pools once (`t_repo->pools()`).
+- For each pool, fetch a queue of candidate UIDs using `get_pool_queue(pool, limit)`.
+- Iterate pools in round-robin:
+  - pop one UID from that pool queue
+  - mark UID as `tried` so it won’t repeat in the same run
+  - push that pool to the end of the pool list
+- If a pool queue empties, refresh it from CouchDB view and continue.
+
+###### Step 4. Resolve UID → filesystem path
+For each UID:
+1. Split into `(contributor, identifier)`
+2. Find the AIP path on disk:
+   - `find_aip_pool(contributor, identifier)`
+3. If no path is found:
+   - log error and continue (skips verification)
+
+###### Step 5. Verify bag in a worker process
+For each AIP path:
+1. Submit to worker pool:
+   - `bag_verify(aippath)`
+2. The worker returns:
+   - `ver_res` (expected `"ok"` on success)
+   - `ver_path`
+   - serialized `bag_stats` (thawed via `Storable::thaw`)
+
+###### Step 6. On success: update CouchDB with verification + size
+If `ver_res == "ok"`:
+1. Thaw `bag_stats`
+2. Update CouchDB via repository helper:
+   ```perl
+   update_item_repository($uid, { verified => 'now', filesize => $bag_stats->{size} })
+   ```
+3. Increment `verified.count`
+4. Log timing and stats
+
+Important: `verified => 'now'` is interpreted by the CouchDB update handler to set `verified date` to the current timestamp.
+
+###### Step 7. On failure: record invalid bag
+If `ver_res != "ok"`:
+1. Increment `error.count`
+2. Log warning including failure reason and path
+3. Continue to next UID
+
+###### Step 8. Shutdown and summarize
+1. Destroy pool and wait for workers to finish (`$cv_finish->recv`)
+2. Print totals:
+   - valid bags verified
+   - invalid bags found
+   - total runtime
+3. Log summary of totals
 
 ### C. Logging
 
