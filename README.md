@@ -360,9 +360,7 @@ This staging area isolates incomplete downloads from live repository paths.
 
 The following is the basic algorithm implemented by the CouchDB update handler used for `item_repository` documents (the `itemrepo` function).
 
-It is called throughout the above steps, updating the AIP document as progress continues on the replication work.
-
-The function is deterministic, field-scoped, and side-effect aware. It updates only a fixed set of metadata fields and encodes replication state transitions implicitly.
+It is called throughout the above steps, updating the AIP document as progress continues on the replication work. It updates only a fixed set of metadata fields and encodes replication state transitions implicitly.
 
 #### High-Level Purpose
 
@@ -372,11 +370,6 @@ The update function:
 - Manages replication queue flags
 - Records verification and manifest state
 - Ensures successful replication clears replication intent
-
-It does not:
-- Inspect filesystem state
-- Validate checksums
-- Store a boolean `verified` field
 
 #### Inputs
 
@@ -491,26 +484,6 @@ If any field changed:
 
 Else:
 - Return no-op (`no update`)
-
-#### Algorithm Properties
-
-##### Deterministic
-- Same input → same output
-- No external state consulted
-
-##### Side-Effect Driven
-- Writing a manifest implicitly clears replication intent
-- Verification updates timestamps only
-
-##### Metadata-Gated
-- Replication and verification state is inferred, not explicit
-
-#### Operational Implications
-
-- Metadata correctness drives system behavior
-- Clearing manifest or verification fields forces re-replication
-- Successful replication automatically removes replication queue state
-- CouchDB is the system of record
   
 ---
 
