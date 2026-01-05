@@ -671,27 +671,9 @@ Return a structure like:
 - `manifest date`, `manifest md5`
 - optionally `tagmanifest date`, `tagmanifest md5`
 
-
-###### Step 9. increment `valid` or `invalid` counters based on return value
-```
-my $val = $self->validateaip( $aip, $options );
-if ( $val->{validate} ) {
-  $validatecount++;
-  $self->log->info("verified Swift AIP: $aip");
-}
-else {
-  $errorcount++;
-  $self->log->warn("invalid Swift AIP: $aip");
-   print "invalid Swift AIP: $aip\n";
-}
-```
-
-###### Step 10. Print and log totals and runtime
-```
-print "total valid bags: $validatecount\n";
-        print "total invalid bags: $errorcount\n";
-        $self->log->info("total valid bags: $validatecount invalid: $errorcount");
-```
+###### Step 9. Shutdown and summarize
+- increment `valid` or `invalid` counters based on return value
+- Print and log totals and runtime
 
 #### Verifying ZFS 
 
