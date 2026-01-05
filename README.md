@@ -33,6 +33,8 @@ The full lifecycle of an Archival Information Package (AIP) as it travels throug
 
 ### A. WIP Work‑In‑Progress Environment
 
+See: https://github.com/crkn-rcdr/CIHM-WIP
+
 The WIP (Work‑In‑Progress) system is a networked staging environment used before an AIP enters the preservation repository. It provides a workspace for digitization staff to prepare and validate content.
 
 Key functions:
@@ -45,7 +47,9 @@ The WIP environment allows human and automated processes to ensure that each AIP
 
 ### B. Sapindale
 
-[Sapindale](https://github.com/crkn-rcdr/sapindale) is a web‑based access and metadata administration tool built using Sapper/Svelte. It interacts directly with CouchDB instances and the WIP system, providing an interface for:
+See: https://github.com/crkn-rcdr/sapindale
+
+Sapindale is a web‑based access and metadata administration tool built using Sapper/Svelte. It interacts directly with CouchDB instances and the WIP system, providing an interface for:
 
 * Browsing and validating packages in WIP.
 * Editing descriptive and administrative metadata.
