@@ -584,7 +584,114 @@ Verification ensures long‑term fixity by re‑computing hashes on stored conte
 
 See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-swiftvalidate
 
-Runs on Trepat every 16 hours to verify the content on Swift.
+Runs on Trepat every 16 hours to verify the content on Swift. 
+
+The Swift validation algorithm runs against Swift object storage using `CIHM::TDR::Swift->new($config)->validate(\%options)`.  Swift validation verifies an AIP by comparing the contents of Swift to the AIP’s manifest files stored in Swift, and then updates CouchDB (tdrepo) for item_repository.swift when the AIP is valid.
+
+##### Algorithm Steps 
+
+###### Step 1: Get list of AIPs to validate
+1. Record `start_time`
+2. Query CouchDB view `_design/tdr/_view/repopoolverified` with:
+   - `reduce=false`
+   - `startkey=["swift"]`
+   - `endkey=["swift",{}]`
+   - optionally `limit` and `skip`
+3. Extract `value` from each row as an AIP id and build `@aiplist`
+4. For each AIP in `@aiplist`:
+   - stop if `timelimit` exceeded
+   - call `validateaip(aip)` on each AIP; running the following steps...
+
+###### Step 2: validateaip - Initialize 
+1. Build an allowlist (`passlist`) for known tag files:
+   - `bag-info.txt`, `bagit.txt`
+   - `manifest-md5.txt`, `tagmanifest-md5.txt`
+   - `validate = 1`
+   - `filesize = 0`
+
+###### Step 3: validateaip - List Swift objects under the AIP prefix
+1. Call `container_get(container, { prefix => "<aip>/" })`
+2. Repeat in a loop because Swift listings are capped (10,000):
+   - If results returned:
+     - set `marker` to the last object name to fetch the next page
+     - for each object:
+       - compute relative filename (strip `<aip>/`)
+       - store object metadata in `%aipdata[file] = object`
+3. If `container_get` fails (HTTP != 200):
+   - warn and return `{}` (hard failure)
+
+###### Step 4: validateaip - Fetch and parse `manifest-md5.txt`
+1. `object_get(container, "<aip>/manifest-md5.txt")`
+2. If missing/failed (HTTP != 200):
+   - warn and return `{}`
+3. Record manifest metadata into return structure:
+   - `manifest date = File-Modified header`
+   - `manifest md5 = ETag`
+4. For each line in manifest (format: `<md5> <file>`):
+   - If file exists in `%aipdata`:
+     - add object bytes to `filesize`
+     - compare `aipdata[file].hash` vs manifest md5
+       - mismatch → `validate = 0` (and verbose dump)
+     - mark `aipdata[file].checked = 1`
+   - Else:
+     - file missing → `validate = 0` (verbose print)
+
+###### Step 5: validateaip - Fetch and parse `tagmanifest-md5.txt` (optional)
+1. `object_get(container, "<aip>/tagmanifest-md5.txt")`
+2. If HTTP 200:
+   - record:
+     - `tagmanifest date = File-Modified`
+     - `tagmanifest md5 = ETag`
+   - parse lines and perform same checks as manifest:
+     - existence
+     - md5 vs Swift object hash
+     - add bytes to `filesize`
+     - mark `checked`
+3. If HTTP 404:
+   - treat as acceptable for older bags (no error)
+4. If other HTTP error:
+   - warn and return `{}`
+
+###### Step 6: validateaip - Detect “extra” Swift objects
+For every object in `%aipdata`:
+- if it was not `checked` by manifest/tagmanifest
+- and it is not in the allowlist (`passlist`)
+→ mark `validate = 0` and (optionally) print “extra file”
+
+###### Step 7: validateaip - On success: update CouchDB
+If `validate == 1`:
+- call `tdrepo->update_item_repository(aip, { verified => 'now', filesize => total_bytes })`
+
+The CouchDB update handler will convert `verified` into setting `verified date = now`.
+
+###### Step 8: validateaip - Return results
+Return a structure like:
+- `validate` (1/0)
+- `filesize`
+- `manifest date`, `manifest md5`
+- optionally `tagmanifest date`, `tagmanifest md5`
+
+
+###### Step 9. increment `valid` or `invalid` counters based on return value
+```
+my $val = $self->validateaip( $aip, $options );
+if ( $val->{validate} ) {
+  $validatecount++;
+  $self->log->info("verified Swift AIP: $aip");
+}
+else {
+  $errorcount++;
+  $self->log->warn("invalid Swift AIP: $aip");
+   print "invalid Swift AIP: $aip\n";
+}
+```
+
+###### Step 10. Print and log totals and runtime
+```
+print "total valid bags: $validatecount\n";
+        print "total invalid bags: $errorcount\n";
+        $self->log->info("total valid bags: $validatecount invalid: $errorcount");
+```
 
 #### Verifying ZFS 
 
@@ -592,19 +699,9 @@ See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
 
 Verification runs on Orchis and Romano ZFS nodes every 8 hours. 
 
-The verification algorithm used by the TDR ZFS verification command implemented in `CIHM::TDR::App::Verify` verifies BagIt AIPs stored on local ZFS pools (e.g., Orchis/Romano) and updates CouchDB (`tdrepo`) with verification timestamps and filesizes, it:
-- Selects AIPs from CouchDB least recently verified (per repo + pool)
-- Locates each AIP on local disk using repository pool mapping
-- Runs BagIt verification via a worker pool (`CIHM::TDR::VerifyWorker::bag_verify`)
-- Updates `item_repository.<repo>` documents in CouchDB:
-  - `verified` (timestamp via update handler)
-  - `filesize` (computed from BagIt stats)
-
-
-##### CouchDB selection mechanism (`get_pool_queue`)
+The verification algorithm used by the TDR ZFS verification command implemented in `CIHM::TDR::App::Verify` verifies BagIt AIPs stored on local ZFS pools (e.g., Orchis/Romano) and updates CouchDB (`tdrepo`) with verification timestamps and filesizes.
 
 For a given pool, verification candidates are pulled from a CouchDB view:
-
 - Design doc: `_design/tdr`
 - View: `repopoolverified`
 - Key range:
@@ -615,11 +712,9 @@ For a given pool, verification candidates are pulled from a CouchDB view:
 
 The view returns rows with `value = <uid>`.
 
-Interpretation (conceptual):
-- The view is structured so that results are ordered by “least recently verified” for that repository and pool.
-- This ensures the verifier re-checks the oldest-checked bags first.
+The view is structured so that results are ordered by “least recently verified” for that repository and pool which ensures the verifier re-checks the oldest-checked bags first.
 
-#### Algorithm Steps
+##### Algorithm Steps
 
 ###### Step 1. Initialize repository + counters
 1. Load TDR configuration and create a `CIHM::TDR::Repository` instance.
