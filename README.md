@@ -549,7 +549,7 @@ Example Final Metadata
 }
 ```
 
-### Summary
+### Ingest and Replcate Summary
 
 | Step | Action                              | Node            | Component            |
 | ---- | ----------------------------------- | --------------- | -------------------- |
