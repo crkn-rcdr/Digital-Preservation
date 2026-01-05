@@ -12,9 +12,9 @@ CRKN is certified as a Trustworthy Digital Repository (TDR), a reliable and inte
 | **CouchDB (`tdrepo`)** | System of record for all repositories         | Trepat / Orchis / Romano (clustered) |
 | **reposync**           | Synchronizes metadata to wipmeta / dipstaging | Trepat                               |
 | **replicationwork**    | Builds replication queues                     | Orchis / Romano                      |
-| **swiftreplicate**     | Executes replication and verification         | Orchis / Romano                      |
-| **repomanage**         | Supervises all replication activity           | Orchis / Romano                      |
-| **ZFS Pool**           | Local disk‑based preservation storage         |  Orchis / Romano                     |
+| **swiftreplicate**     | Executes replication from swift to ZFS        | Orchis / Romano                      |
+| **repomanage**         | Verifies TDR data                             | Trepat / Orchis / Romano            |
+| **ZFS Pool**           | Local disk‑based preservation storage         | Orchis / Romano                      |
 | **Logging**            | Replication and verification logs             | Trepat / Orchis / Romano             |
 
 Notes:
