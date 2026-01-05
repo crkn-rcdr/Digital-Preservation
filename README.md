@@ -61,6 +61,8 @@ Once content is approved and metadata verified, Sapindale and WIP tools generate
 
 ## 2) Ingest into the Preservation Repository (Swift)
 
+See: https://github.com/crkn-rcdr/CIHM-TDR
+
 Once packaging and metadata validation are complete:
 
 1. The AIP is packaged using the CIHM‑TDR ingest tooling (e.g., Archive::BagIt, CIHM‑TDR’s Perl utilities).
