@@ -568,7 +568,7 @@ See: https://github.com/crkn-rcdr/cihm-repomanage
 
 ### A. Verification Process
 
-Each replication includes automatic verification:
+Each replication includes automatic verification (see replication proccess obive for more info:)
 
 * Ensures the bag is valid per BagIt specification.
 * Confirms the MD5/SHA checksum matches the Swift manifest.
