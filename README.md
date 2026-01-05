@@ -572,15 +572,13 @@ Each replication includes automatic verification:
 
 * Ensures the bag is valid per BagIt specification.
 * Confirms the MD5/SHA checksum matches the Swift manifest.
-* If valid, sets `verified: true` and updates `verified date`.
+* If valid, updates `verified date`.
 
 ### B. Periodic Re‑Verification
 
-Separate maintenance processes can re‑check all replicated AIPs:
+Validating Swift runs on Trepat every 16 hours; See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-swiftvalidate
 
-```bash
-tdr verify --timelimit=72000 --maxprocs=8 ; date ; tdr walk ; date"'
-```
+Validating ZFS runs on Orchis and Romano every 8 hours; See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
 
 Verification ensures long‑term fixity by re‑computing hashes on stored content.
 
