@@ -576,11 +576,20 @@ Each replication includes automatic verification:
 
 ### B. Periodic Re‑Verification
 
-Validating Swift runs on Trepat every 16 hours; See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-swiftvalidate
-
-Validating ZFS runs on Orchis and Romano every 8 hours; See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
-
 Verification ensures long‑term fixity by re‑computing hashes on stored content.
+
+#### Verifying Swift 
+
+See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/bin/tdr-swiftvalidate
+
+Runs on Trepat every 16 hours to verify the content on Swift.
+
+#### Verifying ZFS 
+
+See: https://github.com/crkn-rcdr/CIHM-TDR/blob/main/lib/CIHM/TDR/App/Verify.pm
+
+Verification runs on Orchis and Romano ZFS nodes every 8 hours. 
+
 
 ### C. Logging
 
