@@ -776,7 +776,7 @@ If `ver_res != "ok"`:
    - total runtime
 3. Log summary of totals
 
-### C. Logging
+## Logging
 
 Replication and verification logs are written to:
 
@@ -785,12 +785,3 @@ Replication and verification logs are written to:
 ```
 
 Each event is also logged in CouchDB for audit and traceability.
-
-### D. Failure Handling
-
-| Failure Type              | Description                       | Resolution                                      |
-| ------------------------- | --------------------------------- | ----------------------------------------------- |
-| **Missing Source**        | Swift entry missing or incomplete | Verify Swift integrity; re‑upload bag.          |
-| **Checksum Mismatch**     | Bag corrupted in transit          | Remove local copy; requeue AIP for replication. |
-| **ZFS Read Failure**      | Pool error or mount issue         | Check pool health; re‑mount `/cihmz2`.          |
-| **Timeout/Network Error** | Swift connection interrupted      | Automatically retries.                          |
