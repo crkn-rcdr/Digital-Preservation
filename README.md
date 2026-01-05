@@ -1,14 +1,33 @@
-# CRKN digital preservation system
+# CRKN Trustworthy Digital Repository
 
-The Canadian Research Knowledge Network (CRKN) maintains a preservation platform.  As of 2018 it is using a custom platform that was created by Canadiana staff when it was a separate organization, but the plan is to adopt existing software such as Archivematica and OpenStack Swift.
+CRKN is certified as a Trustworthy Digital Repository (TDR), a reliable and integrated digital preservation system in which deposited content can be identified, collected, managed, and kept secure over time. The TDR provides a permanent capability to preserve the documentary heritage digitized through CRKN projects, as well as content already digitized or born-digital, and content received from members, partners, and stakeholders.
 
-This git project will provide documentation for the preservation platform, and the related GitHub project will provide a forum for discussing its future. If you have questions about CRKN's preservation, please create them as issues withinn this repository.
+## System Overview
 
-## How an AIP Moves from WIP → Swift → Orchis & Romano
+| Component              | Function                                      | Host                                 |
+| ---------------------- | --------------------------------------------- | ------------------------------------ |
+| **Sapindale**          | Web admin interface that manages and validates AIPs prior to ingest | Trepat         |
+| **CIHM‑WIP**           | WIP packaging utilities that prepares and stages AIPs before ingest | Trepat         |
+| **Swift**              | Canonical object storage for all AIPs         | Trepat                               |
+| **CouchDB (`tdrepo`)** | System of record for all repositories         | Trepat / Orchis / Romano (clustered) |
+| **reposync**           | Synchronizes metadata to wipmeta / dipstaging | Trepat                               |
+| **replicationwork**    | Builds replication queues                     | Orchis / Romano                      |
+| **swiftreplicate**     | Executes replication and verification         | Orchis / Romano                      |
+| **repomanage**         | Supervises all replication activity           | Orchis / Romano                      |
+| **ZFS Pool**           | Local disk‑based preservation storage         |  Orchis / Romano                     |
+| **Logging**            | Replication and verification logs             | Trepat / Orchis / Romano             |
 
-This document describes the full lifecycle of an Archival Information Package (AIP) as it travels through CRKN's Trusted Digital Repository (TDR) system from ingest in the WIP (Work‑In‑Progress) environment, through preservation in Swift, replication to ZFS‑based nodes (Orchis and Romano), and verification.
-
+Notes:
+* Swift serves as the **authoritative preservation copy** source of truth for the AIP file data.
+* Replication ensures multiple, geographically distributed copies.
+* Verification maintains fixity and integrity across systems.
+* CouchDB metadata enables full auditability and rehydrationand the system treats **CouchDB metadata as authoritative**.
+  
 ---
+
+# How an AIP Moves from WIP → Swift → Orchis & Romano
+
+The full lifecycle of an Archival Information Package (AIP) as it travels through CRKN's Trusted Digital Repository (TDR) system from ingest in the WIP (Work‑In‑Progress) environment, through preservation in Swift, replication to ZFS‑based nodes (Orchis and Romano), and verification, is as follows:
 
 ## 1) AIP Capture & Back‑Staging (WIP / Sapindale)
 
@@ -85,8 +104,6 @@ It does not copy data Instead, it analyzes repository metadata in CouchDB to det
 
 The output of `tdr-replicationwork` is a populated queue of documents in CouchDB (the "replicate" view), which are later consumed by `tdr-swiftreplicate` to perform the actual file transfers.
 
----
-
 #### Inputs Used by `tdr-replicationwork`
 
 ##### 1. `item_repository.*` Documents
@@ -108,8 +125,6 @@ These documents may include:
 
 These fields are used to determine repository completeness and freshness.
 
----
-
 ##### 2. The `--since` Parameter
 
 Example:
@@ -123,8 +138,6 @@ This limits processing to AIPs with repository metadata changes on or after the 
 Notes:
 - `--since` filters on metadata timestamps, not file modification times.
 - `--since all` scans the full historical dataset and may appear to hang due to volume.
-
----
 
 #### High-Level Algorithm
 
@@ -140,8 +153,6 @@ For each AIP owner:
 5. For each repository that is incomplete or outdated:
    - Create a `replicationwork` document
 
----
-
 #### Source Selection Logic
 
 A repository is considered a valid replication source if it has:
@@ -154,8 +165,6 @@ Among valid sources, the repository with the newest `manifest date` is chosen.
 In practice:
 - Swift almost always wins
 - Swift is treated as canonical ingest origin
-
----
 
 #### Conditions That Trigger Replication
 
@@ -171,10 +180,8 @@ A repository is flagged for replication if any of the following are true:
 
 This behavior enables metadata-based recovery.
 
----
-
-#### Output: `replicationwork` Documents
-
+#### Output: Populated Documents Queue in CouchDB "replicate" view
+ 
 When replication is needed, a document similar to the following is written:
 
 ```json
@@ -193,8 +200,6 @@ When replication is needed, a document similar to the following is written:
   "replicate": 5
 }
 ```
-
----
 
 `tdr-replicationwork` is a metadata-driven planner that ensures repository consistency by comparing verification state across repositories.  
 It assumes CouchDB correctness by design and therefore requires deliberate metadata intervention after catastrophic storage failures.
@@ -227,8 +232,6 @@ At a high level, the algorithm is:
 
 No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo`) state.
 
----
-
 #### Inputs
 
 - **AIP identifier**: `<contributor>.<identifier>` (e.g., `aeu.00002`)
@@ -237,16 +240,12 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
 - **CouchDB (`tdrepo`)**: authoritative metadata store
 - **Local ZFS pools**: e.g. `cihmz2`
 
----
-
 #### Algorithm Steps
 
 ##### 1. Parse AIP Identifier
 - Split the AIP ID into:
   - `contributor`
   - `identifier`
-
----
 
 ##### 2. Determine Existing Local State
 - Attempt to locate an existing local copy:
@@ -259,8 +258,6 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
   "replicate": "false"
   ```
   (marks replication attempt as handled)
-
----
 
 ##### 3. Determine the Newest Source Copy
 - Query CouchDB:
@@ -277,8 +274,6 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
   - Update CouchDB
   - Abort replication
 
----
-
 ##### 4. Validate Replication Topology
 - Extract list of repositories that should contain the AIP
 - Confirm the current repository (e.g., Orchis) is included
@@ -286,23 +281,17 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
   - Update CouchDB
   - Abort replication
 
----
-
 ##### 5. Fetch Source AIP Metadata
 - Retrieve authoritative AIP metadata from the source repository
 - If unavailable:
   - Log error
   - Abort replication
 
----
-
 ##### 6. Short-Circuit if Already Up-to-Date
 - If both source and local copies have `manifest md5`
 - AND the checksums match:
   - Update CouchDB
   - Abort replication (no-op)
-
----
 
 ##### 7. Select or Create Incoming Staging Path
 - Attempt to reuse an existing incoming path:
@@ -316,8 +305,6 @@ No filesystem scanning is performed. All decisions are based on CouchDB (`tdrepo
 
 This staging area isolates incomplete downloads from live repository paths.
 
----
-
 ##### 8. Download Bag from Swift (Retry Logic)
 - Attempt download up to 3 times:
   ```perl
@@ -326,8 +313,6 @@ This staging area isolates incomplete downloads from live repository paths.
 - If all attempts fail:
   - Update CouchDB
   - Abort replication
-
----
 
 ##### 9. Verify BagIt Package
 - Instantiate BagIt verifier:
@@ -349,13 +334,9 @@ This staging area isolates incomplete downloads from live repository paths.
   - Update CouchDB
   - Abort replication
 
----
-
 ##### 10. Persist Verification Metadata
 - Write verification and size data to CouchDB before modifying the live repository copy
 - This ensures fixity results are preserved even if later steps fail.
-
----
 
 ##### 11. Remove Existing Local AIP (If Present)
 - If a previous local AIP revision exists:
@@ -363,8 +344,6 @@ This staging area isolates incomplete downloads from live repository paths.
 - If deletion fails:
   - Update CouchDB with failure state
   - Abort replication
-
----
 
 ##### 12. Promote New AIP into Repository
 - Move the verified bag into the live repository using:
@@ -385,8 +364,6 @@ It is called throughout the above steps, updating the AIP document as progress c
 
 The function is deterministic, field-scoped, and side-effect aware. It updates only a fixed set of metadata fields and encodes replication state transitions implicitly.
 
----
-
 #### High-Level Purpose
 
 The update function:
@@ -401,15 +378,11 @@ It does not:
 - Validate checksums
 - Store a boolean `verified` field
 
----
-
 #### Inputs
 
 - `doc`: existing CouchDB document (or `null`)
 - `req.id`: document ID (`<owner>|item_repository.<repo>`)
 - `req.form`: key/value update payload
-
----
 
 #### Core Algorithm
 
@@ -417,8 +390,6 @@ It does not:
 
 1. Generate current timestamp:
    - `nowdates = ISO timestamp (seconds precision)`
-
----
 
 ##### Step 2: Create Document If Missing
 
@@ -438,13 +409,9 @@ If `doc` does not exist:
 
 If `req.id` is missing or invalid → abort with error
 
----
-
 ##### Step 3: Process Update Payload (`req.form`)
 
 If `req.form` exists, apply updates field-by-field.
-
----
 
 ##### Step 4: Verification Updates
 
@@ -456,8 +423,6 @@ If `verified` is present in input:
 
 (No boolean verification state is stored.)
 
----
-
 ##### Step 5: Filesize Updates
 
 If `filesize` present:
@@ -466,14 +431,10 @@ If `filesize` present:
 If `nofilesize` present:
 - Delete `doc["filesize"]`
 
----
-
 ##### Step 6: Storage Location Update
 
 If `pool` present:
 - Set `doc["pool"]`
-
----
 
 ##### Step 7: Manifest Updates
 
@@ -495,8 +456,6 @@ If `manifest md5` present:
 
 This represents successful replication or ingest.
 
----
-
 ##### Step 8: Replication Queue Control
 
 If `replicate` present in input:
@@ -509,8 +468,6 @@ If `replicate` present in input:
 
 This marks replication work as completed or cancelled.
 
----
-
 ###### Case B: `replicate != "false"`
 
 1. Set `doc["replicate"] = "true"`
@@ -520,16 +477,12 @@ This marks replication work as completed or cancelled.
 
 This prevents accidental priority downgrade.
 
----
-
 ##### Step 9: Legacy Priority Handling
 
 If `priority` present:
 - Set `doc["priority"]`
 
 (This field is transitional and independent of replication flags.)
-
----
 
 ##### Step 10: Commit or No-Op
 
@@ -538,8 +491,6 @@ If any field changed:
 
 Else:
 - Return no-op (`no update`)
-
----
 
 #### Algorithm Properties
 
@@ -553,7 +504,6 @@ Else:
 
 ##### Metadata-Gated
 - Replication and verification state is inferred, not explicit
-
 
 #### Operational Implications
 
@@ -615,6 +565,19 @@ Example Final Metadata
 }
 ```
 
+### Summary
+
+| Step | Action                              | Node            | Component            |
+| ---- | ----------------------------------- | --------------- | -------------------- |
+| 1    | AIP created in WIP & Sapindale      | WIP / Sapindale          | Packaging tools      |
+| 2    | BagIt packaging and upload to Swift | Trepat                   | Packaging tools      |
+| 3    | `item_repository.swift` created     | Trepat                   | Packaging tools - CouchDB (`tdrepo`)   |
+| 4    | `tdr-replicationwork` queues AIP    | Orchis / Romano          | Replicationwork - CouchDB (`tdrepo`) replicate view |
+| 5    | `tdr-swiftreplicate` copies AIP     | Orchis / Romano          | SwiftReplicateWorker |
+| 6    | Bag verified on ZFS                 | Orchis / Romano          | SwiftReplicateWorker - ZFS (`/cihmz2`)      |
+| 7    | Metadata updated                    | Orchis / Romano          | SwiftReplicateWorker - CouchDB (`tdrepo`)   |
+| 8    | Queue cleared                       | Orchis / Romano          | SwiftReplicateWorker - CouchDB (`tdrepo`) replicate view |
+
 ---
 
 ## 4) Verification & Fixity
@@ -647,66 +610,11 @@ Replication and verification logs are written to:
 
 Each event is also logged in CouchDB for audit and traceability.
 
----
-
-## 5) Failure Handling
+### D. Failure Handling
 
 | Failure Type              | Description                       | Resolution                                      |
 | ------------------------- | --------------------------------- | ----------------------------------------------- |
 | **Missing Source**        | Swift entry missing or incomplete | Verify Swift integrity; re‑upload bag.          |
 | **Checksum Mismatch**     | Bag corrupted in transit          | Remove local copy; requeue AIP for replication. |
-| **ZFS Write Failure**     | Pool error or mount issue         | Check pool health; re‑mount `/cihmz2`.          |
-| **Timeout/Network Error** | Swift connection interrupted      | Automatically retried by the replication loop.  |
-
----
-
-## 6) System Synchronization Overview
-
-| Component              | Function                                      | Host                                 |
-| ---------------------- | --------------------------------------------- | ------------------------------------ |
-| **Swift**              | Canonical object storage for all AIPs         | Trepat                               |
-| **CouchDB (`tdrepo`)** | System of record for all repositories         | Trepat / Orchis / Romano (clustered) |
-| **reposync**           | Synchronizes metadata to wipmeta / dipstaging | Trepat                               |
-| **replicationwork**    | Builds replication queues                     | Orchis / Romano                      |
-| **swiftreplicate**     | Executes replication and verification         | Orchis / Romano                      |
-| **repomanage**         | Supervises all replication activity           | Orchis / Romano                      |
-
----
-
-## 7) Example Flow Summary
-
-| Step | Action                              | Node            | Component            |
-| ---- | ----------------------------------- | --------------- | -------------------- |
-| 1    | AIP created in WIP & Sapindale      | WIP / Sapindale | WIP tools            |
-| 2    | BagIt packaging and upload to Swift | Trepat          | CIHM‑TDR ingest      |
-| 3    | `item_repository.swift` created     | Trepat          | CouchDB (`tdrepo`)   |
-| 4    | `tdr-replicationwork` queues AIP    | Orchis          | Replicationwork      |
-| 5    | `tdr-swiftreplicate` copies AIP     | Orchis          | SwiftReplicateWorker |
-| 6    | Bag verified on ZFS                 | Orchis          | ZFS (`/cihmz2`)      |
-| 7    | Metadata updated                    | Orchis          | CouchDB (`tdrepo`)   |
-| 8    | Queue cleared                       | Orchis          | Repomanage           |
-
----
-
-## 9) Core Components
-
-| Component                  | Module / Script                   | Description                                |
-| -------------------------- | --------------------------------- | ------------------------------------------ |
-| **Sapindale**              | Web admin interface               | Manages and validates AIPs prior to ingest |
-| **CIHM‑WIP**               | WIP packaging utilities           | Prepares and stages AIPs before ingest     |
-| **Swift**                  | `CIHM::TDR::Swift`                | Canonical object storage layer             |
-| **Replication Worker**     | `CIHM::TDR::SwiftReplicateWorker` | Handles download and verification          |
-| **Replication Controller** | `CIHM::TDR::Replication`          | Manages queue creation                     |
-| **Metadata Repository**    | CouchDB (`tdrepo`)                | Records preservation state                 |
-| **ZFS Pool**               | `/cihmz[1–5]`                     | Local disk‑based preservation storage      |
-| **Logging**                | `/var/log/tdr`                    | Replication and verification logs          |
-
----
-
-## 10) Integrity & Long‑Term Preservation
-
-* Swift serves as the **authoritative preservation copy** source of truth for the AIP file data.
-* Replication ensures multiple, geographically distributed copies.
-* Verification maintains fixity and integrity across systems.
-* CouchDB metadata enables full auditability and rehydrationand the system treats **CouchDB metadata as authoritative**.
-  
+| **ZFS Read Failure**      | Pool error or mount issue         | Check pool health; re‑mount `/cihmz2`.          |
+| **Timeout/Network Error** | Swift connection interrupted      | Automatically retries.                          |
