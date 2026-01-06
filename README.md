@@ -86,7 +86,7 @@ Once packaging and metadata validation are complete:
 
 Swift is considered the **authoritative preservation copy** for all AIPs.
 
-The system treats **CouchDB metadata as authoritative**.
+The system treats **CouchDB metadata** as **authoritative**.
 
 - File system state (ZFS pools, Swift containers) is *not* consulted.
 - If CouchDB indicates an AIP is verified, the system assumes it exists even if storage is empty.
@@ -108,7 +108,7 @@ tdr-replicationwork --conf /home/tdr/tdr.conf --since <date>
 ```
 
 `tdr-replicationwork` is a planning and decision-making tool in the TDR (Trusted Digital Repository) replication pipeline.  
-It does not copy data Instead, it analyzes repository metadata in CouchDB to determine which AIPs require replication, from where, and to which target repositories.
+It does not copy data. Instead, it analyzes repository metadata in CouchDB to determine which AIPs require replication, from where, and to which target repositories.
 
 The output of `tdr-replicationwork` is a populated queue of documents in CouchDB (the "replicate" view), which are later consumed by `tdr-swiftreplicate` to perform the actual file transfers.
 
@@ -212,7 +212,7 @@ When replication is needed, a document similar to the following is written:
 `tdr-replicationwork` is a metadata-driven planner that ensures repository consistency by comparing verification state across repositories.  
 It assumes CouchDB correctness by design and therefore requires deliberate metadata intervention after catastrophic storage failures.
 
-After tdr-replicationwork is completed the AIPs are filtered by the "replicate" CouchDB view, which acts as a queue for the tdr-swiftreplicate script:
+After `tdr-replicationwork` is completed, the AIPs are filtered by the "replicate" CouchDB view, which acts as a queue for the `tdr-swiftreplicate` script:
 
 ```
 function(doc) {
@@ -549,7 +549,7 @@ Example Final Metadata
 }
 ```
 
-### Ingest and Replcate Summary
+### Ingest and Replicate Summary
 
 | Step | Action                              | Node            | Component            |
 | ---- | ----------------------------------- | --------------- | -------------------- |
