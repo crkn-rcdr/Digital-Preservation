@@ -66,7 +66,7 @@ See: https://github.com/crkn-rcdr/CIHM-TDR
 Once packaging and metadata validation are complete:
 
 1. The AIP is packaged using the CIHM‑TDR ingest tooling (e.g., Archive::BagIt, CIHM‑TDR’s Perl utilities).
-2. The package is uploaded to Swift, the canonical object storage hosted on Trepat.
+2. The package is uploaded to Swift, which is hosted on our Swift Cluster, and the repository is managed via tools on Trepat.
 3. CouchDB (`tdrepo`) receives a new metadata record:
 
 ```json
@@ -159,7 +159,7 @@ For each AIP owner:
    - Newest `manifest date`
 4. Compare all other repositories against the selected source
 5. For each repository that is incomplete or outdated:
-   - Create a `replicationwork` document
+   - Set `replication` field in the document to a non-zero value
 
 #### Source Selection Logic
 
