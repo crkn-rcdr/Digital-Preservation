@@ -21,7 +21,7 @@ Notes:
 * Swift serves as the **authoritative preservation copy** source of truth for the AIP file data.
 * Replication ensures multiple, geographically distributed copies.
 * Verification maintains fixity and integrity across systems.
-* CouchDB metadata enables full auditability and rehydrationand the system treats **CouchDB metadata as authoritative**.
+* CouchDB metadata enables full auditability; the system treats **CouchDB metadata as authoritative**.
   
 ---
 
