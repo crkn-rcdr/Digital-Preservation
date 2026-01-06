@@ -781,7 +781,7 @@ If `ver_res != "ok"`:
 Replication and verification logs are written to:
 
 ```
-/var/log/tdr
+/var/log/tdr/root.log
 ```
 
 Each event is also logged in CouchDB for audit and traceability.
