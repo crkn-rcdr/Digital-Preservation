@@ -9,12 +9,12 @@ CRKN is certified as a Trustworthy Digital Repository (TDR), a reliable and inte
 | **Sapindale**          | Web admin interface that manages and validates AIPs prior to ingest | Trepat         |
 | **CIHM‑WIP**           | WIP packaging utilities that prepares and stages AIPs before ingest | Trepat         |
 | **Swift**              | Canonical object storage for all AIPs         | Trepat                               |
+| **ZFS Pool**           | Local disk‑based preservation storage         | Orchis / Romano                      |
 | **CouchDB (`tdrepo`)** | System of record for all repositories         | Trepat / Orchis / Romano (clustered) |
 | **reposync**           | Synchronizes metadata to wipmeta / dipstaging | Trepat                               |
 | **replicationwork**    | Builds replication queues                     | Orchis / Romano                      |
 | **swiftreplicate**     | Executes replication from swift to ZFS        | Orchis / Romano                      |
-| **repomanage**         | Verifies TDR data                             | Trepat / Orchis / Romano            |
-| **ZFS Pool**           | Local disk‑based preservation storage         | Orchis / Romano                      |
+| **repomanage**         | Verifies TDR data                             | Trepat / Orchis / Romano             |
 | **Logging**            | Replication and verification logs             | Trepat / Orchis / Romano             |
 
 Notes:
